@@ -75,9 +75,22 @@ User question → Search vector DB → Retrieve relevant chunks → Assemble pro
 - If context doesn't cover the question, respond with "I don't have information on that"
 - Google Search grounding is OFF by default (opt-in later if we want hybrid)
 
+### Scheduler & Tracker
+Like a calorie tracking app, but for peptides and supplements. Core features:
+- **Daily protocol view** — Everything the user needs to take today, organized by time (morning, midday, evening, bedtime)
+- **Stack management** — Add peptides/supplements with dose, frequency, route (oral, subQ, intranasal), and time of day
+- **Dosing reminders** — Push notifications for each scheduled dose
+- **Dose logging** — Tap to confirm a dose was taken. Track adherence over time.
+- **Cycle tracking** — Set cycle length (e.g., 8 weeks on / 4 off), app tracks position in cycle and reminds when to stop/restart
+- **Fasting windows** — For GH peptides requiring fasted injection, show countdown timers based on last logged meal
+- **History & calendar** — View any past day, spot missed doses, track consistency
+- **Smart conflicts** — Flag timing conflicts from the knowledge base (e.g., zinc + copper same time, eating too close to GH peptide injection)
+- **Feeds the AI** — The scheduler data is passed as user context to the RAG pipeline, so the AI knows the user's full active protocol when answering questions
+
 ### Key Design Decisions
 - Do NOT bundle the LLM model with the app (too large)
-- Mobile app is a thin chat UI; all logic lives on the backend
+- Mobile app is a thin chat UI + scheduler/tracker; all AI logic lives on the backend
+- Scheduler data lives on-device (local storage) with optional cloud sync later
 - LLM provider is swappable via config (use LiteLLM or similar abstraction)
 - Frame all responses as research/education, not medical advice
 - System prompt: "You are a peptide research assistant. Provide factual, research-backed information from the provided sources. You are not providing medical advice."

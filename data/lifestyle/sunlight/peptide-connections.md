@@ -1,0 +1,12 @@
+# Sunlight & Light Exposure
+
+## Peptide Connections
+
+- **DSIP (Delta Sleep-Inducing Peptide) / Pinealon** — Morning light exposure sets the melatonin production timer by signaling the SCN and pineal gland. Without this morning signal, the evening melatonin window is poorly defined, and sleep peptides like DSIP and Pinealon work less effectively because the underlying circadian framework is misaligned
+- **Epitalon (Epithalon)** — Epitalon restores melatonin rhythm by acting on the pineal gland and activating telomerase. Morning light provides the critical input signal that tells the pineal gland WHEN to produce melatonin. Epitalon and morning light are synergistic — the peptide restores the gland's capacity while light provides the timing cue
+- **Melatonin (supplement)** — Exogenous melatonin is more effective when your circadian rhythm is already properly entrained by consistent light exposure. Taking melatonin without daytime light management is like adding fuel to an engine with broken timing
+- **Melanotan II** — UV exposure activates melanocytes, and Melanotan II amplifies this response for skin tanning. However, do NOT use MT-II as an excuse for excessive or unprotected sun exposure. Always use sunscreen for extended outdoor time. Get regular dermatological monitoring, as MT-II can stimulate changes in moles and pigmented lesions
+- **Semax** — Semax is typically dosed in the morning for cognitive enhancement. Combining morning Semax dosing with morning light exposure creates optimal circadian alignment for the nootropic effects, as both cortisol timing and BDNF upregulation are synchronized
+- **Vitamin D3 (supplement)** — Sunlight is the primary and most bioavailable source of vitamin D. Supplementation fills the gaps when sun exposure is insufficient due to season, latitude, skin tone, or lifestyle. Morning sun handles circadian signaling; midday sun handles vitamin D; supplements handle the rest
+- **CJC-1295 / Ipamorelin / Sermorelin** — Growth hormone secretion follows a circadian pattern with the largest pulse during deep sleep. Proper light exposure optimizes the circadian machinery that governs GH pulse timing, making GH secretagogue peptides more effective
+- **PT-141 / Kisspeptin** — Reproductive hormones (LH, FSH, testosterone, estrogen) are regulated by circadian rhythms. Disrupted light exposure and poor sleep reduce gonadotropin output, potentially blunting the effects of sexual health and fertility peptides

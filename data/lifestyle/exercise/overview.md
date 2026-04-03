@@ -1,0 +1,9 @@
+# Exercise & Movement
+
+## Why Exercise Is the Second Pillar
+
+- **Foundation for peptide users**: Exercise is non-negotiable for anyone using peptides, especially GLP-1 agonists (semaglutide, tirzepatide, retatrutide). Without resistance training, up to 40% of weight lost on GLP-1 drugs can be lean muscle mass. This leads to a slower metabolism, a weaker body, and a worse long-term outcome than carrying the original weight.
+- **Resistance training is the priority**: If you can only do one form of exercise, lift weights. Resistance training preserves muscle during fat loss, builds bone density, improves insulin sensitivity, increases metabolic rate, and triggers hormonal responses (GH, testosterone, IGF-1) that synergize with nearly every peptide category.
+- **Synergy with peptide categories**: GH secretagogues work better with resistance training (more substrate for GH to act on). Healing peptides (BPC-157, TB-500) keep you training consistently by accelerating injury recovery. Nootropic peptides (Semax) are amplified by the BDNF that exercise produces. Metabolic peptides (MOTS-c, AOD-9604) complement exercise-driven fat oxidation.
+- **Different goals require different approaches**: Fat loss requires a caloric deficit plus resistance training to preserve muscle. Muscle gain requires progressive overload and caloric surplus. Longevity requires a mix of resistance training, Zone 2 cardio, and daily movement. Cognitive function benefits most from aerobic exercise that drives BDNF production.
+- **Movement is medicine**: Beyond structured exercise, daily movement (walking, taking stairs, standing) contributes to NEAT (non-exercise activity thermogenesis), which can account for 200-800 calories per day. Walking after meals regulates blood sugar. Consistent daily steps are a better predictor of long-term health than gym attendance alone.
