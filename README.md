@@ -182,9 +182,37 @@ pepTalk/
 │       │   ├── peptide-connections.md
 │       │   └── ... (8 files each)
 │       └── ... (10 lifestyle directories)
-├── backend/                           # FastAPI server (coming soon)
+├── backend/
+│   ├── .venv/                         # Python virtual environment (gitignored)
+│   ├── models/                        # Embedding model (gitignored, ~87MB)
+│   │   └── all-MiniLM-L6-v2/         # Local sentence-transformer model
+│   └── requirements.txt               # Python dependencies
 └── app/                               # React Native app (coming soon)
 ```
+
+## Getting Started
+
+```bash
+# Clone the repo
+git clone <repo-url>
+cd pepTalk
+
+# Set up the backend
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Download the embedding model (~87MB, takes ~10 seconds)
+python3 -c "
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('all-MiniLM-L6-v2')
+model.save('models/all-MiniLM-L6-v2')
+print('Model downloaded.')
+"
+```
+
+The embedding model and virtual environment are gitignored (they're large binary files). This setup script re-downloads them locally in under a minute.
 
 ## Cost Projections
 
