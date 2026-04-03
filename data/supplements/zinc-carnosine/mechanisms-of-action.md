@@ -1,0 +1,13 @@
+# Zinc Carnosine
+## Mechanisms of Action
+
+- **Adherence to damaged tissue** — Zinc carnosine has a unique physicochemical property: it dissociates slowly in the GI tract and adheres preferentially to ulcerated and inflamed mucosal tissue. This concentrates the therapeutic compound exactly where repair is needed, rather than being absorbed systemically like regular zinc.
+- **Heat shock protein induction** — Zinc carnosine upregulates heat shock proteins (HSP70, HSP72) in intestinal epithelial cells. Heat shock proteins are cellular stress-response molecules that protect proteins from denaturation, facilitate repair of damaged proteins, and enhance cell survival under stress conditions.
+- **Growth factor stimulation** — Stimulates the expression of insulin-like growth factor-1 (IGF-1), epidermal growth factor (EGF), and trefoil factors (TFF) in the GI mucosa. These growth factors drive epithelial cell proliferation, migration, and tissue remodeling essential for ulcer healing and mucosal restoration.
+- **Tight junction stabilization** — Upregulates expression of tight junction proteins (ZO-1, occludin, claudins) in intestinal epithelial cells, directly reducing paracellular permeability. This mechanism is central to its "leaky gut" repair function.
+- **NF-kB inhibition (localized)** — Suppresses nuclear factor kappa-B activation in gastrointestinal epithelial cells, reducing transcription of inflammatory cytokines (TNF-alpha, IL-1beta, IL-6, IL-8) at the mucosal level.
+- **Antioxidant activity at the mucosal surface** — Both zinc and carnosine independently scavenge reactive oxygen species. The combined molecule provides concentrated antioxidant protection at the GI mucosal surface, reducing oxidative damage from gastric acid, NSAIDs, alcohol, and inflammatory processes.
+- **Mucus secretion enhancement** — Stimulates goblet cell production of protective mucus glycoproteins, strengthening the mucus barrier that separates the epithelium from the harsh luminal environment.
+- **Prostaglandin modulation** — Supports protective prostaglandin production (PGE2) in the gastric mucosa while inhibiting inflammatory prostaglandin cascades. This preserves the gastric mucosal defense while reducing inflammation.
+- **Anti-apoptotic effects** — Reduces stress-induced apoptosis (programmed cell death) in gastric and intestinal epithelial cells, preserving mucosal cellularity during injury and recovery.
+- **Bacteriostatic effects on H. pylori** — Zinc carnosine has direct inhibitory activity against Helicobacter pylori growth, vacuolating toxin (VacA) activity, and urease function, which H. pylori uses to survive in stomach acid.

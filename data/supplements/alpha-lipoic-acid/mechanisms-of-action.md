@@ -1,0 +1,13 @@
+# Alpha-Lipoic Acid
+## Mechanisms of Action
+
+- **Universal antioxidant (amphipathic):** ALA is both water-soluble and fat-soluble, allowing it to neutralize free radicals in every cellular compartment — cytoplasm, cell membranes, mitochondrial matrix, extracellular fluid, and across the blood-brain barrier. Its reduced form, dihydrolipoic acid (DHLA), is an even more potent antioxidant
+- **Antioxidant network recycling:** ALA/DHLA regenerates oxidized forms of vitamin C (dehydroascorbate back to ascorbate), vitamin E (tocopheroxyl radical back to tocopherol), glutathione (GSSG back to GSH), and CoQ10 (ubiquinone back to ubiquinol). It is the "antioxidant of antioxidants"
+- **Glutathione upregulation:** ALA increases intracellular glutathione levels by 30-70% through two mechanisms: (1) reducing oxidized glutathione (GSSG) back to active GSH, and (2) upregulating gamma-glutamylcysteine ligase, the rate-limiting enzyme in glutathione synthesis. Glutathione is the body's master intracellular antioxidant
+- **Mitochondrial cofactor:** ALA is a required prosthetic group for pyruvate dehydrogenase complex (PDC) and alpha-ketoglutarate dehydrogenase complex (KGDC) in the Krebs cycle. These enzymes are critical for converting carbohydrates into mitochondrial energy (ATP)
+- **AMPK activation and glucose uptake:** ALA activates AMPK, which promotes GLUT4 glucose transporter translocation to the cell surface, increasing glucose uptake independent of insulin. This underlies ALA's blood sugar-lowering effects
+- **Insulin signaling enhancement:** ALA improves insulin receptor substrate (IRS) phosphorylation and downstream PI3K/Akt signaling, enhancing insulin sensitivity in muscle, liver, and adipose tissue
+- **NF-kB inhibition:** ALA suppresses NF-kB activation, reducing the transcription of pro-inflammatory cytokines (TNF-alpha, IL-6, IL-1beta) and adhesion molecules. This provides anti-inflammatory effects throughout the body
+- **Heavy metal chelation:** Both ALA and DHLA contain sulfhydryl (thiol) groups that bind divalent metal ions (mercury, lead, cadmium, arsenic, copper, iron). ALA is one of few chelating agents that crosses the blood-brain barrier, allowing it to mobilize brain-accumulated metals
+- **Nrf2 activation:** ALA activates the Nrf2/ARE pathway, upregulating endogenous antioxidant enzymes (superoxide dismutase, catalase, glutathione peroxidase, heme oxygenase-1). This induces a sustained antioxidant defense beyond ALA's direct scavenging activity
+- **Advanced glycation end-product (AGE) inhibition:** ALA reduces the formation of AGEs by scavenging reactive carbonyl species and reducing blood sugar levels. AGEs contribute to diabetic complications and aging

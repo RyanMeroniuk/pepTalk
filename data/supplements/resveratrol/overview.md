@@ -1,0 +1,12 @@
+# Resveratrol
+## Overview
+
+Resveratrol is a polyphenolic compound produced by plants as a defense mechanism against stress, infection, and UV radiation. Found most famously in red grape skins, it gained attention as the proposed explanation for the "French Paradox" — the observation that French populations have lower cardiovascular disease despite high dietary fat intake, potentially due to red wine consumption.
+
+- **Why it matters:** Resveratrol is one of the most potent known activators of SIRT1, a NAD+-dependent deacetylase that regulates aging, metabolism, inflammation, and stress resistance. SIRT1 activation mimics many of the benefits of caloric restriction, the most robust life-extending intervention known in biology
+- **The red wine myth (important context):** While resveratrol is found in red wine, the concentrations are far too low for therapeutic benefit. A typical glass of red wine contains 0.5-2mg of resveratrol. Therapeutic doses are 250-1000mg/day. You would need to drink 125-500+ glasses of wine per day to match a single supplement dose. The alcohol damage would vastly outweigh any resveratrol benefit
+- **Trans-resveratrol is the active form:** Resveratrol exists as two geometric isomers: trans-resveratrol (biologically active, stable) and cis-resveratrol (largely inactive, unstable). Quality supplements specify trans-resveratrol content. Exposure to UV light converts trans to cis, reducing potency
+- **Bioavailability challenges:** Resveratrol has notoriously poor oral bioavailability (~1-5%) due to rapid Phase II metabolism (glucuronidation and sulfation) in the intestine and liver. Strategies to improve bioavailability include micronization, liposomal delivery, taking with fat, and combining with piperine (black pepper extract)
+- **David Sinclair's protocol:** Harvard geneticist David Sinclair takes 1000mg resveratrol with NMN each morning, mixed into yogurt. The fat in yogurt aids resveratrol absorption. He considers resveratrol the "accelerator pedal" for SIRT1, with NMN providing the NAD+ "fuel"
+- **Estrogenic activity (important caveat):** At high doses, resveratrol has weak estrogenic (phytoestrogenic) activity, binding to estrogen receptors. This is a consideration for hormone-sensitive cancers and individuals with estrogen dominance
+- **Extensive research base:** Over 12,000 published studies on resveratrol, though translation from cell/animal studies to human clinical outcomes has been mixed, partly due to bioavailability limitations

@@ -1,0 +1,12 @@
+# Tart Cherry Extract
+## Lifestyle Recommendations
+
+- **Create an evening tart cherry ritual** — Mix 30ml tart cherry concentrate with sparkling water or still water 30-60 minutes before bed. The ritual of preparing and slowly drinking this "nightcap" signals to your brain that the wind-down period has begun. This behavioral cue compounds the biochemical effects.
+- **Time exercise strategically** — Tart cherry's recovery benefits are maximized when training is planned alongside supplementation. Take tart cherry pre- and post-workout during heavy training blocks. For evening workouts, the post-workout tart cherry dose doubles as a sleep-support dose.
+- **Maintain consistent sleep and wake times** — Tart cherry's melatonin supports circadian rhythm entrainment. This works best when combined with consistent sleep/wake timing. Set a fixed wake time (even on weekends) and let tart cherry support the evening sleep signal.
+- **Prioritize dim evening lighting** — The naturally occurring melatonin in tart cherry works synergistically with your body's own melatonin production, which requires darkness. Use warm, dim lighting after sunset. Blue-light blocking glasses are a practical alternative if screen use is necessary.
+- **Eat an anti-inflammatory diet** — Tart cherry's anti-inflammatory effects are amplified by an overall anti-inflammatory dietary pattern: fatty fish, olive oil, leafy greens, berries, nuts, and turmeric. Reduce ultra-processed foods, refined sugars, and excessive omega-6 seed oils.
+- **Stay hydrated** — Adequate hydration supports anthocyanin absorption and kidney function for uric acid excretion. Aim for at least 2-3 liters of water daily, more during heavy training.
+- **Use frozen tart cherries in smoothies** — Blend frozen Montmorency tart cherries with banana, spinach, protein powder, and full-fat yogurt for a post-workout recovery smoothie that provides anthocyanins, protein, and probiotics.
+- **Monitor gout triggers alongside supplementation** — If using tart cherry for gout, also reduce purine-rich foods (organ meats, shellfish, beer), manage weight, limit alcohol, and stay hydrated. Tart cherry is an adjunct, not a replacement for comprehensive gout management.
+- **Get morning sunlight** — Morning light exposure (10-15 minutes within 1 hour of waking) reinforces the same circadian rhythm that tart cherry's evening melatonin supports. The combination of morning light and evening melatonin creates a robust circadian signal.

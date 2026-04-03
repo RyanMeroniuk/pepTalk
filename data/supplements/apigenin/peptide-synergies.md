@@ -1,0 +1,10 @@
+# Apigenin
+## Peptide Synergies
+
+- **DSIP (Delta Sleep-Inducing Peptide)** — DSIP promotes delta wave sleep architecture while apigenin provides GABAergic calming for sleep onset. DSIP addresses deep sleep quality; apigenin reduces pre-sleep anxiety and mental chatter. Together, they support both falling asleep and achieving restorative deep sleep phases.
+- **Pinealon** — Pinealon is a neuroprotective tripeptide that supports memory, circadian rhythm regulation, and pineal gland function. Apigenin's calming and neuroprotective effects complement Pinealon's circadian-supportive actions. Both compounds reduce neuroinflammation through distinct pathways.
+- **Epitalon (Epithalon)** — Epitalon activates telomerase and supports endogenous melatonin production by the pineal gland. Apigenin's CD38 inhibition preserves NAD+, which is essential for sirtuin-mediated DNA repair and cellular longevity pathways. Both compounds contribute to anti-aging strategies from complementary angles (telomere maintenance + NAD+ preservation).
+- **Selank** — Selank modulates GABA and provides anxiolytic effects with immune support. Apigenin also modulates GABA-A receptors. The combination may offer enhanced anxiety reduction during the evening, though caution is warranted to avoid excessive sedation. Start with lower doses of both.
+- **BPC-157** — BPC-157's systemic anti-inflammatory and tissue repair properties pair with apigenin's NF-kB suppression for a comprehensive anti-inflammatory approach. Relevant for individuals managing chronic inflammation alongside sleep optimization.
+- **NAD+ / NMN / NR** — Apigenin's CD38 inhibition preserves existing NAD+ while NMN or NR supplementation increases NAD+ production. This dual approach — reducing NAD+ degradation while boosting synthesis — is more effective than either strategy alone for maintaining cellular NAD+ levels.
+- **Semax** — Semax upregulates BDNF and enhances cognitive function. Apigenin also supports BDNF signaling and provides neuroprotection. The combination may support both daytime cognitive enhancement (Semax) and evening neuroprotective relaxation (apigenin).

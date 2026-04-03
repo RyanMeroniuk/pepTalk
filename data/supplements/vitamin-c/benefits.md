@@ -1,0 +1,15 @@
+# Vitamin C
+## Benefits
+
+- **Immune defense:** Regular vitamin C supplementation (200 mg-1g/day) reduces cold duration by 8% in adults and 14% in children. In physically stressed populations (marathon runners, soldiers, skiers), supplementation reduces cold incidence by 50%. High-dose vitamin C (1-2g every 1-2 hours at onset) may further shorten illness duration.
+- **Collagen production and skin health:** Vitamin C is essential for collagen types I, III, and IV synthesis. Supplementation (500-1,000 mg/day) improves skin elasticity, hydration, and reduces wrinkle depth. Topical vitamin C (10-20% L-ascorbic acid, pH <3.5) protects against UV photodamage and hyperpigmentation.
+- **Antioxidant protection:** Reduces oxidative stress biomarkers (F2-isoprostanes, 8-OHdG, MDA) by 30-50% in supplementation studies. Protects LDL cholesterol from oxidation, a key step in atherosclerosis initiation.
+- **Cardiovascular health:** Meta-analyses show vitamin C supplementation reduces systolic blood pressure by 3-5 mmHg and diastolic by 1.5-2 mmHg. Higher plasma vitamin C levels are associated with 25-40% reduced risk of cardiovascular disease and stroke.
+- **Iron absorption:** Critical for individuals with iron-deficiency anemia. Taking 100-200 mg vitamin C with iron supplements or iron-rich plant foods increases non-heme iron absorption 2-6x. Particularly important for vegetarians, vegans, and menstruating women.
+- **Wound healing:** Accelerates all phases of wound healing — inflammatory, proliferative, and remodeling. Deficiency causes delayed healing, poor scar formation, and wound dehiscence. Supplementation (500-1,000 mg/day) is standard in surgical recovery protocols.
+- **Cancer prevention:** Higher dietary and plasma vitamin C levels are associated with reduced risk of stomach, esophageal, oral, and lung cancers. The mechanism involves antioxidant protection of DNA, epigenetic regulation via TET enzymes, and immune enhancement.
+- **Cortisol reduction and stress resilience:** The adrenal glands are the body's largest vitamin C reservoir. Supplementation (1,000-1,500 mg/day) has been shown to reduce cortisol levels by 25-30% after physical and psychological stress. Reduces subjective anxiety and stress perception.
+- **Exercise performance and recovery:** Reduces exercise-induced oxidative stress and muscle damage markers (CK, LDH). May reduce DOMS (delayed onset muscle soreness). However, very high doses (>1g) immediately post-exercise may blunt some beneficial training adaptations — timing matters.
+- **Uric acid reduction:** Meta-analyses show vitamin C supplementation (500 mg/day) reduces serum uric acid by 0.35 mg/dL, relevant for gout prevention. Higher doses show greater reductions.
+- **Eye health:** Higher vitamin C intake is associated with 20-30% reduced risk of cataracts and slowed progression of age-related macular degeneration (AREDS study included 500 mg vitamin C).
+- **Histamine reduction:** Vitamin C degrades histamine and prevents its release from mast cells. Supplementation (2,000 mg/day) may reduce allergy symptoms and histamine intolerance. Useful adjunct for mast cell activation issues.

@@ -1,0 +1,13 @@
+# Apigenin
+## Benefits
+
+- **Sleep quality improvement** — Apigenin promotes relaxation and reduces pre-sleep anxiety through GABA-A modulation. Clinical studies on chamomile extract (standardized to apigenin) show improvements in sleep quality scores. The effect is mild and gentle — not a knockout sedative — making it ideal for nightly use without morning grogginess.
+- **NAD+ preservation** — By inhibiting CD38, apigenin helps maintain cellular NAD+ levels that naturally decline with age. This supports cellular energy production, mitochondrial health, sirtuin activity, and DNA repair. Complements NAD+ boosting strategies (NMN, NR supplementation) by reducing NAD+ consumption rather than increasing production — addressing both sides of the equation.
+- **Anxiety reduction** — Apigenin's benzodiazepine-site binding produces anxiolytic effects without cognitive impairment, motor dysfunction, or dependency. Studies on chamomile extract show reduced Generalized Anxiety Disorder (GAD) symptoms comparable to mild anxiolytic medications.
+- **Anti-inflammatory effects** — NF-kB suppression and COX-2 inhibition produce broad anti-inflammatory benefits. Relevant for chronic low-grade inflammation (inflammaging), metabolic syndrome, and inflammatory conditions.
+- **Antioxidant protection** — Both direct radical scavenging and upregulation of endogenous antioxidant systems (Nrf2 pathway). Protects against lipid peroxidation, DNA oxidative damage, and protein carbonylation.
+- **Neuroprotection** — Reduces neuroinflammation, protects against glutamate excitotoxicity, and supports BDNF. Preclinical models show protection against cognitive decline and neurodegenerative processes.
+- **Cardiovascular support** — Apigenin improves endothelial function, reduces vascular inflammation, and may lower blood pressure through vasodilation. Preclinical evidence for protection against atherosclerosis.
+- **Anti-cancer potential** — Extensive in vitro and animal model evidence for anti-proliferative effects across breast, prostate, colon, lung, and skin cancer cell lines. Induces apoptosis, inhibits angiogenesis, and sensitizes cancer cells to chemotherapy. Clinical evidence is still limited but preclinical data is compelling.
+- **Testosterone support (men)** — Mild aromatase inhibition may help maintain testosterone-to-estrogen ratios. Not potent enough to replace medical intervention but potentially beneficial as part of a comprehensive male health optimization approach.
+- **Skin health** — Photoprotective effects against UV-induced damage. Reduces skin inflammation and supports collagen integrity through antioxidant and anti-inflammatory mechanisms.

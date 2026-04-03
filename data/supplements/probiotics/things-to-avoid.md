@@ -1,0 +1,13 @@
+# Probiotics
+## Things to Avoid
+
+- **Unnecessary antibiotic use** — Antibiotics are the single most disruptive event for the gut microbiome, killing beneficial bacteria alongside pathogens. Never take antibiotics without a confirmed bacterial infection and physician prescription. If antibiotics are necessary, use S. boulardii throughout treatment.
+- **Chronic NSAID use** — Ibuprofen, naproxen, and aspirin increase intestinal permeability and damage the gut lining, undermining the barrier integrity that probiotics work to maintain. If chronic pain management is needed, explore alternatives with your physician.
+- **Proton pump inhibitors (PPIs) without cause** — Long-term PPI use (omeprazole, pantoprazole) raises stomach pH, alters the gut microbiome, increases C. difficile risk, and reduces SIBO defense. If on long-term PPIs, discuss necessity with your physician and consider concurrent probiotic support.
+- **Chronic high stress** — Cortisol and stress hormones alter gut motility, reduce secretory IgA, increase intestinal permeability, and shift microbiome composition toward pathogenic species. Stress management is not optional for gut health — it is foundational.
+- **Sleep deprivation** — Disrupted sleep alters gut microbiome composition within 48 hours. Circadian rhythm disruption (shift work, jet lag) is particularly damaging to microbial diversity.
+- **Sedentary lifestyle** — Regular exercise independently increases microbiome diversity and Firmicutes-to-Bacteroidetes ratio. Sedentary behavior reduces beneficial species.
+- **Storing probiotics improperly** — Refrigerated probiotics must stay cold. Leaving them in a hot car, on a kitchen counter in summer, or in direct sunlight rapidly kills live bacteria. Check storage requirements on the label. Spore-based and S. boulardii products are exceptions.
+- **Buying probiotics without strain verification** — A label that says "Lactobacillus acidophilus 10 billion CFU" without specifying the strain (e.g., La-5, NCFM, DDS-1) is useless for evidence-based supplementation. You cannot verify that the strain matches clinical research without the full designation.
+- **Expecting overnight results** — Microbiome shifts take 2-4 weeks to establish. Mood benefits from psychobiotics take 4-8 weeks. Do not abandon a well-chosen probiotic after a few days.
+- **Excessive hand sanitizer and antimicrobial product use** — While hygiene is important, excessive antimicrobial product use reduces beneficial microbial exposure. The "hygiene hypothesis" suggests that some microbial exposure is necessary for healthy immune development.

@@ -1,0 +1,12 @@
+# NMN (Nicotinamide Mononucleotide)
+## Mechanisms of Action
+
+- **NAD+ biosynthesis (salvage pathway):** NMN is converted to NAD+ by the enzyme NMNAT (nicotinamide mononucleotide adenylyltransferase). This is the final step in the NAD+ salvage pathway, which recycles nicotinamide back to NAD+. NMN supplementation directly replenishes NAD+ pools
+- **Sirtuin activation:** NAD+ is the essential co-substrate for all seven sirtuin enzymes (SIRT1-7). Sirtuins are NAD+-dependent deacetylases and ADP-ribosyltransferases that regulate aging, metabolism, DNA repair, inflammation, and stress resistance. Higher NAD+ = more sirtuin activity. SIRT1 (nuclear, metabolic regulation), SIRT3 (mitochondrial, energy metabolism), and SIRT6 (DNA repair, telomere maintenance) are particularly important
+- **DNA repair via PARPs:** NAD+ is consumed by PARP enzymes (poly-ADP-ribose polymerases) during DNA repair. With aging, accumulated DNA damage causes PARPs to consume increasing amounts of NAD+, depleting the pool. NMN supplementation ensures adequate NAD+ for ongoing DNA repair
+- **Mitochondrial energy metabolism:** NAD+ is a critical electron carrier in the Krebs cycle and oxidative phosphorylation. NADH (the reduced form of NAD+) shuttles electrons to Complex I of the electron transport chain. More NAD+ = more efficient energy production
+- **CD38 competition:** CD38 is an NAD+-consuming enzyme that increases with age and chronic inflammation. CD38 activity is a major driver of age-related NAD+ decline. NMN supplementation helps compensate for CD38-mediated NAD+ consumption
+- **Circadian rhythm regulation:** NAD+ levels oscillate in a circadian pattern, regulated by NAMPT (the rate-limiting enzyme in the salvage pathway). SIRT1 and NAD+ regulate the core clock gene machinery (CLOCK/BMAL1). NMN supports healthy circadian function
+- **Cellular transport:** The Slc12a8 transporter (identified in 2019) allows direct NMN uptake into cells, particularly in the gut and liver. Some NMN is also converted extracellularly to NR (via CD73), which enters cells and is re-phosphorylated to NMN inside
+- **Epigenetic regulation:** NAD+-dependent sirtuins deacetylate histones, influencing gene expression patterns. Adequate NAD+ (via NMN) maintains youthful epigenetic patterns and prevents age-related epigenetic drift
+- **Stem cell maintenance:** NAD+ is essential for stem cell self-renewal and function. Age-related NAD+ decline impairs stem cell pools. NMN supplementation has been shown to restore muscle stem cell function in aged mice

@@ -1,0 +1,13 @@
+# Lion's Mane
+## Benefits
+
+- **Cognitive function and memory:** A double-blind RCT in Japanese adults with mild cognitive impairment showed significant improvement in cognitive function scores after 16 weeks of Lion's Mane (3g/day powdered fruiting body). Improvements in short-term memory, concentration, and recognition have been reported across studies. Effects are most pronounced in those with existing cognitive decline
+- **Nerve regeneration and repair:** Animal studies demonstrate accelerated peripheral nerve regeneration after crush injury. NGF stimulation promotes axonal regrowth and remyelination. Relevant for peripheral neuropathy, nerve injuries, and potentially demyelinating conditions. Clinical applications being explored for diabetic neuropathy
+- **Depression and anxiety:** A Japanese RCT in menopausal women showed reduced depression and anxiety scores after 4 weeks of Lion's Mane cookie consumption. Mechanism likely involves reduced neuroinflammation, BDNF upregulation, and improved hippocampal neurogenesis — all implicated in depression pathology. Unlike SSRIs, this addresses root neurotrophic deficits rather than just serotonin levels
+- **Neuroprotection:** Protects against neuronal damage from amyloid beta (Alzheimer's), oxidative stress, and ischemia in preclinical models. Reduces markers of neurodegeneration. Potential preventive supplement for those with family history of Alzheimer's or Parkinson's disease
+- **Gut health:** Protects gastric mucosa, promotes repair of damaged gut lining, and has shown anti-H. pylori activity in vitro. Prebiotic effects support beneficial gut bacteria. A small trial showed improvement in ulcerative colitis symptoms
+- **Immune function:** Beta-glucans from fruiting body stimulate innate immune function — increased macrophage and NK cell activity. May improve resistance to infections and support immune surveillance
+- **Anti-inflammatory:** Reduces systemic and neuroinflammatory markers. Relevant for chronic inflammatory conditions and the low-grade inflammation associated with aging (inflammaging)
+- **Blood sugar management:** Animal studies show improved insulin sensitivity and reduced blood glucose. Mechanism may involve AMPK activation and improved pancreatic beta-cell function. Human data is limited but promising
+- **Cardiovascular markers:** May reduce LDL oxidation, lower triglycerides, and improve lipid profiles in animal models. Limited human data available
+- **Focus and mental clarity:** Anecdotal reports and some clinical evidence suggest improved focus, mental clarity, and reduced brain fog. Likely mediated by NGF/BDNF support, reduced neuroinflammation, and enhanced cholinergic function

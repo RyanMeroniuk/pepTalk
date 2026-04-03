@@ -1,0 +1,13 @@
+# L-Theanine
+## Benefits
+
+- **Anxiety reduction** — Multiple randomized controlled trials demonstrate reduced subjective anxiety (State-Trait Anxiety Inventory scores) and reduced physiological stress markers (cortisol, heart rate, blood pressure) in both acute stress tests and chronic supplementation. Effects are noticeable within 30-60 minutes at 200mg.
+- **Enhanced focus and attention** — L-Theanine alone improves sustained attention and reduces mind-wandering. Combined with caffeine (see below), it significantly improves reaction time, visual information processing, and task-switching accuracy.
+- **L-Theanine + caffeine synergy** — The most studied nootropic stack. 100-200mg L-Theanine + 50-100mg caffeine produces superior cognitive performance compared to either alone: faster reaction time, improved accuracy, better working memory, reduced susceptibility to distraction, and elimination of caffeine jitteriness. The ratio of approximately 2:1 (L-Theanine:caffeine) is commonly recommended.
+- **Sleep quality improvement** — At 200-400mg before bed, L-Theanine improves sleep quality scores (Pittsburgh Sleep Quality Index), reduces sleep latency in anxious individuals, and increases subjective refreshment upon waking. It does not cause morning grogginess because it is not a sedative — it reduces the mental hyperarousal that prevents sleep.
+- **Blood pressure reduction during stress** — L-Theanine attenuates acute stress-induced blood pressure spikes. Studies show reduced systolic and diastolic blood pressure during mental arithmetic stress tasks.
+- **ADHD symptom support** — Preliminary research in children with ADHD shows improved sleep quality and reduced hyperactivity at 200-400mg daily. Used as an adjunct, not a replacement, for ADHD management.
+- **Neuroprotection** — Protects neurons from glutamate-mediated excitotoxicity and oxidative stress in preclinical models. May slow cognitive decline related to aging and neurodegeneration.
+- **Mood enhancement** — Modest but consistent improvements in subjective well-being, contentment, and calmness across multiple studies. The serotonin and dopamine modulation contributes to a subtle mood lift.
+- **Immune support** — L-Theanine and its metabolite ethylamine prime gamma-delta T cells for a faster immune response. Tea drinkers show enhanced gamma-delta T cell activity, and L-Theanine supplementation may contribute to reduced upper respiratory infection incidence.
+- **Caffeine crash prevention** — When taken with caffeine, L-Theanine extends the duration of focus while preventing the post-caffeine energy dip, creating a smoother stimulant experience.

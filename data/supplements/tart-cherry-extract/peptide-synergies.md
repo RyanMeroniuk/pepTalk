@@ -1,0 +1,10 @@
+# Tart Cherry Extract
+## Peptide Synergies
+
+- **DSIP (Delta Sleep-Inducing Peptide)** — DSIP promotes delta wave (deep) sleep architecture while tart cherry provides natural melatonin for sleep onset and anthocyanins that reduce inflammation-mediated sleep disruption. Together, they address sleep initiation (melatonin), sleep depth (DSIP), and the inflammatory component of poor sleep.
+- **BPC-157** — BPC-157 accelerates tissue repair, supports gut healing, and has documented anti-inflammatory effects. Tart cherry's anthocyanins provide complementary anti-inflammatory action through COX inhibition and NF-kB suppression. Excellent combination for athletes managing both recovery and tissue injuries.
+- **TB-500 (Thymosin Beta-4)** — TB-500 promotes wound healing, tissue repair, and flexibility through upregulation of actin. Paired with tart cherry's anti-inflammatory anthocyanins and exercise recovery benefits, this combination supports comprehensive musculoskeletal recovery. Relevant for injury rehabilitation and intense training phases.
+- **Epitalon (Epithalon)** — Epitalon supports endogenous melatonin production by the pineal gland and activates telomerase. Tart cherry provides exogenous melatonin and potent antioxidants. The combination supports circadian health and anti-aging from multiple angles.
+- **Pinealon** — Pinealon supports pineal gland function and circadian regulation. Tart cherry provides the melatonin substrate while Pinealon supports the gland responsible for endogenous production. Together, they optimize both exogenous and endogenous melatonin pathways.
+- **GHK-Cu** — GHK-Cu stimulates collagen synthesis and tissue remodeling. Tart cherry's anti-inflammatory environment supports these repair processes by reducing oxidative interference with tissue regeneration.
+- **Ipamorelin / CJC-1295** — Growth hormone secretagogues support muscle recovery and tissue repair, effects amplified by tart cherry's reduction in exercise-induced inflammation and muscle damage markers. Taking tart cherry in the evening aligns with the nighttime GH pulse stimulated by these peptides.

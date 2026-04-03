@@ -1,0 +1,31 @@
+# NMN (Nicotinamide Mononucleotide)
+## Drug Interactions
+
+- **Diabetes medications (moderate concern):**
+  - **Drugs:** Metformin, insulin, sulfonylureas, SGLT2 inhibitors, GLP-1 agonists
+  - **Interaction:** NMN improves insulin sensitivity and may lower blood glucose. Additive hypoglycemic effect is possible. Note: NMN and metformin both activate AMPK — the combination may be synergistic but requires glucose monitoring
+  - **Recommendation:** Monitor blood glucose closely when starting NMN. Medication dose adjustments may be needed. The NMN + metformin combination is used by many longevity practitioners but the interaction is not fully characterized
+- **Chemotherapy agents (important caution):**
+  - **Interaction:** NAD+ is required by cancer cells for growth, but also by PARP enzymes for DNA repair and tumor suppression. The net effect of NMN during cancer treatment is unclear and may vary by cancer type and chemotherapy agent
+  - **Specific concern with PARP inhibitors:** PARP inhibitors (olaparib, niraparib, rucaparib) kill cancer cells by preventing DNA repair. NMN fuels PARPs and could theoretically reduce PARP inhibitor efficacy
+  - **Recommendation:** Do not take NMN during active cancer treatment without explicit oncologist approval
+- **Immunosuppressants:**
+  - **Drugs:** Cyclosporine, tacrolimus, sirolimus, mycophenolate
+  - **Interaction:** NMN enhances immune cell function by restoring NAD+ levels. This could theoretically counteract immunosuppressive therapy
+  - **Recommendation:** Consult transplant physician or rheumatologist before starting NMN
+- **Blood pressure medications:**
+  - **Drugs:** ACE inhibitors, ARBs, calcium channel blockers, beta-blockers
+  - **Interaction:** NMN may modestly lower blood pressure through improved endothelial function. Additive hypotensive effect possible
+  - **Recommendation:** Monitor blood pressure when starting NMN. Minor interaction for most people
+- **Niacin (vitamin B3):**
+  - **Interaction:** Both niacin and NMN increase NAD+ but through different pathways. High-dose niacin produces nicotinamide, which can inhibit SIRT1 at high concentrations. Combining high-dose niacin with NMN may produce excess nicotinamide
+  - **Recommendation:** Avoid high-dose niacin supplements (>100mg) alongside NMN. Standard dietary niacin intake is fine
+- **Anti-aging drugs (rapamycin/sirolimus):**
+  - **Interaction:** Rapamycin inhibits mTOR; NMN activates AMPK. Both pathways promote longevity through different mechanisms. Some longevity researchers combine them, but the interaction is complex and not fully understood
+  - **Recommendation:** If using rapamycin off-label for longevity, discuss NMN with the prescribing physician
+- **Alcohol (lifestyle interaction):**
+  - **Interaction:** Alcohol metabolism consumes 2 NAD+ molecules per ethanol molecule metabolized (via ADH and ALDH). Regular drinking directly counteracts NMN supplementation
+  - **Recommendation:** Minimize alcohol intake to maximize NMN's benefit. This is a metabolic competition, not a safety concern
+- **Acetaminophen (Tylenol):**
+  - **Interaction:** Acetaminophen metabolism depletes glutathione and can stress liver NAD+ pools. NMN may actually be protective by maintaining hepatic NAD+ levels
+  - **Recommendation:** NMN may help mitigate acetaminophen's hepatotoxic potential, but do not exceed recommended acetaminophen doses regardless

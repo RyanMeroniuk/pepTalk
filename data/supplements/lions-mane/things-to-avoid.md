@@ -1,0 +1,12 @@
+# Lion's Mane
+## Things to Avoid
+
+- **Buying mycelium-on-grain (MOG) products:** This is the single most important thing to avoid. Products grown on grain are 50-70% starch with minimal active compounds. They test high in "polysaccharides" because grain starch is a polysaccharide (alpha-glucan), but it is not the bioactive beta-glucan from mushrooms. Look for "fruiting body" on the label and reject products listing rice, oats, or grain as ingredients. If the product says "mycelium" or "myceliated biomass" without specifying liquid fermentation, it is almost certainly MOG
+- **Relying on polysaccharide percentage as a quality marker:** Many cheap products advertise "50% polysaccharides" or similar. If the product is MOG, those polysaccharides are grain starch, not mushroom beta-glucans. Demand products that specify beta-glucan content specifically, and verify with third-party testing
+- **Expecting overnight results:** Lion's Mane works through neurotrophin-mediated neuroplasticity — actual nerve growth, myelination, and synapse formation. This takes weeks to months, not hours or days. Do not abandon Lion's Mane after a few days of no noticeable effect
+- **Taking before surgery without disclosure:** Lion's Mane may have mild antiplatelet properties. Discontinue 1-2 weeks before elective surgery and disclose use to your surgeon
+- **Combining with anticoagulants without medical awareness:** Due to potential antiplatelet effects, inform your prescriber if you are on blood-thinning medications (warfarin, heparin, aspirin, clopidogrel)
+- **Using if you have a mushroom allergy:** Cross-reactivity is possible. If you are allergic to other mushroom species, start with a very small dose and monitor for reactions, or avoid entirely
+- **Ignoring extraction method:** Unextracted dried mushroom powder has poor bioavailability because bioactives are locked behind chitin cell walls that humans cannot digest. Insist on hot water extracted or dual extracted (hot water + alcohol) products
+- **Chronic sleep deprivation while supplementing:** Sleep is when much of the neuroplasticity promoted by NGF and BDNF is consolidated. Chronic sleep deprivation (less than 6 hours/night) suppresses BDNF and impairs neurogenesis, severely limiting what Lion's Mane can accomplish
+- **Excessive stress without management:** Chronic unmanaged stress elevates cortisol, which suppresses BDNF and neurogenesis. Lion's Mane stimulates neurotrophins, but chronic cortisol works against them. Address stress alongside supplementation for best results

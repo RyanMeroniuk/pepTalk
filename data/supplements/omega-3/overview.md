@@ -1,0 +1,8 @@
+# Omega-3 (Fish Oil / Krill Oil)
+## Overview
+
+- **What it is:** Omega-3 fatty acids are a family of polyunsaturated fats that the body cannot produce on its own. The three main forms are EPA (eicosapentaenoic acid), DHA (docosahexaenoic acid), and ALA (alpha-linolenic acid). EPA and DHA are the biologically active forms found in marine sources, while ALA is plant-derived and requires conversion to EPA/DHA at a very low rate (5-10% for EPA, 2-5% for DHA).
+- **Historical use:** Fish and marine oils have been used medicinally for centuries. Cod liver oil was a staple of Northern European health practices since the 1700s. Modern omega-3 research exploded after studies of Greenland Inuit populations in the 1970s revealed extremely low rates of cardiovascular disease despite high-fat diets rich in marine omega-3s.
+- **Why it matters:** The modern Western diet has shifted the omega-6 to omega-3 ratio from roughly 1:1 (ancestral) to approximately 15-20:1, driving chronic systemic inflammation. This imbalance is implicated in cardiovascular disease, neurodegeneration, depression, autoimmune conditions, and metabolic dysfunction. Correcting this ratio through omega-3 supplementation is one of the most well-evidenced interventions in nutritional science.
+- **Key distinction — EPA vs DHA:** EPA is primarily anti-inflammatory and cardiovascular-protective. DHA is the structural omega-3 concentrated in the brain (making up ~40% of PUFA in the brain) and retina. Both matter, but the ratio you choose should match your goals.
+- **Scale of evidence:** Omega-3s are among the most studied supplements in history, with thousands of clinical trials, multiple meta-analyses, and several FDA-approved pharmaceutical formulations.

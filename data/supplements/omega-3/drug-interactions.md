@@ -1,0 +1,16 @@
+# Omega-3 (Fish Oil / Krill Oil)
+## Drug Interactions
+
+- **Anticoagulants (warfarin, heparin, enoxaparin):** Omega-3 has mild antiplatelet effects. At high doses (3g+/day), may potentiate anticoagulant effects and increase bleeding risk. Monitor INR more frequently when adding or changing omega-3 dose. Many patients safely combine them under physician supervision, but dose adjustments to warfarin may be needed
+- **Antiplatelet drugs (aspirin, clopidogrel/Plavix, prasugrel, ticagrelor):** Additive antiplatelet effects at high omega-3 doses. Standard doses (1-2g/day EPA+DHA) are generally considered safe in combination. Inform your prescriber
+- **NSAIDs (ibuprofen, naproxen, celecoxib):** Theoretical additive effect on bleeding risk, but omega-3 may actually reduce NSAID requirements due to shared anti-inflammatory mechanisms. No strong evidence of clinically significant interaction at normal doses
+- **Blood pressure medications (ACE inhibitors, ARBs, calcium channel blockers, beta-blockers):** Omega-3 modestly lowers blood pressure (3-5 mmHg systolic). Additive hypotensive effect is generally beneficial but monitor blood pressure, especially when initiating high-dose omega-3 alongside antihypertensives
+- **Statins (atorvastatin, rosuvastatin):** No negative interaction. Omega-3 is frequently prescribed alongside statins (as in Lovaza + statin regimens). The combination addresses different lipid parameters — statins lower LDL, omega-3 lowers triglycerides. Note that DHA may modestly raise LDL; if this is a concern, use EPA-only formulation (Vascepa)
+- **Diabetes medications (metformin, sulfonylureas, insulin):** Very high-dose omega-3 (4g+/day) may slightly increase fasting glucose in some individuals, though this is inconsistent. Monitor blood sugar when initiating high-dose therapy. Standard doses are not a concern
+- **Immunosuppressants (cyclosporine, tacrolimus):** Omega-3 may modulate immune function. Theoretically could affect immunosuppressant efficacy, though clinical evidence of problems is lacking. Monitor and discuss with transplant team
+- **Orlistat (Alli/Xenical):** Fat-absorption blocker that reduces absorption of all fat-soluble nutrients including omega-3. Separate dosing by at least 2 hours, or take omega-3 at a meal without orlistat
+- **Isotretinoin (Accutane):** Both can raise triglycerides (isotretinoin raises, omega-3 lowers). The combination may be beneficial for managing isotretinoin-induced hypertriglyceridemia, but monitor lipids
+- **Contraceptive pills:** Oral contraceptives can raise triglycerides. Omega-3 may help counterbalance this effect. No negative interaction
+- **Surgery and anesthesia:** Discontinue high-dose omega-3 (3g+/day) 7-14 days before elective surgery per most surgical guidelines. Standard doses (1-2g/day) are generally not a concern, but disclose to your surgeon and anesthesiologist
+
+- **Overall safety note:** Omega-3 fatty acids have an excellent safety profile. Most drug interactions are theoretical or only relevant at high doses (3-4g+/day). At standard supplemental doses (1-2g/day EPA+DHA), clinically significant interactions are rare. Always inform your healthcare providers about supplementation

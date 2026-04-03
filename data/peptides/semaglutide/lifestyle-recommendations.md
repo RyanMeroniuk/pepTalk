@@ -1,0 +1,17 @@
+# Semaglutide
+
+## Lifestyle Recommendations
+
+- **Protein-First Eating Strategy**: At every single meal, eat protein FIRST before touching carbs or fats. Target 1.6-2.2g protein per kg body weight daily. Up to 40% of weight lost on semaglutide can be lean muscle mass — this is the single biggest risk of GLP-1 therapy and protein intake is the primary defense
+- **Resistance Training 3-5x/Week**: This is NON-NEGOTIABLE on semaglutide. Compound lifts (squats, deadlifts, bench press, rows, overhead press) with progressive overload preserve muscle far better than cardio alone. If you are new to lifting, start with machines or bodyweight and work up. Do not skip this
+- **Daily Step Count**: Walk 8,000-10,000+ steps per day. Walking supports fat loss, improves insulin sensitivity, aids gastric motility (helps with the constipation and bloating), and does not trigger the nausea that high-intensity cardio can cause
+- **Meal Timing & Frequency**: Eat 4-6 small, nutrient-dense meals throughout the day instead of 2-3 large meals. Semaglutide slows gastric emptying significantly — large meals sit in the stomach and cause nausea, bloating, and vomiting. Eat slowly and stop at 80% fullness
+- **Hydration Between Meals**: Drink 80-100oz of water daily, but BETWEEN meals, not with food. Drinking large amounts of liquid during meals fills the slow-emptying stomach and prevents you from consuming adequate protein and nutrients
+- **Preventing "Ozempic Face"**: Facial volume loss from rapid fat loss is a well-known semaglutide side effect. Mitigation strategies: maintain adequate total calorie intake (do not crash diet on top of the drug), eat sufficient healthy fats (avocado, olive oil, nuts, salmon), supplement collagen peptides (10-15g/day), stay hydrated, wear daily SPF, and consider a retinol or hyaluronic acid skincare routine. Facial exercises may provide modest benefit
+- **Sleep 7-9 Hours Nightly**: Poor sleep increases ghrelin (hunger hormone), decreases leptin (satiety hormone), raises cortisol, and impairs insulin sensitivity — directly undermining semaglutide's benefits. Maintain consistent sleep/wake times
+- **GI Side Effect Management**: Ginger tea or ginger chews for nausea (especially during dose escalation). Peppermint tea for bloating. Psyllium husk (Metamucil) or magnesium citrate for constipation. Walk 10-15 minutes after meals to help gastric motility. Smaller, more frequent meals reduce symptom severity
+- **Body Composition Tracking**: Use DEXA scans, bioimpedance scales, or waist/hip measurements — not just body weight. You need to confirm you are losing fat, not muscle
+- **Gallbladder Awareness**: Rapid weight loss significantly increases gallstone risk. Report any sharp right upper quadrant pain, especially after eating fatty meals, to your provider immediately
+- **Stress Management**: Chronic stress raises cortisol, which promotes visceral fat storage and muscle breakdown — both of which work against semaglutide's benefits. Incorporate meditation, deep breathing, yoga, or walks in nature
+- **Mindful Eating**: With dramatically reduced appetite, every bite matters. Choose nutrient-dense foods over empty calories. Do not waste your limited appetite on chips and candy
+- **Plan for Discontinuation**: Weight regain is common (up to 2/3 of weight lost) after stopping semaglutide. Build sustainable exercise and eating habits while ON the drug so they persist after discontinuation

@@ -1,0 +1,9 @@
+# Lion's Mane
+## Foods to Avoid
+
+- **Excessive alcohol:** Alcohol is neurotoxic and directly opposes Lion's Mane's neuroprotective and neurogenerative effects. Chronic alcohol consumption reduces BDNF levels, impairs hippocampal neurogenesis, and damages the very neural structures Lion's Mane works to support. Occasional moderate drinking is unlikely to negate all benefits, but heavy or regular drinking significantly undermines the supplementation
+- **High-sugar, high-glycemic foods:** Chronic hyperglycemia and insulin resistance cause neuroinflammation, reduce BDNF, and impair hippocampal neurogenesis. A diet high in refined sugar, white bread, pastries, and sugary beverages creates the conditions that accelerate cognitive decline — working against Lion's Mane at every level
+- **Highly processed and ultra-processed foods:** These typically combine refined seed oils, refined sugars, and artificial additives that promote systemic inflammation and oxidative stress. Neuroinflammation from poor diet quality reduces the effectiveness of any neurotrophic intervention
+- **Excessive omega-6 seed oils:** Disproportionate omega-6 intake promotes neuroinflammation through pro-inflammatory eicosanoids. While this does not directly block Lion's Mane absorption, chronic neuroinflammation from dietary imbalance reduces the net benefit of NGF/BDNF stimulation
+- **Trans fats and hydrogenated oils:** Trans fats incorporate into cell membranes (including neuronal membranes) and impair membrane fluidity, receptor function, and neural signaling. They directly counteract the neuroplasticity that Lion's Mane promotes
+- **Foods you are intolerant to:** Undiagnosed food sensitivities (gluten, dairy, eggs, etc.) can drive systemic and neuroinflammation through gut permeability and immune activation. If you suspect food sensitivities, identifying and eliminating trigger foods removes an inflammatory burden that would otherwise limit Lion's Mane's benefits

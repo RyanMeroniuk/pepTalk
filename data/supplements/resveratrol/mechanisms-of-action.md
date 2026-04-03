@@ -1,0 +1,14 @@
+# Resveratrol
+## Mechanisms of Action
+
+- **SIRT1 activation (primary mechanism):** Resveratrol directly activates SIRT1, a NAD+-dependent deacetylase. SIRT1 deacetylates key transcription factors and proteins involved in aging, metabolism, and stress resistance. SIRT1 activation mimics caloric restriction — the most robust life-extending intervention known. SIRT1 targets include PGC-1alpha (mitochondrial biogenesis), FOXO transcription factors (stress resistance), NF-kB (inflammation), and p53 (tumor suppression)
+- **AMPK activation:** Resveratrol activates AMPK, the cellular energy sensor, through both direct and SIRT1-mediated mechanisms. AMPK activation promotes mitochondrial biogenesis, fatty acid oxidation, glucose uptake, and autophagy
+- **NF-kB inhibition (anti-inflammatory):** Resveratrol potently inhibits NF-kB signaling, reducing expression of pro-inflammatory cytokines (TNF-alpha, IL-6, IL-1beta), COX-2, and iNOS. This provides broad anti-inflammatory effects
+- **Antioxidant activity:** Directly scavenges superoxide, hydroxyl radicals, and hydrogen peroxide. Also induces endogenous antioxidant enzymes (SOD, catalase, glutathione peroxidase) through Nrf2/ARE pathway activation
+- **PGC-1alpha upregulation (mitochondrial biogenesis):** Through SIRT1 and AMPK, resveratrol activates PGC-1alpha, driving the production of new mitochondria. This improves cellular energy capacity, exercise performance, and metabolic health
+- **Anti-angiogenic and anti-cancer effects:** Inhibits tumor angiogenesis (VEGF suppression), induces cancer cell apoptosis, and inhibits cancer cell proliferation in vitro. Modulates multiple cancer-related pathways (Wnt, Hedgehog, PI3K/Akt/mTOR)
+- **Estrogenic/anti-estrogenic activity (dose-dependent):** At low concentrations, resveratrol acts as an estrogen receptor agonist (phytoestrogen). At high concentrations, it may act as an estrogen receptor antagonist. This biphasic effect is clinically relevant for hormone-sensitive conditions
+- **Platelet aggregation inhibition:** Resveratrol inhibits platelet aggregation through COX-1 inhibition and thromboxane A2 suppression, contributing to cardiovascular protection
+- **Endothelial nitric oxide (eNOS) activation:** Increases nitric oxide production in blood vessel endothelium, promoting vasodilation, reducing blood pressure, and protecting against atherosclerosis
+- **Gut microbiome modulation:** Resveratrol and its metabolites influence gut microbiota composition, increasing beneficial bacteria (Lactobacillus, Bifidobacterium) and reducing inflammatory species. Some of resveratrol's systemic effects may be mediated through microbiome changes
+- **Epigenetic regulation:** Modifies histone acetylation (via SIRT1), DNA methylation, and microRNA expression patterns, potentially reprogramming gene expression toward more youthful patterns

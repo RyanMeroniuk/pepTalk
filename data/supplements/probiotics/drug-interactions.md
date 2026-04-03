@@ -1,0 +1,15 @@
+# Probiotics
+## Drug Interactions
+
+- **Antibiotics** — Antibiotics kill probiotic bacteria (except S. boulardii and spore-forming Bacillus strains). If taking both, separate by at least 2 hours. Use S. boulardii during antibiotic courses as it is unaffected by antibacterial agents. Resume full probiotic supplementation after completing the antibiotic course.
+- **Immunosuppressants (cyclosporine, tacrolimus, mycophenolate, azathioprine)** — Probiotics should be used with extreme caution in immunocompromised patients. Documented cases of Lactobacillus bacteremia and S. boulardii fungemia exist in severely immunosuppressed individuals. Consult the transplant team or oncologist before initiating any probiotic.
+- **Chemotherapy and radiation** — Immunocompromised cancer patients are at elevated risk for probiotic-associated infections. Some oncologists permit specific strains; others advise against all live microorganism supplementation during active treatment. Always defer to the oncology team.
+- **Antifungal medications (fluconazole, nystatin)** — Antifungals can kill Saccharomyces boulardii (which is a yeast). If taking antifungals, use bacterial probiotics instead of S. boulardii.
+- **Warfarin and anticoagulants** — Some probiotic strains produce vitamin K2, which can interfere with warfarin's mechanism. Monitor INR if initiating probiotics on stable warfarin therapy. Strains like Lactobacillus and Bifidobacterium produce minimal K2; Bacillus subtilis (natto-derived) produces significant K2.
+- **Diabetes medications (insulin, metformin, sulfonylureas)** — Probiotics can modestly influence blood glucose levels. Monitor blood sugar more closely when initiating probiotic supplementation, particularly with strains studied for glycemic effects (L. reuteri, multi-strain formulations).
+- **MAO inhibitors** — Fermented food-based probiotics (and some strains that produce tyramine or histamine) may be problematic for individuals on MAO inhibitors. Use capsule-based, pure-culture probiotics rather than fermented food products.
+- **Proton pump inhibitors (PPIs)** — PPIs reduce stomach acid, which may actually improve probiotic survival through the stomach. However, long-term PPI use alters the overall microbiome and increases C. difficile risk. Probiotics are often recommended alongside PPIs to mitigate some of these effects.
+- **SSRIs and psychiatric medications** — Psychobiotic strains affect serotonin and GABA signaling. While interactions are theoretical and generally considered safe, inform your psychiatrist if adding psychobiotic strains (L. helveticus R0052 + B. longum R0175) to existing psychiatric medication regimens.
+- **Sulfasalazine and mesalazine (IBD drugs)** — Generally compatible. E. coli Nissle 1917 has been studied as an alternative to mesalazine for UC maintenance with comparable efficacy.
+
+**General principle:** Probiotics are safe for the vast majority of people taking medications. The primary caution groups are: severely immunocompromised patients, those on anticoagulants (K2-producing strains), and those on MAO inhibitors (histamine/tyramine-producing fermented products).

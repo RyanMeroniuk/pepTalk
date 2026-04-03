@@ -1,0 +1,12 @@
+# Tart Cherry Extract
+## Things to Avoid
+
+- **Confusing sweet cherries with tart cherries** — Sweet cherries (Bing, Rainier, Stella) are nutritionally different from tart/sour cherries (Montmorency, Balaton). Sweet cherries have significantly lower anthocyanin and melatonin content. Always verify that products specify "tart" or "sour" cherry, and ideally "Montmorency" variety.
+- **Heat-processed products** — Anthocyanins degrade with heat. Pasteurized juices retain some benefits but lose a portion of their anthocyanin content. Prefer cold-pressed, freeze-dried, or minimally processed products. Avoid tart cherry "cocktails" or heavily processed cherry beverages with added sugars and preservatives.
+- **Using as a sleep supplement while taking sedatives** — Tart cherry's melatonin content, while relatively low compared to supplements, still contributes to sedation. Combined with prescription sleep aids, benzodiazepines, or alcohol, excessive sedation could occur.
+- **Relying on maraschino cherries** — Maraschino cherries are sweet cherries that have been bleached, dyed, and preserved in sugar syrup. They contain negligible anthocyanins and no meaningful melatonin. They are not a source of tart cherry benefits.
+- **Ignoring the sugar content** — The twice-daily juice protocol delivers 24-34g of sugar per day. This is meaningful for diabetics, those on ketogenic diets, or anyone managing caloric intake. Switch to capsules if sugar is a concern.
+- **Expecting immediate results for gout or inflammation** — Anti-inflammatory and uric acid-lowering effects build over 2-4 weeks of consistent use. Do not abandon the protocol after a few days. Acute gout flares require medical treatment, not just cherry supplementation.
+- **Consuming excessive quantities** — More is not proportionally better. Excessive tart cherry juice can cause significant GI distress (diarrhea, bloating) due to sorbitol content. Stick to researched doses.
+- **Bright light exposure after evening dosing** — If using tart cherry for sleep, the melatonin component works best in dim light conditions. Bright screens and overhead lighting after your evening dose reduce its effectiveness.
+- **Combining with high-dose melatonin supplements** — If already taking supplemental melatonin, adding tart cherry provides additional melatonin. This is not necessarily harmful but could lead to excess drowsiness, vivid dreams, or morning grogginess. Adjust doses accordingly.

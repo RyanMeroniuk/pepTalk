@@ -1,0 +1,9 @@
+# DSIP (Delta Sleep-Inducing Peptide)
+
+## Stacking Protocols
+
+- **Ultimate Sleep Architecture Stack**: DSIP (100-300mcg, 30-60 min before bed) + Pinealon (10mg sublingual, evening) + Magnesium Glycinate (400mg, evening) — DSIP promotes delta-wave deep sleep, Pinealon provides neuroprotective support and circadian regulation, magnesium activates parasympathetic nervous system and GABA receptors. Three complementary sleep-promoting mechanisms
+- **Sleep + Anti-Aging Stack**: DSIP (100-300mcg before bed) + Epitalon (1mg/day, evening, during 10-20 day cycle) — DSIP enhances deep restorative sleep while Epitalon restores melatonin secretion from the aging pineal gland. Both support circadian rhythm normalization through different mechanisms; deep sleep is when melatonin performs its antioxidant and DNA repair functions
+- **Calm Sleep Stack**: DSIP (100-300mcg before bed) + Selank (250-500mcg, evening) + L-Theanine (200mg, evening) — DSIP for delta sleep promotion, Selank for anxiolytic GABA modulation to reduce pre-sleep anxiety and racing thoughts, L-theanine for calm alpha-wave production. Targets both sleep onset difficulty (anxiety) and sleep depth (delta waves)
+- **Cortisol Recovery Stack**: DSIP (200-500mcg before bed) + Semax (300-600mcg, morning) + Ashwagandha KSM-66 (600mg/day) — DSIP lowers elevated cortisol and promotes restorative sleep at night, Semax provides cognitive enhancement and BDNF support during the day, ashwagandha provides 24-hour cortisol modulation. Designed for high-stress recovery phases
+- **Deep Sleep + GH Optimization Stack**: DSIP (100-300mcg before bed) + CJC-1295/Ipamorelin (100mcg/100mcg, 30 min before bed) — DSIP deepens delta-wave sleep (the phase when growth hormone is maximally released), while CJC-1295/Ipamorelin directly stimulates GH secretion. Synergistic timing: enhanced deep sleep amplifies the natural GH pulse that CJC/Ipa triggers

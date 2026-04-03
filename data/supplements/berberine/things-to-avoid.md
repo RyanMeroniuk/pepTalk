@@ -1,0 +1,17 @@
+# Berberine
+## Things to Avoid
+
+- **Taking berberine on an empty stomach:** Significantly increases GI side effects (diarrhea, cramping, nausea) and reduces absorption. Always take with food
+- **Single large doses:** Berberine has a short half-life (~5 hours). Taking the full daily dose at once (e.g., 1,500mg in one sitting) produces a sharp spike in GI irritation, increases side effects, and is less effective than split dosing. Always divide into 2-3 doses throughout the day with meals
+- **Starting at full dose:** Jumping straight to 1,500mg/day without ramping up is the primary reason people abandon berberine due to GI distress. Start at 500mg once daily, increase by 500mg/week until at target dose
+- **Combining berberine with grapefruit:** Both inhibit CYP3A4. The combination compounds drug interaction risk exponentially if any CYP3A4-metabolized medications are present
+- **Taking berberine with multiple CYP-interacting supplements:** Stacking berberine with other CYP enzyme inhibitors (goldenseal, St. John's Wort, high-dose curcumin, large amounts of grapefruit seed extract) creates unpredictable drug metabolism changes. Be conservative with combining multiple CYP-active supplements
+- **Using berberine during pregnancy or breastfeeding:** Absolutely contraindicated. Berberine stimulates uterine contractions and can displace bilirubin from albumin in neonates, causing kernicterus
+- **Chronic continuous use without breaks (debated):** Some practitioners recommend cycling berberine (8 weeks on, 2-4 weeks off) to prevent the gut microbiome from fully adapting and to maintain effectiveness. While evidence for this is anecdotal, it is a reasonable precaution
+- **Ignoring drug interactions:** Berberine's CYP enzyme inhibition profile is broad and clinically significant. Do NOT treat berberine as "just a supplement" if you take prescription medications. Consult a pharmacist who understands natural product interactions
+- **Excessive alcohol consumption:** Alcohol impairs liver function (which metabolizes berberine), disrupts blood sugar regulation (opposing berberine's effects), and damages the gut microbiome. Limit alcohol or avoid it entirely during berberine use
+- **Sedentary lifestyle:** Berberine activates AMPK, the same pathway activated by exercise. Remaining sedentary wastes significant synergistic potential. Even light daily movement (walking 20-30 minutes) substantially amplifies berberine's metabolic effects
+- **High-sugar diets:** A diet high in refined sugar and processed carbohydrates directly opposes berberine's glucose-regulating effects. Berberine works best alongside a low-to-moderate glycemic diet with adequate protein, fiber, and healthy fats
+- **Skipping blood work:** If using berberine for metabolic health, failing to monitor lab values (fasting glucose, HbA1c, lipid panel, liver enzymes) means you cannot confirm effectiveness or detect potential issues. Baseline labs plus follow-up at 3 months minimum
+- **Using unverified brands:** Berberine content can vary significantly between products. Choose brands with third-party testing (USP, NSF, ConsumerLab verified) to ensure potency and purity
+- **Combining with strong sedatives without awareness:** Berberine can potentiate CNS depressants metabolized by CYP3A4 (benzodiazepines, certain sleep medications). If you take these medications, be aware of potential increased sedation

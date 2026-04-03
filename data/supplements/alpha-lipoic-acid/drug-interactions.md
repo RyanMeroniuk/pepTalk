@@ -1,0 +1,35 @@
+# Alpha-Lipoic Acid
+## Drug Interactions
+
+- **Diabetes medications — CRITICAL:**
+  - **Drugs:** Insulin, metformin, sulfonylureas (glipizide, glyburide, glimepiride), SGLT2 inhibitors (empagliflozin, dapagliflozin), GLP-1 agonists (semaglutide, liraglutide), thiazolidinediones (pioglitazone)
+  - **Interaction:** ALA significantly lowers blood sugar through AMPK activation and enhanced insulin sensitivity. Additive hypoglycemic effect is clinically significant and well-documented
+  - **Risk:** Dangerous hypoglycemia, especially with insulin and sulfonylureas
+  - **Recommendation:** MUST monitor blood glucose closely when starting ALA. Start with a low dose (100-200mg/day) and titrate up. Inform physician; medication dose reductions are frequently needed. Do not combine ALA with diabetes medications without physician awareness
+- **Thyroid medications (levothyroxine):**
+  - **Drugs:** Levothyroxine (Synthroid, Levoxyl), liothyronine (Cytomel)
+  - **Interaction:** ALA may reduce conversion of T4 to T3 and may lower thyroid hormone levels. Some studies suggest ALA can suppress thyroid function
+  - **Recommendation:** Monitor thyroid function (TSH, free T4, free T3) when starting ALA. Space ALA and thyroid medications at least 2-4 hours apart. Hypothyroid patients should have thyroid levels checked 4-6 weeks after starting ALA
+- **Chemotherapy agents:**
+  - **Interaction:** ALA is a potent antioxidant. Some chemotherapy drugs (cisplatin, doxorubicin) generate ROS to kill cancer cells. ALA could theoretically reduce chemotherapy efficacy. Conversely, ALA may reduce cisplatin-induced nephrotoxicity (a known protective effect)
+  - **Recommendation:** Do not use ALA during active chemotherapy without oncologist approval. May be beneficial in recovery phase for chemo-induced neuropathy
+- **Blood pressure medications:**
+  - **Drugs:** ACE inhibitors, ARBs, calcium channel blockers, beta-blockers, diuretics
+  - **Interaction:** ALA modestly lowers blood pressure. Additive hypotensive effect possible
+  - **Recommendation:** Monitor blood pressure. Minor interaction for most people
+- **Anticoagulants:**
+  - **Drugs:** Warfarin, heparin, apixaban, rivaroxaban
+  - **Interaction:** ALA has mild antiplatelet properties. Theoretical increased bleeding risk with anticoagulants
+  - **Recommendation:** Inform physician of ALA use. Monitor INR if on warfarin
+- **Iron supplements:**
+  - **Interaction:** ALA chelates iron. Taking ALA simultaneously with iron supplements reduces iron absorption and may lower stored iron levels
+  - **Recommendation:** Space ALA and iron supplements at least 2-3 hours apart. Monitor ferritin levels in iron-deficient individuals
+- **Cisplatin and platinum-based chemo (specific):**
+  - **Interaction:** ALA chelates platinum. This could theoretically reduce cisplatin efficacy but also reduce cisplatin-induced kidney damage and neuropathy
+  - **Recommendation:** Complex interaction — only use under oncologist direction during treatment. Often beneficial post-treatment for neuropathy
+- **Alcohol (lifestyle):**
+  - **Interaction:** Alcohol depletes thiamine and glutathione — both critical to ALA's function. Chronic alcohol + ALA without B1 supplementation could theoretically worsen neurological outcomes
+  - **Recommendation:** If consuming alcohol regularly, ensure adequate thiamine (B1) intake. Better yet, minimize alcohol
+- **Mineral supplements (zinc, copper):**
+  - **Interaction:** ALA chelates zinc and copper along with toxic metals. Long-term high-dose ALA without mineral repletion can cause zinc and copper deficiency
+  - **Recommendation:** Supplement with zinc (15-30mg) and copper (1-2mg) when using ALA long-term at doses above 300mg/day. Take minerals 2-3 hours away from ALA

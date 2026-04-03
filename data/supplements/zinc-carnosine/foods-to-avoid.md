@@ -1,0 +1,12 @@
+# Zinc Carnosine
+## Foods to Avoid
+
+- **High-phytate foods at the same time** — Phytates (phytic acid) in whole grains, legumes, nuts, and seeds bind zinc and prevent absorption. While zinc carnosine's primary action is local (mucosal contact), minimizing phytate interference supports overall zinc status. Separate zinc carnosine from high-phytate meals by 1-2 hours. Soaking, sprouting, and fermenting these foods reduces phytate content.
+- **High-calcium foods simultaneously** — Calcium competes with zinc for absorption. Avoid taking zinc carnosine at the same time as dairy products, calcium-fortified foods, or calcium supplements. Separate by 2 hours.
+- **Alcohol** — Alcohol directly damages the gastric and intestinal mucosa, causes inflammation, increases permeability, and depletes zinc stores. Drinking alcohol while taking zinc carnosine for gut repair is counterproductive. If gut healing is the goal, alcohol reduction or elimination is strongly recommended.
+- **Spicy foods (during acute healing)** — While zinc carnosine protects the mucosa, consuming highly spicy foods during active ulcer healing or acute gastritis can irritate damaged tissue and slow recovery. Moderate spice can be reintroduced as healing progresses.
+- **Coffee on an empty stomach (during healing)** — Coffee stimulates gastric acid secretion and can aggravate existing ulcers or gastritis. If using zinc carnosine for ulcer healing, avoid coffee on an empty stomach. Consuming coffee with food buffers the acid effect.
+- **NSAIDs without protective strategy** — If you are using zinc carnosine specifically to protect against NSAID damage, ensure you are timing the zinc carnosine correctly (before or with the NSAID). NSAIDs on an empty stomach without zinc carnosine defeat the purpose of the protective protocol.
+- **Processed and fried foods** — Trans fats, seed oils, and highly processed foods promote GI inflammation and oxidative stress, directly opposing zinc carnosine's healing and anti-inflammatory effects.
+- **High-sugar foods** — Excess sugar promotes dysbiosis (unfavorable gut bacteria balance) and contributes to GI inflammation. Reducing sugar intake supports the gut environment that zinc carnosine is working to repair.
+- **Iron supplements at the same time** — Zinc and iron compete for absorption via shared transporters. Separate zinc carnosine from iron supplements by at least 2 hours to optimize absorption of both.

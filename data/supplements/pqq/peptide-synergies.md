@@ -1,0 +1,12 @@
+# PQQ (Pyrroloquinoline Quinone)
+## Peptide Synergies
+
+- **MOTS-c (premier synergy):** MOTS-c is a mitochondrial-derived peptide that activates AMPK, improves glucose metabolism, and functions as an exercise mimetic. PQQ also activates AMPK and stimulates mitochondrial biogenesis. Together, they represent the most powerful mitochondrial support combination — MOTS-c optimizes mitochondrial signaling, PQQ builds new mitochondria, and the new mitochondria produce more MOTS-c in a positive feedback loop
+- **Epitalon (longevity stack):** Epitalon activates telomerase to preserve telomere length. PQQ creates new mitochondria and protects mitochondrial DNA. Since mitochondrial dysfunction and telomere attrition are two of the primary hallmarks of aging, combining them addresses the core mechanisms of cellular aging
+- **BPC-157 (regeneration support):** BPC-157 promotes tissue repair, angiogenesis, and neuroregeneration. PQQ supports these energy-intensive processes by ensuring adequate mitochondrial capacity in healing tissues. PQQ's NGF promotion also complements BPC-157's neuroprotective effects
+- **Semax / Selank (cognitive stack):** Semax upregulates BDNF; PQQ upregulates NGF. Combining them provides comprehensive neurotrophin support for cognitive enhancement. Both protect against neurodegeneration through complementary mechanisms
+- **GH secretagogues (CJC-1295 + Ipamorelin, Sermorelin):** Growth hormone increases metabolic rate and cellular turnover. PQQ ensures the body can meet increased mitochondrial demands by creating new mitochondria during GH-driven anabolism
+- **NAD+ / NMN (comprehensive longevity):** NMN boosts NAD+ for energy metabolism and sirtuin activation. PQQ creates new mitochondria that use NAD+ for energy production. More mitochondria (PQQ) with more NAD+ (NMN) equals greater total cellular energy output
+- **Thymosin Alpha-1 (immune + mitochondria):** Immune activation is extremely energy-intensive. PQQ's mitochondrial biogenesis ensures immune cells have the energy infrastructure to mount robust responses when stimulated by Thymosin Alpha-1
+- **AOD-9604 / 5-Amino-1MQ (metabolic fat loss):** Fat oxidation occurs in mitochondria. PQQ increases the number of mitochondria available for fat burning, potentially amplifying the fat metabolism effects of AOD-9604 and 5-Amino-1MQ
+- **DSIP (sleep + recovery):** DSIP improves sleep quality, and mitochondrial biogenesis is most active during deep sleep. PQQ plus DSIP may enhance overnight mitochondrial renewal

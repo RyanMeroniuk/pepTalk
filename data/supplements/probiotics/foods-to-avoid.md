@@ -1,0 +1,12 @@
+# Probiotics
+## Foods to Avoid
+
+- **Artificial sweeteners (sucralose, aspartame, saccharin)** — Research demonstrates that artificial sweeteners disrupt gut microbiome composition, reducing Lactobacillus and Bifidobacterium populations while promoting glucose intolerance. Sucralose has been shown to reduce beneficial gut bacteria by up to 50% in animal studies. This directly counteracts probiotic supplementation.
+- **Excessive sugar and refined carbohydrates** — High sugar intake feeds pathogenic bacteria and Candida yeast, shifting the microbiome away from the beneficial strains you are supplementing. Refined carbohydrates (white bread, pastries, white rice) are rapidly fermented and can promote dysbiosis.
+- **Emulsifiers and food additives** — Carboxymethylcellulose (CMC) and polysorbate-80, common in processed foods, damage the intestinal mucus layer and promote inflammation in animal studies. This degraded mucosal barrier provides a less hospitable environment for probiotic colonization.
+- **Excessive alcohol** — Alcohol damages the intestinal epithelium, increases permeability ("leaky gut"), promotes endotoxin translocation, and shifts the microbiome toward pro-inflammatory species. Moderate to heavy alcohol use undermines probiotic benefits.
+- **Chlorinated water** — Chlorine in tap water can kill probiotic bacteria. If taking probiotic powders, mix with filtered or bottled water rather than unfiltered tap water. When swallowing probiotic capsules, a sip of tap water is unlikely to be problematic (the capsule protects the bacteria).
+- **Highly processed and ultra-processed foods** — The combination of preservatives, emulsifiers, artificial colors, and refined ingredients in ultra-processed foods creates a hostile environment for beneficial gut bacteria. A diet high in processed foods is consistently associated with reduced microbiome diversity.
+- **Excessive red meat** — High red meat consumption increases TMAO (trimethylamine N-oxide) production by gut bacteria, promotes inflammatory species, and is associated with reduced Bifidobacterium populations.
+- **Very hot beverages taken simultaneously** — Do not wash down probiotic capsules with hot coffee, tea, or soup. Heat kills live bacteria. Use room temperature or cool water.
+- **Foods you are intolerant to** — Consuming foods that trigger personal digestive inflammation (common culprits: gluten for celiacs, dairy for lactose intolerant individuals) creates an inflamed intestinal environment that impairs probiotic colonization.

@@ -1,0 +1,13 @@
+# Probiotics
+## Lifestyle Recommendations
+
+- **Eat 6+ servings of fermented foods weekly** — A landmark Stanford study found that a high-fermented-food diet increased microbiome diversity and reduced 19 inflammatory markers. Include kefir, yogurt, sauerkraut, kimchi, kombucha, miso, and tempeh in regular rotation. Diversity of fermented foods matters more than quantity of any single source.
+- **Prioritize dietary fiber** — Aim for 30-40g of fiber daily from diverse sources (vegetables, fruits, legumes, whole grains, nuts, seeds). Fiber is the primary fuel for beneficial gut bacteria. The "30 different plants per week" guideline is a practical target for microbiome diversity.
+- **Manage stress actively** — The gut-brain axis is bidirectional. Chronic stress damages gut health; gut dysbiosis worsens mental health. Implement daily stress management: meditation, breathwork, nature exposure, social connection, or journaling.
+- **Exercise regularly** — Moderate exercise (150+ minutes/week) independently increases microbiome diversity. Both aerobic and resistance training show benefits. Avoid chronic overtraining, which can increase intestinal permeability.
+- **Prioritize sleep** — 7-9 hours of consistent, quality sleep supports healthy microbiome composition. Circadian disruption (irregular schedules, shift work) is particularly harmful to gut bacteria.
+- **Spend time outdoors** — Soil exposure, interaction with animals, and diverse environmental microbiomes contribute to microbial diversity. Gardening is an excellent way to increase beneficial microbial exposure.
+- **Filter drinking water** — Remove chlorine and chloramine from drinking water (a basic carbon filter is sufficient) to protect both resident and supplemented gut bacteria. These disinfectants are effective at killing bacteria — including the ones you want.
+- **Minimize unnecessary medications** — Beyond antibiotics, many common medications alter the microbiome: PPIs, metformin, statins, SSRIs, and oral contraceptives all have documented microbiome effects. This is not a reason to stop necessary medications, but it supports the case for concurrent probiotic support.
+- **Practice "controlled messiness"** — Allow children and adults appropriate microbial exposure. Avoid unnecessary antibacterial soaps and sanitizers for routine hand washing. Regular soap and water is sufficient for most situations.
+- **Cook at home more often** — Home-cooked meals from whole ingredients support a healthier microbiome than restaurant or processed food-heavy diets. You control ingredients, cooking methods, and fermented food inclusion.

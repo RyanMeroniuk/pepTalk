@@ -1,0 +1,12 @@
+# CoQ10 (Coenzyme Q10)
+## Peptide Synergies
+
+- **MOTS-c (strong synergy):** MOTS-c is a mitochondrial-derived peptide that activates AMPK and improves mitochondrial function, glucose metabolism, and exercise capacity. CoQ10 supports the electron transport chain that MOTS-c helps optimize. Together, they provide comprehensive mitochondrial support — MOTS-c signals mitochondria to work harder, CoQ10 ensures they have the tools to do so
+- **Epitalon (anti-aging stack):** Epitalon activates telomerase and regulates melatonin production. CoQ10 protects mitochondrial DNA from oxidative damage that accelerates telomere shortening. Combining them addresses aging from two angles: telomere preservation (Epitalon) and mitochondrial protection (CoQ10)
+- **BPC-157 (tissue repair):** BPC-157 promotes angiogenesis and tissue healing. CoQ10 supports the massive energy demands of tissue repair and regeneration. Enhanced ATP availability accelerates the healing processes BPC-157 initiates
+- **Tesamorelin / Sermorelin / CJC-1295 + Ipamorelin (GH secretagogues):** Growth hormone increases metabolic rate and cellular energy demand. CoQ10 ensures mitochondria can meet the increased ATP requirements during GH-stimulated anabolism and fat metabolism
+- **AOD-9604 (fat metabolism):** AOD-9604 targets fat metabolism without full GH effects. CoQ10 supports the mitochondrial beta-oxidation pathways that burn fatty acids released by AOD-9604
+- **Semaglutide / Tirzepatide / Retatrutide (metabolic peptides):** GLP-1 agonists improve metabolic function and promote weight loss. CoQ10 supports mitochondrial energy production during caloric restriction and metabolic shift. May help mitigate fatigue some users experience on GLP-1 therapies
+- **NAD+ / NMN (longevity stack):** NMN boosts NAD+ levels, which drives NADH production in the Krebs cycle. CoQ10 accepts electrons from NADH (via Complex I) in the ETC. They are sequential links in the energy production chain — NMN fuels it, CoQ10 carries it forward
+- **Thymosin Alpha-1 (immune support):** Immune cells have high mitochondrial demands during activation. CoQ10 supports the energy-intensive process of immune cell proliferation and function that Thymosin Alpha-1 stimulates
+- **SS-31 / Elamipretide (mitochondrial peptide):** SS-31 targets cardiolipin in the inner mitochondrial membrane, stabilizing the ETC complexes. CoQ10 is the mobile carrier between those complexes. Combining them optimizes both the structural integrity and functional capacity of the ETC

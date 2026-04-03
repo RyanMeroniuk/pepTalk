@@ -1,0 +1,14 @@
+# Larazotide (AT-1001)
+
+## Lifestyle Recommendations
+
+- **Strict Gluten-Free Diet (Non-Negotiable for Celiac)**: Larazotide is designed as an adjunct to a gluten-free diet, not a replacement. Even with larazotide, intentional gluten consumption damages the intestinal villi in celiac patients. The peptide helps protect against incidental/accidental exposure, not deliberate intake
+- **Meal Timing & Dosing Coordination**: Take larazotide before meals (as per clinical trial protocol: 3x daily before meals). This ensures the tight junction regulator is active in the gut lumen during digestion when zonulin release is triggered by food antigens
+- **Eat in a Calm State**: Stress activates the zonulin pathway and increases intestinal permeability independently of food triggers. Sit down for meals, take 3-5 deep breaths before eating, chew thoroughly (20-30 chews per bite), and avoid eating while stressed or distracted
+- **Meal Spacing**: Allow 3-4 hours between meals. The migrating motor complex (MMC) sweeps the small intestine between meals, removing debris and bacteria. Constant snacking impairs this function and increases bacterial exposure to the intestinal barrier
+- **Sleep for Gut Barrier Repair**: Intestinal epithelial cells regenerate during sleep. Tight junction proteins (claudins, occludins, ZO-1) are actively repaired overnight. Target 7-9 hours of quality sleep. Circadian disruption alone increases intestinal permeability
+- **Stress Management (Gut-Brain Axis)**: Psychological stress triggers zonulin release and opens tight junctions — the exact mechanism larazotide blocks. Daily stress management is essential: diaphragmatic breathing, meditation, vagal toning exercises (gargling, humming, cold water face immersion), and regular relaxation practices
+- **Food Journal**: Track meals and symptoms to identify foods that trigger gut symptoms even on a gluten-free diet. Many celiac patients react to additional foods (dairy, corn, soy, oats). An elimination-reintroduction approach helps identify personal triggers
+- **Cross-Contamination Awareness**: Even trace gluten (20 ppm) triggers immune response in celiac disease. Use dedicated kitchen equipment (toasters, cutting boards, colanders), avoid shared cooking oil, and verify restaurant practices. Larazotide provides an additional safety net, but vigilance remains important
+- **Gentle Exercise**: Walking (15-20 minutes after meals) promotes healthy gut motility. Moderate exercise reduces systemic inflammation. Avoid high-intensity exercise immediately after meals, which diverts blood from the GI tract
+- **Hydration**: Adequate water intake supports mucosal lining integrity and healthy digestion. Drink between meals rather than during to avoid diluting digestive enzymes. Target half your body weight in ounces daily

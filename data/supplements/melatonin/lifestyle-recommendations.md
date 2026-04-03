@@ -1,0 +1,15 @@
+# Melatonin
+## Lifestyle Recommendations
+
+- **Morning bright light exposure** — Get 10-30 minutes of bright sunlight within the first hour of waking. This sets the "start clock" for the circadian cycle, ensuring melatonin onset occurs approximately 14-16 hours later. Overcast days still provide 10,000+ lux. If sunlight is unavailable, use a 10,000 lux light therapy lamp for 20-30 minutes.
+- **Evening light discipline** — Dim lights to below 10 lux 2 hours before bed. Use amber or red-tinted lighting. Wear blue-light-blocking glasses if using screens. This allows endogenous melatonin production to begin naturally.
+- **Consistent sleep-wake schedule** — Go to bed and wake up within a 30-minute window every day, including weekends. This is the single most powerful circadian intervention and makes melatonin supplementation far more effective.
+- **Cool bedroom environment** — Set thermostat to 60-67 degrees Fahrenheit (15-19 degrees Celsius). Use breathable bedding. Consider a cooling mattress pad. The drop in core body temperature is a critical sleep trigger that synergizes with melatonin's thermoregulatory effects.
+- **Hot bath or shower 1-2 hours before bed** — Paradoxically, warming the body before bed accelerates subsequent core cooling through vasodilation. A 10-minute hot bath or shower 90 minutes before bed can advance sleep onset by 10-15 minutes.
+- **Evening wind-down routine** — Create a consistent 30-60 minute pre-sleep ritual: dim lights, put away screens, gentle stretching, reading (physical book), meditation, or journaling. This trains the brain to associate these cues with the transition to sleep.
+- **Magnesium supplementation in the evening** — Magnesium glycinate or threonate (200-400mg) taken with melatonin enhances both relaxation and melatonin synthesis. Magnesium is a cofactor for N-acetyltransferase.
+- **Regular exercise, timed appropriately** — Moderate exercise (30-60 minutes) earlier in the day improves sleep quality and supports circadian rhythm. Morning or early afternoon exercise is ideal. Avoid vigorous exercise within 3-4 hours of bedtime.
+- **Manage evening cortisol** — Practice stress-reduction techniques in the evening: box breathing (4-4-4-4), body scan meditation, yoga nidra, or progressive muscle relaxation. High evening cortisol directly suppresses melatonin.
+- **Limit evening fluid intake** — Reduce fluids 2 hours before bed to minimize nighttime awakenings for urination, which disrupts melatonin-supported sleep cycles.
+- **Dark sleeping environment** — Use blackout curtains or a quality sleep mask. Even small amounts of light (a charging LED, hallway light under the door) can suppress melatonin production during sleep. The bedroom should be dark enough that you cannot see your hand in front of your face.
+- **Address sleep apnea** — Untreated sleep apnea disrupts sleep architecture regardless of melatonin status. If you snore, wake unrefreshed, or have daytime fatigue despite adequate sleep duration, get evaluated.

@@ -1,0 +1,12 @@
+# Probiotics
+## Mechanisms of Action
+
+- **Competitive exclusion** — Beneficial probiotic strains compete with pathogenic bacteria for adhesion sites on the intestinal epithelium and for available nutrients. By occupying these ecological niches, probiotics reduce pathogen colonization. Lactobacillus rhamnosus GG is particularly effective at adhering to intestinal mucosa.
+- **Antimicrobial substance production** — Many probiotic strains produce bacteriocins (antimicrobial peptides), organic acids (lactic acid, acetic acid), and hydrogen peroxide that directly inhibit pathogenic organisms including C. difficile, E. coli, and Salmonella.
+- **Short-chain fatty acid (SCFA) production** — Probiotics ferment dietary fiber into SCFAs (butyrate, propionate, acetate). Butyrate is the primary energy source for colonocytes, maintains intestinal barrier integrity, reduces inflammation via HDAC inhibition, and supports regulatory T-cell development. Propionate influences hepatic gluconeogenesis and lipid metabolism.
+- **Intestinal barrier reinforcement** — Specific strains upregulate tight junction proteins (occludin, claudins, ZO-1), increase mucin production by goblet cells, and reduce intestinal permeability ("leaky gut"). This prevents translocation of bacterial endotoxins (lipopolysaccharides) into the bloodstream.
+- **Immune modulation** — Probiotics interact with dendritic cells, macrophages, and epithelial cells in the GALT through pattern recognition receptors (TLRs, NOD receptors). This modulates the Th1/Th2/Th17/Treg balance, promotes tolerogenic immune responses, and enhances secretory IgA production.
+- **Neurotransmitter production and modulation** — Certain strains produce GABA (Lactobacillus brevis), serotonin precursors (tryptophan metabolism), dopamine, and norepinephrine. They also modulate vagus nerve signaling, influencing brain function via the gut-brain axis.
+- **Bile acid metabolism** — Probiotics possess bile salt hydrolase (BSH) enzymes that deconjugate bile acids, influencing cholesterol metabolism, FXR/TGR5 receptor signaling, and fat absorption.
+- **Enzyme production** — Probiotics produce lactase (improving lactose digestion), phytase (releasing minerals from phytates), and various proteases and lipases that aid digestion.
+- **Biofilm disruption** — Some probiotic strains produce biosurfactants and enzymes that disrupt pathogenic biofilms in the gut, making infections more susceptible to immune clearance.

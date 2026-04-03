@@ -1,0 +1,19 @@
+# DSIP (Delta Sleep-Inducing Peptide)
+
+## Lifestyle Recommendations
+
+- **Non-Negotiable Sleep Schedule**: Go to bed and wake at the same time every single day, including weekends. DSIP normalizes sleep architecture, but it cannot override a chaotic schedule. Consistency is the foundation — even 30 minutes of variation can fragment the circadian rhythm DSIP is working to stabilize
+- **Morning Sunlight Exposure (10-20 min within first hour)**: Bright morning light is the strongest circadian time-setter. It suppresses residual melatonin, triggers cortisol awakening response, and sets the 14-16 hour countdown to natural sleep onset. This anchors the sleep-wake cycle DSIP is designed to restore
+- **Complete Darkness for Sleep**: Use blackout curtains, cover all LED lights (clocks, chargers, standby indicators), and consider an eye mask. Even dim light (5-10 lux) detected through closed eyelids can suppress melatonin and reduce delta-wave sleep — the exact sleep stage DSIP promotes
+- **Cool Bedroom Temperature (65-68°F / 18-20°C)**: Core body temperature must drop 2-3°F to initiate deep sleep. A cool room facilitates this thermoregulatory signal, amplifying DSIP's delta-wave promotion. Consider a hot shower 1-2 hours before bed to trigger the subsequent core temperature drop
+- **Hot Bath/Shower 90 Minutes Before Bed**: Raises skin temperature, causing vasodilation and subsequent core temperature drop — a powerful physiological sleep trigger that synergizes with DSIP's delta-sleep promotion
+- **Injection Timing Protocol**: Administer DSIP 30-60 minutes before target bedtime, consistently at the same time each night. The peptide's effects align with the body's pre-sleep neurochemical cascade — timing consistency is critical for optimal results
+- **Digital Sunset (screens off 60-90 min before bed)**: Blue light from screens suppresses melatonin and activates alerting pathways in the brain. DSIP promotes natural sleep onset — screens in the final hour directly fight this mechanism. Use blue-light-blocking glasses if screens are unavoidable
+- **Caffeine Curfew (no caffeine after 12 PM)**: Caffeine has a half-life of 5-7 hours and blocks adenosine receptors that build sleep pressure. Afternoon caffeine can reduce delta-wave sleep by up to 20% — directly opposing DSIP's primary mechanism
+- **No Alcohol as a "Sleep Aid"**: Alcohol may feel sedating but it destroys sleep architecture, suppresses delta sleep, causes nighttime awakenings, and disrupts REM. It directly counteracts every benefit DSIP provides
+- **Evening Wind-Down Routine (30-60 min)**: Create a consistent pre-sleep ritual: dim lighting, light stretching, reading (physical book), breathwork, or meditation. This trains the brain to associate these cues with sleep onset, complementing DSIP's neurochemical effects
+- **Stress Management Practice**: DSIP reduces cortisol, but chronic unmanaged stress continuously elevates it. Implement at least one daily stress-reduction practice: meditation, breathwork, journaling, nature walks, or progressive muscle relaxation
+- **No Vigorous Exercise Within 3-4 Hours of Bed**: Exercise raises cortisol and core body temperature, both of which must be declining for sleep onset. Morning or early afternoon exercise is ideal — it improves sleep quality that same night
+- **Limit Naps (max 20 min, before 1 PM)**: Napping reduces adenosine sleep pressure, potentially blunting DSIP's effectiveness at bedtime. If napping is necessary, keep it short and early
+- **Address Sleep Environment Noise**: Use white noise, earplugs, or sound insulation. Noise arousals fragment sleep even when they do not fully wake you, reducing the delta-wave sleep DSIP promotes
+- **Elevate Legs / Use Supportive Mattress**: Physical comfort directly affects sleep maintenance. Evaluate your mattress and pillow — pain and discomfort are underrecognized causes of poor sleep that no peptide can override

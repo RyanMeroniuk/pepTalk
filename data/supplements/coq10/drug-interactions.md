@@ -1,0 +1,35 @@
+# CoQ10 (Coenzyme Q10)
+## Drug Interactions
+
+- **Statins (HMG-CoA reductase inhibitors) — CRITICAL:**
+  - **Drugs:** Atorvastatin (Lipitor), rosuvastatin (Crestor), simvastatin (Zocor), pravastatin (Pravachol), lovastatin (Mevacor), fluvastatin (Lescol), pitavastatin (Livalo)
+  - **Interaction:** Statins block the mevalonate pathway, which produces both cholesterol and CoQ10. Statin use depletes CoQ10 by 16-54% depending on the statin and dose
+  - **Recommendation:** All statin users should supplement with CoQ10 (200-300mg/day ubiquinol). This is not optional — it is a well-documented depletion
+  - **Evidence:** Multiple studies confirm statin-induced CoQ10 depletion and symptom improvement with supplementation
+- **Warfarin (Coumadin) — IMPORTANT:**
+  - **Interaction:** CoQ10 has a chemical structure similar to vitamin K2 and may reduce warfarin's anticoagulant effect by competing at vitamin K-dependent clotting factor sites
+  - **Recommendation:** Do not start, stop, or change CoQ10 dose without informing the prescribing physician. INR must be monitored closely when initiating or adjusting CoQ10. Stable dosing is key
+- **Antihypertensive medications:**
+  - **Drugs:** ACE inhibitors, ARBs, calcium channel blockers, beta-blockers, diuretics
+  - **Interaction:** CoQ10 lowers blood pressure independently (11-17 mmHg systolic). Additive hypotensive effect may cause dizziness or lightheadedness
+  - **Recommendation:** Monitor blood pressure regularly. Medication doses may need adjustment downward over time
+- **Insulin and oral hypoglycemics:**
+  - **Drugs:** Insulin, metformin, sulfonylureas (glipizide, glyburide), SGLT2 inhibitors
+  - **Interaction:** CoQ10 may lower blood glucose levels. Additive hypoglycemic effect possible
+  - **Recommendation:** Monitor blood glucose more frequently when starting CoQ10. Adjust diabetes medications as needed under physician guidance
+- **Chemotherapy agents:**
+  - **Drugs:** Doxorubicin (Adriamycin), daunorubicin, and other anthracyclines
+  - **Interaction:** CoQ10 may protect the heart from anthracycline-induced cardiotoxicity (a documented benefit). However, theoretical concern exists that antioxidants could reduce chemotherapy efficacy
+  - **Recommendation:** Use only under oncologist supervision during active cancer treatment
+- **Beta-blockers (specific interaction):**
+  - **Drugs:** Propranolol, metoprolol, atenolol
+  - **Interaction:** Some beta-blockers inhibit CoQ10-dependent enzymes, further depleting CoQ10. Supplementation may be beneficial
+  - **Recommendation:** Consider CoQ10 supplementation, especially with propranolol which has the strongest inhibitory effect
+- **Tricyclic antidepressants:**
+  - **Drugs:** Amitriptyline, nortriptyline, imipramine
+  - **Interaction:** TCAs may inhibit CoQ10-dependent enzymes in the mitochondria
+  - **Recommendation:** CoQ10 supplementation may help mitigate fatigue associated with TCA use
+- **Blood thinners (beyond warfarin):**
+  - **Drugs:** Aspirin, clopidogrel (Plavix), heparin
+  - **Interaction:** Minor — CoQ10's vitamin K-like effect is most relevant to warfarin. Less significant with other anticoagulants, but caution is warranted
+  - **Recommendation:** Inform physician of CoQ10 use if on any anticoagulant therapy

@@ -1,0 +1,13 @@
+# Ashwagandha
+## Things to Avoid
+
+- **Continuous long-term use without cycling:** Prolonged uninterrupted use (3+ months) is associated with anhedonia, emotional blunting, and reduced motivation in some individuals. Cycle 8-12 weeks on, 2-4 weeks off to prevent this and to allow the HPA axis to maintain its own regulatory capacity
+- **Taking without knowing your thyroid status:** Ashwagandha can significantly increase T3 and T4 levels. If you have hyperthyroidism, Graves' disease, thyroid nodules, or are on thyroid medication, ashwagandha could worsen your condition or alter medication requirements. Get baseline thyroid labs before starting
+- **Using during pregnancy:** Ashwagandha is traditionally classified as potentially abortifacient at high doses. Contraindicated during pregnancy. Insufficient safety data for breastfeeding — avoid or use only under practitioner guidance
+- **Combining with sedatives or anxiolytics without awareness:** Ashwagandha's GABAergic activity can potentiate the effects of benzodiazepines (Xanax, Valium, Klonopin), sleep medications (Ambien, trazodone), and alcohol. Excessive sedation, drowsiness, and impaired coordination are possible. Start with lower ashwagandha doses if combining
+- **Using with autoimmune conditions without supervision:** Ashwagandha stimulates immune function. In autoimmune diseases (lupus, RA, MS, Hashimoto's, type 1 diabetes), this immune stimulation may worsen the disease by further activating the overactive immune system
+- **Taking on a completely empty stomach:** Can cause nausea and GI discomfort. Always take with food or at least with milk/a small snack
+- **Ignoring product quality:** Generic ashwagandha powders vary wildly in withanolide content and may contain fillers, heavy metals, or leaf material marketed as root. Use KSM-66 or Sensoril branded extracts for reliable potency and safety
+- **Expecting immediate results:** Ashwagandha is not an acute anxiolytic — it works by gradually modulating the HPA axis and cortisol patterns. Most clinical benefits emerge over 2-8 weeks. Do not abandon it after a few days
+- **Combining with immunosuppressive drugs:** Ashwagandha's immune-stimulating effects may counteract immunosuppressive medications (used after organ transplant or for autoimmune conditions)
+- **High doses of leaf extract for extended periods:** Withaferin A, concentrated in leaves, has cytotoxic properties. While this is being studied for anti-cancer applications, prolonged high-dose leaf extract is not advisable for general supplementation. Stick to root extract or root+leaf at studied doses
