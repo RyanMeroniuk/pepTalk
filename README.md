@@ -34,6 +34,23 @@ It's not just a reference tool. It's a coach.
 
 The mobile app is a thin client — all intelligence lives on the backend. The app sends your question plus your current stack, the backend searches its knowledge base, builds a context-rich prompt, calls the LLM, and returns a grounded answer.
 
+## Knowledge Graph
+
+On top of vector search, PepTalk uses a **knowledge graph** — an adjacency list of every relationship between peptides, supplements, drugs, conditions, and lifestyle factors. It's built with NetworkX (Python library, no external database) and persisted as a JSON file.
+
+### What it stores
+- **103 nodes**: 32 peptides, 31 supplements, 27 drugs, 13 conditions
+- **2,493 edges**: synergies, conflicts, stacking protocols, contraindications, timing conflicts, and support relationships
+
+### Why it matters
+Vector search finds *similar text*. The graph finds *explicit relationships*. Together they give the AI both relevant content and structured facts:
+
+- **Without graph**: "What supplements should I add?" → vector search returns generic supplement files
+- **With graph**: The AI also gets "semaglutide SYNERGIZES_WITH creatine (preserves lean mass), semaglutide CONFLICTS_WITH sulfonylureas (hypoglycemia risk), bpc-157 SYNERGIZES_WITH collagen-peptides (tissue repair)" — explicit facts it can reason over
+
+### How it's built
+The `build_graph.py` script parses all stacking-protocols, drug-interactions, supplement-interactions, and peptide-synergies files using regex. No LLM needed — the files are structured enough to extract relationships directly. Takes under a second to build.
+
 ## Scheduler & Tracker
 
 Think of it like MyFitnessPal, but for peptides and supplements instead of calories.
@@ -183,10 +200,24 @@ pepTalk/
 │       │   └── ... (8 files each)
 │       └── ... (10 lifestyle directories)
 ├── backend/
+│   ├── app/
+│   │   ├── main.py                    # FastAPI entry point
+│   │   ├── config.py                  # Settings, system prompt
+│   │   ├── dependencies.py            # Shared model + ChromaDB singletons
+│   │   ├── graph_utils.py             # Knowledge graph query helpers
+│   │   └── routers/
+│   │       ├── chat.py                # POST /chat (streaming RAG)
+│   │       ├── browse.py              # GET /peptides, /supplements, /lifestyle
+│   │       └── search.py              # GET /search, POST /check-conflicts
+│   ├── ingest.py                      # Builds vector database from data/
+│   ├── build_graph.py                 # Builds knowledge graph from data/
+│   ├── requirements.txt               # Python dependencies
+│   ├── .env.example                   # API key template
 │   ├── .venv/                         # Python virtual environment (gitignored)
 │   ├── models/                        # Embedding model (gitignored, ~87MB)
 │   │   └── all-MiniLM-L6-v2/         # Local sentence-transformer model
-│   └── requirements.txt               # Python dependencies
+│   ├── chroma_db/                     # Vector database (gitignored)
+│   └── graph.json                     # Knowledge graph (gitignored, ~800KB)
 └── app/                               # React Native app (coming soon)
 ```
 
@@ -210,9 +241,20 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 model.save('models/all-MiniLM-L6-v2')
 print('Model downloaded.')
 "
+
+# Copy .env.example to .env and add your API key
+cp .env.example .env
+# Edit .env and add your GOOGLE_API_KEY (from https://aistudio.google.com/apikey)
+
+# Build the vector database and knowledge graph
+python ingest.py        # Embeds 969 files into ChromaDB (~6 seconds)
+python build_graph.py   # Extracts relationships into graph.json (~1 second)
+
+# Start the server
+uvicorn app.main:app --reload
 ```
 
-The embedding model and virtual environment are gitignored (they're large binary files). This setup script re-downloads them locally in under a minute.
+The embedding model, vector database, and knowledge graph are all gitignored (large/generated files). This setup rebuilds them locally in under a minute.
 
 ## Cost Projections
 
