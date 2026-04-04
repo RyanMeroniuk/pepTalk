@@ -15,7 +15,7 @@ CHROMA_PATH = BACKEND_DIR / "chroma_db"
 
 # LLM
 LLM_MODEL = os.getenv("LLM_MODEL", "gemini/gemini-2.0-flash")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
 # RAG settings

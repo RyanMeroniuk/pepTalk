@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import GEMINI_API_KEY, ANTHROPIC_API_KEY
+from app.config import GOOGLE_API_KEY, ANTHROPIC_API_KEY
 from app.dependencies import get_model, get_collection
 from app.routers import browse, chat, search
 
@@ -15,8 +15,10 @@ from app.routers import browse, chat, search
 async def lifespan(app: FastAPI):
     """Load ML model and ChromaDB on startup."""
     # Set API keys for LiteLLM
-    if GEMINI_API_KEY:
-        os.environ["GEMINI_API_KEY"] = GEMINI_API_KEY
+    # LiteLLM's gemini/ provider checks GEMINI_API_KEY
+    if GOOGLE_API_KEY:
+        os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+        os.environ["GEMINI_API_KEY"] = GOOGLE_API_KEY
     if ANTHROPIC_API_KEY:
         os.environ["ANTHROPIC_API_KEY"] = ANTHROPIC_API_KEY
 

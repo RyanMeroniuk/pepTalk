@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from app.config import LLM_MODEL, RAG_TOP_K, RAG_SCORE_THRESHOLD, SYSTEM_PROMPT
 from app.dependencies import get_collection, get_model
+from app.graph_utils import get_stack_context
 
 router = APIRouter()
 
@@ -98,6 +99,13 @@ def build_prompt(
             dose_str = f" ({item.dose})" if item.dose else ""
             stack_text += f"- {item.item} [{item.category}]{dose_str}\n"
         messages.append({"role": "system", "content": stack_text})
+
+    # Add knowledge graph relationship context
+    if stack:
+        stack_items = [item.item for item in stack]
+        graph_context = get_stack_context(stack_items)
+        if graph_context:
+            messages.append({"role": "system", "content": f"RELATIONSHIP CONTEXT (from knowledge graph):\n{graph_context}"})
 
     # Add retrieved knowledge base context
     if chunks:
