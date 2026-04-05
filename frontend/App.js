@@ -11,6 +11,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import MarkdownBubble from './components/MarkdownBubble';
 
 // Point at your backend — use your Mac's local IP so your phone can reach it
 // To find your IP: run `ipconfig getifaddr en0` in terminal
@@ -73,9 +74,8 @@ export default function App() {
         }
       }
 
-      if (sources.length > 0) {
-        fullReply += '\n\n---\nSources: ' + sources.map((s) => s.split('/').pop()).join(', ');
-      }
+      // Strip any source lines the LLM may self-generate
+      fullReply = fullReply.replace(/\n{1,3}---\n*Sources?:.*$/s, '').trim();
 
       setMessages((prev) => [...prev, { role: 'ai', text: fullReply || 'No response.' }]);
 
@@ -123,14 +123,13 @@ export default function App() {
               msg.role === 'user' ? styles.userBubble : styles.aiBubble,
             ]}
           >
-            <Text
-              style={
-                msg.role === 'user' ? styles.userText : styles.aiText
-              }
-              selectable
-            >
-              {msg.text}
-            </Text>
+            {msg.role === 'user' ? (
+              <Text style={styles.userText} selectable>
+                {msg.text}
+              </Text>
+            ) : (
+              <MarkdownBubble>{msg.text}</MarkdownBubble>
+            )}
           </View>
         ))}
         {loading && (
