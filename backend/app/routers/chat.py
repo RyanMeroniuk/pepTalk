@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from litellm import acompletion
 from pydantic import BaseModel
 
-from app.config import LLM_MODEL, RAG_TOP_K, RAG_SCORE_THRESHOLD, SYSTEM_PROMPT
+from app.config import LLM_MODEL, RAG_TOP_K, RAG_SCORE_THRESHOLD, SYSTEM_PROMPT, STACK_REVIEW_PROMPT
 from app.dependencies import get_collection, get_model
 from app.graph_utils import get_stack_context
 
@@ -30,6 +30,10 @@ class ChatRequest(BaseModel):
     message: str
     stack: list[StackItem] = []
     history: list[ChatMessage] = []
+
+
+class StackReviewRequest(BaseModel):
+    stack: list[StackItem]
 
 
 def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:
@@ -165,6 +169,83 @@ async def chat(request: ChatRequest):
     )
 
     # Collect source file paths for citation
+    sources = [chunk["id"] for chunk in chunks]
+
+    return StreamingResponse(
+        stream_response(messages, sources),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+def get_stack_chunks(stack: list[StackItem]) -> list[dict]:
+    """Pull the most relevant knowledge base chunks for each stack item."""
+    model = get_model()
+    collection = get_collection()
+    chunks = []
+    seen_ids = set()
+
+    for stack_item in stack[:10]:
+        # Search for key sections: interactions, dosing, side effects, stacking
+        review_query = f"{stack_item.item} interactions dosing side effects stacking"
+        query_embedding = model.encode(review_query).tolist()
+
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=3,
+            where={"item": stack_item.item},
+        )
+
+        for doc_id, document, distance in zip(
+            results["ids"][0], results["documents"][0], results["distances"][0]
+        ):
+            if doc_id not in seen_ids:
+                similarity = 1 - distance
+                if similarity >= RAG_SCORE_THRESHOLD:
+                    chunks.append({"id": doc_id, "content": document, "score": similarity})
+                    seen_ids.add(doc_id)
+
+    chunks.sort(key=lambda x: x["score"], reverse=True)
+    return chunks[:20]  # allow more chunks for a thorough review
+
+
+@router.post("/chat/stack-review")
+async def chat_stack_review(request: StackReviewRequest):
+    """AI-powered stack review — analyzes the full stack with a dedicated review prompt."""
+    # Get relevant chunks for each stack item
+    chunks = get_stack_chunks(request.stack)
+
+    # Build review prompt
+    messages = [{"role": "system", "content": STACK_REVIEW_PROMPT}]
+
+    # Stack listing
+    stack_text = "USER'S CURRENT STACK:\n"
+    for item in request.stack:
+        dose_str = f" ({item.dose})" if item.dose else ""
+        stack_text += f"- {item.item} [{item.category}]{dose_str}\n"
+    messages.append({"role": "system", "content": stack_text})
+
+    # Graph context
+    stack_items = [item.item for item in request.stack]
+    graph_context = get_stack_context(stack_items)
+    if graph_context:
+        messages.append({"role": "system", "content": f"RELATIONSHIP CONTEXT (from knowledge graph):\n{graph_context}"})
+
+    # Knowledge base chunks
+    if chunks:
+        context_text = "KNOWLEDGE BASE CONTEXT:\n\n"
+        for chunk in chunks:
+            context_text += f"--- Source: {chunk['id']} ---\n"
+            context_text += chunk["content"] + "\n\n"
+        messages.append({"role": "system", "content": context_text})
+
+    # The review request
+    messages.append({"role": "user", "content": "Analyze my current stack. Provide a full review covering risks, timing, synergies, and suggestions."})
+
     sources = [chunk["id"] for chunk in chunks]
 
     return StreamingResponse(

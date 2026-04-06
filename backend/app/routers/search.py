@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from app.config import RAG_SCORE_THRESHOLD
 from app.dependencies import get_collection, get_model
-from app.graph_utils import get_conflicts, get_timing_conflicts, get_synergies, get_graph_stats
+from app.graph_utils import get_conflicts, get_timing_conflicts, get_synergies, get_stack_context, get_graph_stats
 
 router = APIRouter()
 
@@ -84,6 +84,40 @@ async def check_conflicts(request: ConflictRequest):
     return {
         "conflicts": conflicts,
         "timing_conflicts": timing,
+    }
+
+
+@router.post("/stack-review")
+async def stack_review(request: ConflictRequest):
+    """Full stack review — conflicts, synergies, timing issues from the knowledge graph."""
+    stack_items = [item.item for item in request.stack]
+
+    conflicts = get_conflicts(stack_items)
+    timing = get_timing_conflicts(stack_items)
+
+    # Get synergies for each item in the stack
+    all_synergies = []
+    seen_pairs = set()
+    for item_name in stack_items:
+        for syn in get_synergies(item_name):
+            # Only include synergies between items in the stack
+            pair = tuple(sorted([item_name.lower(), syn["target"]]))
+            if syn["target"] in [s.lower() for s in stack_items] and pair not in seen_pairs:
+                seen_pairs.add(pair)
+                all_synergies.append({
+                    "items": list(pair),
+                    "relationship": syn["relationship"],
+                    "mechanism": syn["mechanism"],
+                    "strength": syn["strength"],
+                })
+
+    summary = get_stack_context(stack_items)
+
+    return {
+        "conflicts": conflicts,
+        "timing_conflicts": timing,
+        "synergies": all_synergies,
+        "summary": summary,
     }
 
 
