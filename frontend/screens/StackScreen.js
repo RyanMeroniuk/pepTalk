@@ -1,39 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Modal,
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useStack } from '../context/StackContext';
+import { getItemsForDate, todayString, formatDateHeader } from '../utils/schedule';
+import DateStrip from '../components/DateStrip';
+import QuickActions from '../components/QuickActions';
+import DoseCheckbox from '../components/DoseCheckbox';
 import ItemPickerModal from '../components/ItemPickerModal';
+import ScheduleFormModal from '../components/ScheduleFormModal';
 import StackReviewModal from '../components/StackReviewModal';
 
 const API_URL = 'http://10.0.0.239:8000';
 
 export default function StackScreen() {
-  const { stack, addItem, removeItem } = useStack();
+  const navigation = useNavigation();
+  const { stack, addItem, removeItem, loadLogsForDate, logDose, unlogDose, isLogged } = useStack();
+
+  const [selectedDate, setSelectedDate] = useState(todayString());
   const [showReview, setShowReview] = useState(false);
 
-  // Data from backend
+  // Backend data
   const [peptides, setPeptides] = useState([]);
   const [supplements, setSupplements] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   // Add flow state
-  const [pendingTimeSlot, setPendingTimeSlot] = useState(null); // 'morning' | 'night'
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [showItemPicker, setShowItemPicker] = useState(false);
-  const [pickerCategory, setPickerCategory] = useState(null); // 'peptide' | 'supplement'
+  const [pickerCategory, setPickerCategory] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [showDoseInput, setShowDoseInput] = useState(false);
-  const [doseText, setDoseText] = useState('');
+  const [showScheduleForm, setShowScheduleForm] = useState(false);
 
+  // Fetch backend data
   useEffect(() => {
     Promise.all([
       fetch(`${API_URL}/peptides`).then((r) => r.json()),
@@ -47,11 +54,18 @@ export default function StackScreen() {
       .catch(() => setDataLoaded(true));
   }, []);
 
-  const morningItems = stack.filter((s) => s.timeSlot === 'morning');
-  const nightItems = stack.filter((s) => s.timeSlot === 'night');
+  // Load dose logs when date changes
+  useEffect(() => {
+    loadLogsForDate(selectedDate);
+  }, [selectedDate, loadLogsForDate]);
 
-  const handleAddPress = (timeSlot) => {
-    setPendingTimeSlot(timeSlot);
+  // Compute items for the selected date
+  const dayItems = getItemsForDate(stack, selectedDate);
+  const morningItems = dayItems.filter((s) => s.timeSlot === 'morning');
+  const nightItems = dayItems.filter((s) => s.timeSlot === 'night');
+
+  // --- Add Flow ---
+  const handleAddPress = () => {
     setShowCategoryPicker(true);
   };
 
@@ -64,74 +78,88 @@ export default function StackScreen() {
   const handleItemSelect = (item) => {
     setSelectedItem(item);
     setShowItemPicker(false);
-    setDoseText('');
-    setShowDoseInput(true);
+    setShowScheduleForm(true);
   };
 
-  const handleDoseConfirm = () => {
+  const handleScheduleConfirm = (scheduleData) => {
     if (selectedItem) {
       addItem({
         item: selectedItem.name,
         slug: selectedItem.slug,
         category: pickerCategory,
-        dose: doseText.trim() || '',
-        timeSlot: pendingTimeSlot,
+        ...scheduleData,
       });
     }
     resetAddFlow();
   };
 
   const resetAddFlow = () => {
-    setShowDoseInput(false);
+    setShowScheduleForm(false);
     setShowItemPicker(false);
     setShowCategoryPicker(false);
-    setPendingTimeSlot(null);
     setSelectedItem(null);
     setPickerCategory(null);
-    setDoseText('');
   };
 
-  const renderCard = (item) => (
-    <View key={item.id} style={styles.card}>
-      <View style={styles.cardLeft}>
-        <View style={styles.cardHeader}>
-          <Text style={styles.cardName}>{item.item}</Text>
-          <View
-            style={[
-              styles.categoryPill,
-              item.category === 'peptide' ? styles.pillPeptide : styles.pillSupplement,
-            ]}
-          >
-            <Text style={styles.pillText}>{item.category}</Text>
+  // --- Dose Logging ---
+  const handleToggleDose = useCallback(
+    (itemId) => {
+      if (isLogged(selectedDate, itemId)) {
+        unlogDose(selectedDate, itemId);
+      } else {
+        logDose(selectedDate, itemId);
+      }
+    },
+    [selectedDate, isLogged, logDose, unlogDose]
+  );
+
+  // --- Rendering ---
+  const renderCard = (item) => {
+    const checked = isLogged(selectedDate, item.id);
+    return (
+      <View key={item.id} style={[styles.card, checked && styles.cardChecked]}>
+        <DoseCheckbox checked={checked} onToggle={() => handleToggleDose(item.id)} />
+        <View style={styles.cardContent}>
+          <View style={styles.cardHeader}>
+            <Text style={[styles.cardName, checked && styles.cardNameChecked]}>{item.item}</Text>
+            <View
+              style={[
+                styles.categoryPill,
+                item.category === 'peptide' ? styles.pillPeptide : styles.pillSupplement,
+              ]}
+            >
+              <Text style={styles.pillText}>{item.category}</Text>
+            </View>
+          </View>
+          <View style={styles.cardMeta}>
+            {item.dose ? <Text style={styles.cardDose}>{item.dose}</Text> : null}
+            {item.route && (
+              <View style={styles.routePill}>
+                <Text style={styles.routeText}>{item.route}</Text>
+              </View>
+            )}
           </View>
         </View>
-        {item.dose ? <Text style={styles.cardDose}>{item.dose}</Text> : null}
+        <TouchableOpacity onPress={() => removeItem(item.id)} style={styles.deleteBtn}>
+          <Ionicons name="trash-outline" size={16} color="#555" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => removeItem(item.id)} style={styles.deleteBtn}>
-        <Ionicons name="trash-outline" size={18} color="#ef4444" />
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  };
 
-  const renderSection = (title, icon, items, timeSlot) => (
-    <View style={styles.section}>
-      <View style={styles.sectionHeader}>
-        <Ionicons name={icon} size={20} color="#fff" />
-        <Text style={styles.sectionTitle}>{title}</Text>
+  const renderSection = (title, icon, items) => {
+    if (items.length === 0) return null;
+    return (
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Ionicons name={icon} size={18} color="#888" />
+          <Text style={styles.sectionTitle}>{title}</Text>
+          <Text style={styles.sectionCount}>{items.length}</Text>
+        </View>
+        {items.map(renderCard)}
       </View>
-
-      {items.length === 0 ? (
-        <Text style={styles.emptyText}>Tap + to add your first item</Text>
-      ) : (
-        items.map(renderCard)
-      )}
-
-      <TouchableOpacity style={styles.addBtn} onPress={() => handleAddPress(timeSlot)}>
-        <Ionicons name="add" size={22} color="#2563eb" />
-        <Text style={styles.addBtnText}>Add Item</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  };
 
   if (!dataLoaded) {
     return (
@@ -141,17 +169,56 @@ export default function StackScreen() {
     );
   }
 
+  const isToday = selectedDate === todayString();
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {stack.length >= 2 && (
-          <TouchableOpacity style={styles.reviewBtn} onPress={() => setShowReview(true)}>
-            <Ionicons name="shield-checkmark-outline" size={20} color="#fff" />
-            <Text style={styles.reviewBtnText}>Review My Stack</Text>
-          </TouchableOpacity>
+        {/* Quick Actions Widget */}
+        <QuickActions
+          onAdd={handleAddPress}
+          onSyringe={() => navigation.navigate('SyringeCalculator')}
+          onReview={() => setShowReview(true)}
+          stackCount={stack.length}
+        />
+
+        {/* Date Strip */}
+        <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+
+        {/* Date Header */}
+        <View style={styles.dateHeader}>
+          <Text style={styles.dateHeaderText}>
+            {isToday ? 'Today' : formatDateHeader(selectedDate)}
+          </Text>
+          {!isToday && (
+            <TouchableOpacity onPress={() => setSelectedDate(todayString())}>
+              <Text style={styles.todayLink}>Go to Today</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Day Summary */}
+        {dayItems.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Ionicons name="calendar-outline" size={48} color="#333" />
+            <Text style={styles.emptyTitle}>Nothing scheduled</Text>
+            <Text style={styles.emptySubtitle}>
+              Tap the + button above to add a peptide or supplement
+            </Text>
+          </View>
+        ) : (
+          <>
+            {renderSection('Morning', 'sunny-outline', morningItems)}
+            {renderSection('Night', 'moon-outline', nightItems)}
+
+            {/* Completion summary */}
+            <View style={styles.completionBar}>
+              <Text style={styles.completionText}>
+                {dayItems.filter((i) => isLogged(selectedDate, i.id)).length} / {dayItems.length} completed
+              </Text>
+            </View>
+          </>
         )}
-        {renderSection('Morning', 'sunny-outline', morningItems, 'morning')}
-        {renderSection('Night', 'moon-outline', nightItems, 'night')}
       </ScrollView>
 
       {/* Category Picker Modal */}
@@ -189,31 +256,13 @@ export default function StackScreen() {
         onClose={resetAddFlow}
       />
 
-      {/* Dose Input Modal */}
-      <Modal visible={showDoseInput} transparent animationType="fade">
-        <View style={styles.overlay}>
-          <View style={styles.doseModal}>
-            <Text style={styles.modalTitle}>
-              {selectedItem?.name}
-            </Text>
-            <Text style={styles.doseLabel}>Dose (optional)</Text>
-            <TextInput
-              style={styles.doseInput}
-              placeholder="e.g. 250mcg 2x/day"
-              placeholderTextColor="#666"
-              value={doseText}
-              onChangeText={setDoseText}
-              autoFocus
-            />
-            <TouchableOpacity style={styles.confirmBtn} onPress={handleDoseConfirm}>
-              <Text style={styles.confirmBtnText}>Add to Stack</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelBtn} onPress={resetAddFlow}>
-              <Text style={styles.cancelBtnText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {/* Schedule Form */}
+      <ScheduleFormModal
+        visible={showScheduleForm}
+        itemName={selectedItem?.name || ''}
+        onConfirm={handleScheduleConfirm}
+        onClose={resetAddFlow}
+      />
 
       {/* Stack Review */}
       <StackReviewModal
@@ -237,53 +286,64 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollContent: {
-    padding: 16,
     paddingBottom: 40,
   },
-  reviewBtn: {
+  // Date header
+  dateHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#2563eb',
-    borderRadius: 14,
-    paddingVertical: 14,
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    marginBottom: 16,
   },
-  reviewBtnText: {
+  dateHeaderText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  todayLink: {
+    color: '#2563eb',
+    fontSize: 14,
     fontWeight: '600',
   },
+  // Sections
   section: {
-    marginBottom: 28,
+    paddingHorizontal: 16,
+    marginBottom: 20,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
     gap: 8,
+    marginBottom: 10,
+    paddingHorizontal: 4,
   },
   sectionTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  emptyText: {
-    color: '#555',
+    color: '#888',
     fontSize: 14,
-    textAlign: 'center',
-    paddingVertical: 20,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
+  sectionCount: {
+    color: '#555',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  // Cards
   card: {
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#1a1a1a',
     borderRadius: 14,
     padding: 14,
     marginBottom: 8,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
   },
-  cardLeft: {
+  cardChecked: {
+    opacity: 0.7,
+  },
+  cardContent: {
     flex: 1,
   },
   cardHeader: {
@@ -295,6 +355,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  cardNameChecked: {
+    textDecorationLine: 'line-through',
+    color: '#888',
   },
   categoryPill: {
     paddingHorizontal: 8,
@@ -313,31 +377,61 @@ const styles = StyleSheet.create({
     color: '#aaa',
     textTransform: 'uppercase',
   },
+  cardMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 4,
+  },
   cardDose: {
     color: '#888',
     fontSize: 14,
-    marginTop: 4,
+  },
+  routePill: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+    backgroundColor: '#222',
+  },
+  routeText: {
+    color: '#666',
+    fontSize: 11,
+    fontWeight: '500',
+    textTransform: 'uppercase',
   },
   deleteBtn: {
     padding: 8,
   },
-  addBtn: {
-    flexDirection: 'row',
+  // Empty state
+  emptyState: {
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#333',
-    borderStyle: 'dashed',
-    marginTop: 4,
+    paddingVertical: 60,
+    paddingHorizontal: 40,
   },
-  addBtnText: {
-    color: '#2563eb',
-    fontSize: 15,
+  emptyTitle: {
+    color: '#555',
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 16,
+  },
+  emptySubtitle: {
+    color: '#444',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
+    lineHeight: 20,
+  },
+  // Completion bar
+  completionBar: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  completionText: {
+    color: '#555',
+    fontSize: 13,
     fontWeight: '500',
   },
+  // Modals (category picker)
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -381,38 +475,5 @@ const styles = StyleSheet.create({
   cancelBtnText: {
     color: '#888',
     fontSize: 15,
-  },
-  doseModal: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 20,
-    padding: 24,
-    width: '100%',
-    maxWidth: 320,
-  },
-  doseLabel: {
-    color: '#888',
-    fontSize: 13,
-    marginBottom: 8,
-  },
-  doseInput: {
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 15,
-    marginBottom: 16,
-  },
-  confirmBtn: {
-    backgroundColor: '#2563eb',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  confirmBtnText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
   },
 });
