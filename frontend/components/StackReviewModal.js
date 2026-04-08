@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import MarkdownBubble from './MarkdownBubble';
 
-const API_URL = 'http://10.0.0.239:8000';
+const API_URL = 'http://10.0.0.83:8000';
 
 export default function StackReviewModal({ visible, onClose, stack }) {
   const [graphData, setGraphData] = useState(null);

@@ -7,10 +7,8 @@ import {
   Modal,
   ScrollView,
   StyleSheet,
-  Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { todayString } from '../utils/schedule';
+import { WEEKDAYS, describeDays } from '../utils/schedule';
 
 const TIME_SLOTS = ['morning', 'night'];
 const ROUTES = [
@@ -19,55 +17,46 @@ const ROUTES = [
   { key: 'intranasal', label: 'Intranasal' },
   { key: 'intramuscular', label: 'IM' },
 ];
-const FREQUENCIES = ['daily', 'weekly', 'biweekly'];
+
+const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
 export default function ScheduleFormModal({ visible, itemName, onConfirm, onClose }) {
   const [dose, setDose] = useState('');
   const [timeSlot, setTimeSlot] = useState('morning');
   const [route, setRoute] = useState(null);
-  const [frequency, setFrequency] = useState('daily');
-  const [startDate, setStartDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [daysOfWeek, setDaysOfWeek] = useState(ALL_DAYS);
 
-  const needsStartDate = frequency === 'weekly' || frequency === 'biweekly';
+  const toggleDay = (dayIndex) => {
+    setDaysOfWeek((prev) =>
+      prev.includes(dayIndex)
+        ? prev.filter((d) => d !== dayIndex)
+        : [...prev, dayIndex].sort((a, b) => a - b)
+    );
+  };
+
+  const selectAllDays = () => setDaysOfWeek(ALL_DAYS);
+  const selectWeekdays = () => setDaysOfWeek([1, 2, 3, 4, 5]);
 
   const handleConfirm = () => {
     onConfirm({
       dose: dose.trim(),
       timeSlot,
       route,
-      frequency,
-      startDate: needsStartDate
-        ? startDate.toISOString().slice(0, 10)
-        : todayString(),
-      endDate: null,
+      daysOfWeek,
     });
-    // Reset
+    resetForm();
+  };
+
+  const resetForm = () => {
     setDose('');
     setTimeSlot('morning');
     setRoute(null);
-    setFrequency('daily');
-    setStartDate(new Date());
-    setShowDatePicker(false);
+    setDaysOfWeek(ALL_DAYS);
   };
 
   const handleClose = () => {
-    setDose('');
-    setTimeSlot('morning');
-    setRoute(null);
-    setFrequency('daily');
-    setStartDate(new Date());
-    setShowDatePicker(false);
+    resetForm();
     onClose();
-  };
-
-  const formatDate = (d) =>
-    d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-
-  const frequencyLabel = (f) => {
-    if (f === 'daily') return 'Every day';
-    if (f === 'weekly') return `Every ${startDate.toLocaleDateString('en-US', { weekday: 'long' })}`;
-    return `Every other ${startDate.toLocaleDateString('en-US', { weekday: 'long' })}`;
   };
 
   return (
@@ -121,59 +110,80 @@ export default function ScheduleFormModal({ visible, itemName, onConfirm, onClos
             ))}
           </View>
 
-          {/* Frequency */}
-          <Text style={styles.label}>Frequency</Text>
-          <View style={styles.segmented}>
-            {FREQUENCIES.map((f) => (
-              <TouchableOpacity
-                key={f}
-                style={[styles.segment, frequency === f && styles.segmentActive]}
-                onPress={() => {
-                  setFrequency(f);
-                  if (f === 'weekly' || f === 'biweekly') {
-                    setShowDatePicker(true);
-                  }
-                }}
+          {/* Schedule — Day Picker */}
+          <Text style={styles.label}>Schedule</Text>
+          <Text style={styles.hint}>Which days do you take this?</Text>
+
+          {/* Quick presets */}
+          <View style={styles.presetRow}>
+            <TouchableOpacity
+              style={[styles.presetBtn, daysOfWeek.length === 7 && styles.presetBtnActive]}
+              onPress={selectAllDays}
+            >
+              <Text style={[styles.presetText, daysOfWeek.length === 7 && styles.presetTextActive]}>
+                Every Day
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.presetBtn,
+                daysOfWeek.length === 5 &&
+                  daysOfWeek.every((d) => d >= 1 && d <= 5) &&
+                  styles.presetBtnActive,
+              ]}
+              onPress={selectWeekdays}
+            >
+              <Text
+                style={[
+                  styles.presetText,
+                  daysOfWeek.length === 5 &&
+                    daysOfWeek.every((d) => d >= 1 && d <= 5) &&
+                    styles.presetTextActive,
+                ]}
               >
-                <Text style={[styles.segmentText, frequency === f && styles.segmentTextActive]}>
-                  {f.charAt(0).toUpperCase() + f.slice(1)}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                Weekdays
+              </Text>
+            </TouchableOpacity>
           </View>
 
-          {/* Start Date (for weekly/biweekly) */}
-          {needsStartDate && (
-            <View style={styles.dateSection}>
-              <Text style={styles.label}>Start Date</Text>
-              <TouchableOpacity
-                style={styles.dateButton}
-                onPress={() => setShowDatePicker(!showDatePicker)}
-              >
-                <Text style={styles.dateButtonText}>{formatDate(startDate)}</Text>
-                <Text style={styles.dateHint}>{frequencyLabel(frequency)}</Text>
-              </TouchableOpacity>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={startDate}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={(_, date) => {
-                    if (date) setStartDate(date);
-                    if (Platform.OS === 'android') setShowDatePicker(false);
-                  }}
-                  minimumDate={new Date()}
-                  themeVariant="dark"
-                  style={styles.datePicker}
-                />
-              )}
-            </View>
-          )}
+          {/* Day circles */}
+          <View style={styles.dayRow}>
+            {WEEKDAYS.map((day) => {
+              const selected = daysOfWeek.includes(day.index);
+              return (
+                <TouchableOpacity
+                  key={day.index}
+                  style={[styles.dayCircle, selected && styles.dayCircleActive]}
+                  onPress={() => toggleDay(day.index)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.dayLetter, selected && styles.dayLetterActive]}>
+                    {day.short}
+                  </Text>
+                  <Text style={[styles.dayLabel, selected && styles.dayLabelActive]}>
+                    {day.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* Summary */}
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryText}>{describeDays(daysOfWeek)}</Text>
+            <Text style={styles.summaryCount}>
+              {daysOfWeek.length} {daysOfWeek.length === 1 ? 'day' : 'days'} per week
+            </Text>
+          </View>
         </ScrollView>
 
         {/* Bottom Buttons */}
         <View style={styles.bottomButtons}>
-          <TouchableOpacity style={styles.confirmBtn} onPress={handleConfirm}>
+          <TouchableOpacity
+            style={[styles.confirmBtn, daysOfWeek.length === 0 && styles.confirmBtnDisabled]}
+            onPress={handleConfirm}
+            disabled={daysOfWeek.length === 0}
+          >
             <Text style={styles.confirmBtnText}>Add to Stack</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
@@ -211,6 +221,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 20,
     marginBottom: 8,
+  },
+  hint: {
+    color: '#666',
+    fontSize: 13,
+    marginBottom: 12,
+    marginTop: -4,
   },
   input: {
     backgroundColor: '#1a1a1a',
@@ -270,29 +286,85 @@ const styles = StyleSheet.create({
   pillTextActive: {
     color: '#fff',
   },
-  dateSection: {
-    marginTop: 4,
+  // Day picker
+  presetRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
   },
-  dateButton: {
+  presetBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
     backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    padding: 16,
     borderWidth: 1,
     borderColor: '#333',
   },
-  dateButtonText: {
-    color: '#fff',
-    fontSize: 16,
+  presetBtnActive: {
+    backgroundColor: '#2563eb',
+    borderColor: '#2563eb',
+  },
+  presetText: {
+    color: '#888',
+    fontSize: 13,
     fontWeight: '600',
   },
-  dateHint: {
-    color: '#2563eb',
-    fontSize: 13,
+  presetTextActive: {
+    color: '#fff',
+  },
+  dayRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  dayCircle: {
+    width: 44,
+    height: 56,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1a1a1a',
+    borderWidth: 1.5,
+    borderColor: '#333',
+  },
+  dayCircleActive: {
+    backgroundColor: '#2563eb',
+    borderColor: '#2563eb',
+  },
+  dayLetter: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  dayLetterActive: {
+    color: '#fff',
+  },
+  dayLabel: {
+    color: '#555',
+    fontSize: 9,
+    fontWeight: '500',
+    marginTop: 1,
+  },
+  dayLabelActive: {
+    color: 'rgba(255,255,255,0.7)',
+  },
+  summaryCard: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    padding: 14,
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  summaryText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  summaryCount: {
+    color: '#666',
+    fontSize: 12,
     marginTop: 4,
   },
-  datePicker: {
-    marginTop: 8,
-  },
+  // Bottom
   bottomButtons: {
     position: 'absolute',
     bottom: 0,
@@ -310,6 +382,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     marginBottom: 8,
+  },
+  confirmBtnDisabled: {
+    opacity: 0.4,
   },
   confirmBtnText: {
     color: '#fff',

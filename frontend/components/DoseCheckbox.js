@@ -3,29 +3,37 @@ import { TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function DoseCheckbox({ checked, onToggle }) {
-  const scale = useRef(new Animated.Value(checked ? 1 : 1)).current;
+  const scale = useRef(new Animated.Value(1)).current;
   const bgColor = useRef(new Animated.Value(checked ? 1 : 0)).current;
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.sequence([
-        Animated.timing(scale, {
-          toValue: 1.25,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scale, {
-          toValue: 1,
-          friction: 4,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.timing(bgColor, {
-        toValue: checked ? 1 : 0,
-        duration: 200,
-        useNativeDriver: false,
+    // Skip animation on first render
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
+    // Scale pop (native driver — only transforms)
+    Animated.sequence([
+      Animated.timing(scale, {
+        toValue: 1.25,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scale, {
+        toValue: 1,
+        friction: 4,
+        useNativeDriver: true,
       }),
     ]).start();
+
+    // Color transition (JS driver — colors can't use native)
+    Animated.timing(bgColor, {
+      toValue: checked ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
   }, [checked]);
 
   const backgroundColor = bgColor.interpolate({
@@ -40,17 +48,12 @@ export default function DoseCheckbox({ checked, onToggle }) {
 
   return (
     <TouchableOpacity onPress={onToggle} activeOpacity={0.7}>
-      <Animated.View
-        style={[
-          styles.box,
-          {
-            transform: [{ scale }],
-            backgroundColor,
-            borderColor,
-          },
-        ]}
-      >
-        {checked && <Ionicons name="checkmark" size={18} color="#fff" />}
+      {/* Outer view for color (JS-driven) */}
+      <Animated.View style={[styles.box, { backgroundColor, borderColor }]}>
+        {/* Inner view for scale (native-driven) */}
+        <Animated.View style={[styles.inner, { transform: [{ scale }] }]}>
+          {checked && <Ionicons name="checkmark" size={18} color="#fff" />}
+        </Animated.View>
       </Animated.View>
     </TouchableOpacity>
   );
@@ -62,6 +65,10 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 8,
     borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inner: {
     alignItems: 'center',
     justifyContent: 'center',
   },

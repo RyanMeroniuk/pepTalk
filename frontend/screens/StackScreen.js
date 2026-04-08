@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useStack } from '../context/StackContext';
-import { getItemsForDate, todayString, formatDateHeader } from '../utils/schedule';
+import { getItemsForDate, todayString, formatDateHeader, describeDays } from '../utils/schedule';
 import DateStrip from '../components/DateStrip';
 import QuickActions from '../components/QuickActions';
 import DoseCheckbox from '../components/DoseCheckbox';
@@ -19,7 +19,7 @@ import ItemPickerModal from '../components/ItemPickerModal';
 import ScheduleFormModal from '../components/ScheduleFormModal';
 import StackReviewModal from '../components/StackReviewModal';
 
-const API_URL = 'http://10.0.0.239:8000';
+const API_URL = 'http://10.0.0.83:8000';
 
 export default function StackScreen() {
   const navigation = useNavigation();
@@ -139,6 +139,9 @@ export default function StackScreen() {
               </View>
             )}
           </View>
+          {item.daysOfWeek && item.daysOfWeek.length < 7 && (
+            <Text style={styles.cardSchedule}>{describeDays(item.daysOfWeek)}</Text>
+          )}
         </View>
         <TouchableOpacity onPress={() => removeItem(item.id)} style={styles.deleteBtn}>
           <Ionicons name="trash-outline" size={16} color="#555" />
@@ -398,6 +401,11 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '500',
     textTransform: 'uppercase',
+  },
+  cardSchedule: {
+    color: '#555',
+    fontSize: 12,
+    marginTop: 4,
   },
   deleteBtn: {
     padding: 8,

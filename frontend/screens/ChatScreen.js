@@ -13,7 +13,7 @@ import {
 import MarkdownBubble from '../components/MarkdownBubble';
 import { useStack } from '../context/StackContext';
 
-const API_URL = 'http://10.0.0.239:8000';
+const API_URL = 'http://10.0.0.83:8000';
 
 export default function ChatScreen() {
   const { stack } = useStack();
