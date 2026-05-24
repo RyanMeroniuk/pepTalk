@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { generateDateRange } from '../utils/schedule';
 
@@ -9,8 +9,14 @@ const TODAY_INDEX = PAST_DAYS;
 
 const dates = generateDateRange(PAST_DAYS, FUTURE_DAYS);
 
-export default function DateStrip({ selectedDate, onSelectDate }) {
+const DateStrip = forwardRef(function DateStrip({ selectedDate, onSelectDate }, ref) {
   const listRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    scrollToToday: () => {
+      listRef.current?.scrollToIndex({ index: TODAY_INDEX, animated: true, viewPosition: 0.5 });
+    },
+  }));
 
   const getItemLayout = useCallback(
     (_, index) => ({
@@ -59,7 +65,9 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
       contentContainerStyle={styles.content}
     />
   );
-}
+});
+
+export default DateStrip;
 
 const styles = StyleSheet.create({
   list: {

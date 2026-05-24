@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -25,6 +25,7 @@ export default function StackScreen() {
   const navigation = useNavigation();
   const { stack, addItem, removeItem, loadLogsForDate, logDose, unlogDose, isLogged } = useStack();
 
+  const dateStripRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(todayString());
   const [showReview, setShowReview] = useState(false);
 
@@ -186,7 +187,7 @@ export default function StackScreen() {
         />
 
         {/* Date Strip */}
-        <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+        <DateStrip ref={dateStripRef} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
         {/* Date Header */}
         <View style={styles.dateHeader}>
@@ -194,7 +195,10 @@ export default function StackScreen() {
             {isToday ? 'Today' : formatDateHeader(selectedDate)}
           </Text>
           {!isToday && (
-            <TouchableOpacity onPress={() => setSelectedDate(todayString())}>
+            <TouchableOpacity onPress={() => {
+              setSelectedDate(todayString());
+              dateStripRef.current?.scrollToToday();
+            }}>
               <Text style={styles.todayLink}>Go to Today</Text>
             </TouchableOpacity>
           )}

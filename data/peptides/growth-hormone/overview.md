@@ -1,0 +1,5 @@
+# Growth Hormone (Somatropin)
+
+## Overview
+
+Growth Hormone (somatropin) is recombinant human growth hormone — the actual 191-amino-acid peptide hormone normally secreted by the anterior pituitary, manufactured to be identical to the body's own. This distinguishes it from the secretagogues elsewhere in this library (sermorelin, CJC-1295, ipamorelin, the GHRPs, MK-677), which prompt the pituitary to make more of its own GH; somatropin instead supplies the finished hormone directly. It is sold under brands including Genotropin, Norditropin, Humatrope, and Omnitrope. Unlike the gray-market peptides, somatropin is FDA-approved and tightly regulated — indicated for conditions such as pediatric and adult growth hormone deficiency, Turner syndrome, chronic kidney disease in children, Prader-Willi syndrome, and AIDS wasting, among others. Because it bypasses the body's own pulsatile control, exogenous GH carries meaningful risks including acromegaly-like changes and insulin resistance, and it is a controlled, prescription-only medication that is illegal to use without a prescription and banned in sport.

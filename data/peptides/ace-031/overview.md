@@ -1,0 +1,5 @@
+# ACE-031
+
+## Overview
+
+ACE-031 (ramatercept) is an engineered fusion protein consisting of the extracellular domain of the activin receptor type IIB (ActRIIB) fused to a human antibody Fc fragment. Rather than being injected into a receptor, it acts as a soluble "decoy" that floats in circulation and traps myostatin, activin, GDF-11, and related TGF-β ligands before they can reach muscle receptors — strongly disinhibiting muscle growth. In animal models this produced dramatic lean mass increases on the order of 30–40%. It was developed by Acceleron Pharma and entered human clinical trials, including studies in Duchenne muscular dystrophy. However, those human trials were discontinued: dosing was halted after participants experienced vascular and bleeding-related adverse events — nosebleeds (epistaxis), gum bleeding, and dilated surface blood vessels (telangiectasias) — reflecting the off-target consequences of broadly blocking the ActRIIB ligand pathway, which is involved in vascular regulation. It is not approved and exists today only as a gray-market research chemical.

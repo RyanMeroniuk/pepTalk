@@ -1,0 +1,5 @@
+# Follistatin-344
+
+## Overview
+
+Follistatin-344 (FST-344) is a synthetic version of one of the naturally occurring isoforms of follistatin, a glycoprotein that potently binds and neutralizes members of the TGF-β superfamily — most notably myostatin (GDF-8) and the activins. By sequestering myostatin, the body's primary brake on muscle growth, follistatin can drive both muscle hypertrophy (larger fibers) and hyperplasia (new fibers) in animal models. FST-344 is the precursor form that is proteolytically processed in tissue toward the shorter, more tissue-bound FST-315 isoform. Critically, the evidence base is almost entirely preclinical (rodent and gene-therapy studies) — there are no rigorous human trials supporting injectable follistatin peptide use, and it circulates only through gray-market research-chemical channels. Because follistatin's TGF-β antagonism is broad, off-target effects (including concerns about bone density and reproductive hormones) are poorly characterized in humans.
