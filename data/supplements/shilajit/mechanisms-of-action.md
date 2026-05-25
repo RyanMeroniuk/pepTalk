@@ -1,0 +1,10 @@
+# Shilajit
+## Mechanisms of Action
+
+- **Fulvic acid as a mitochondrial and antioxidant agent (primary):** Fulvic acid, the principal active fraction, is a low-molecular-weight humic substance with antioxidant and free-radical-scavenging activity. It is proposed to support mitochondrial electron transport and ATP production, which underlies shilajit's traditional "energy" and anti-fatigue reputation
+- **Dibenzo-alpha-pyrones (DBPs) and CoQ10 recycling:** DBPs are thought to act within mitochondria, potentially helping recycle/preserve CoQ10 in its active form and supporting the efficiency of oxidative phosphorylation. This is one proposed bioenergetic mechanism and a rationale for pairing shilajit with CoQ10
+- **Mineral and nutrient carrier:** Fulvic acid chelates and helps transport minerals across membranes. Shilajit therefore functions partly as a delivery vehicle for its broad trace-mineral content (iron, zinc, magnesium, selenium, etc.) — though this same chelating/concentrating property is exactly why contaminated source material can carry heavy metals into the body
+- **Modest testosterone support:** In a small human trial, purified shilajit (PrimaVie) was associated with increased total testosterone, free testosterone, and DHEA-S over several weeks in healthy men. The mechanism is not fully defined but may involve reduced oxidative stress in Leydig cells and improved overall mitochondrial/endocrine function. Effects are modest and less robust than the bioenergetic claims
+- **Antioxidant / anti-inflammatory effects:** Beyond fulvic acid's direct radical scavenging, shilajit has shown anti-inflammatory activity in preclinical models, which may contribute to its anti-fatigue and recovery effects
+- **Spermatogenic / reproductive support:** Some research reports improved sperm count and motility, plausibly via antioxidant protection of reproductive tissue, paralleling the testosterone findings
+- **Cognitive/neuroprotective (preliminary):** Fulvic acid has been studied for inhibiting tau aggregation in vitro, generating interest in neuroprotection, but human evidence is very limited

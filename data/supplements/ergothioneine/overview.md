@@ -1,0 +1,10 @@
+# Ergothioneine
+## Overview
+
+Ergothioneine is a naturally occurring, sulfur-containing antioxidant derived from histidine that humans cannot make themselves — it is obtained entirely from the diet, with mushrooms being by far the richest source. What sets it apart from ordinary dietary antioxidants is that the body has evolved a dedicated, highly specific transporter (OCTN1 / SLC22A4) that actively pulls ergothioneine into cells and concentrates it in tissues most exposed to oxidative stress, such as the liver, blood cells, eyes, skin, and brain. The presence of a specialized transporter and ergothioneine's selective retention have led researchers to propose it as a possible "longevity vitamin" — a dietary compound that is not classically essential but may support long-term health. A 2025 randomized controlled trial reported improvements in sleep and memory measures, adding early human evidence to a field that has been largely mechanistic.
+
+- **Why it matters:** The dedicated transporter is a strong clue. The body does not build specialized machinery to concentrate something it has no use for — ergothioneine is selectively retained in exactly the tissues that face the most oxidative damage.
+- **Stable, persistent antioxidant:** Unlike many thiol antioxidants, ergothioneine resists auto-oxidation, so it lingers in tissues and acts as a stress-buffering reserve rather than being rapidly consumed.
+- **Longevity-vitamin hypothesis:** Lower blood ergothioneine has been associated in observational studies with higher risk of cardiovascular disease and frailty; whether supplementing changes outcomes is still being investigated.
+- **2025 RCT:** A randomized controlled trial reported improvements in sleep quality and memory measures with supplementation — encouraging but early, single-trial evidence.
+- **Honest framing:** Human interventional data are still in early stages. The mechanistic case and observational associations are compelling, but it is premature to make strong therapeutic claims. None of this is medical advice.

@@ -72,6 +72,32 @@ def normalize_id(name: str) -> str:
         "genotropin": "growth-hormone", "norditropin": "growth-hormone",
         "humatrope": "growth-hormone", "omnitrope": "growth-hormone",
         "methylene-blue": "methylene-blue", "slu-pp-332": "slu-pp-332",
+        # Added 2026-05 — supplement aliases / alternate forms / brand names
+        "l-taurine": "taurine",
+        "citrulline": "l-citrulline", "citrulline-malate": "l-citrulline",
+        "n-acetylcysteine": "nac", "n-acetyl-cysteine": "nac", "n-acetyl-l-cysteine": "nac",
+        "cdp-choline": "citicoline", "cytidine-diphosphate-choline": "citicoline", "cognizin": "citicoline",
+        "bacopa-monnieri": "bacopa", "brahmi": "bacopa",
+        "rhodiola-rosea": "rhodiola", "golden-root": "rhodiola",
+        "tyrosine": "l-tyrosine", "n-acetyl-l-tyrosine": "l-tyrosine", "nalt": "l-tyrosine",
+        "myo-inositol": "inositol", "d-chiro-inositol": "inositol",
+        "lutein": "lutein-zeaxanthin", "zeaxanthin": "lutein-zeaxanthin",
+        "eurycoma-longifolia": "tongkat-ali", "longjack": "tongkat-ali",
+        "calcium-alpha-ketoglutarate": "ca-akg", "alpha-ketoglutarate": "ca-akg", "akg": "ca-akg",
+        "trimethylglycine": "tmg", "betaine": "tmg", "betaine-anhydrous": "tmg",
+        "methylsulfonylmethane": "msm",
+        "sodium-hyaluronate": "hyaluronic-acid",
+        "saffron-extract": "saffron", "crocus-sativus": "saffron",
+        "urolithin": "urolithin-a", "mitopure": "urolithin-a",
+        "broccoli-sprout-extract": "sulforaphane", "glucoraphanin": "sulforaphane", "sulphoraphane": "sulforaphane",
+        "l-ergothioneine": "ergothioneine", "egt": "ergothioneine",
+        "tauroursodeoxycholic-acid": "tudca",
+        "velvet-bean": "mucuna-pruriens", "mucuna": "mucuna-pruriens",
+        "gamma-aminobutyric-acid": "gaba", "pharmagaba": "gaba",
+        "5-hydroxytryptophan": "5-htp",
+        "tryptophan": "l-tryptophan",
+        "dehydroepiandrosterone": "dhea",
+        "fadogia": "fadogia-agrestis",
         "vitamin-b-complex": "b-complex", "b-vitamins": "b-complex",
         "lions-mane": "lions-mane", "lion's-mane": "lions-mane",
         "magnesium-glycinate": "magnesium", "magnesium-l-threonate": "magnesium",
@@ -103,6 +129,13 @@ KNOWN_SUPPLEMENTS = {
     "lions-mane", "berberine", "turmeric-curcumin", "coq10", "pqq", "nmn",
     "alpha-lipoic-acid", "resveratrol", "melatonin", "l-theanine", "apigenin",
     "tart-cherry-extract", "probiotics", "zinc-carnosine", "glucosamine-chondroitin",
+    # Added 2026-05 — supplement library expansion (33 new entries)
+    "taurine", "l-citrulline", "nac", "citicoline", "bacopa", "rhodiola",
+    "l-tyrosine", "inositol", "astaxanthin", "lutein-zeaxanthin", "tongkat-ali",
+    "shilajit", "cordyceps", "reishi", "quercetin", "fisetin", "spermidine",
+    "ca-akg", "tmg", "boron", "msm", "hyaluronic-acid", "saffron", "urolithin-a",
+    "sulforaphane", "ergothioneine", "tudca", "mucuna-pruriens", "gaba", "5-htp",
+    "l-tryptophan", "dhea", "fadogia-agrestis",
 }
 
 KNOWN_CONDITIONS = {
@@ -124,6 +157,19 @@ def get_entity_type(entity_id: str) -> str:
     return "drug"  # default to drug for unknown entities
 
 
+def mentions_entity(entity: str, text_lower: str) -> bool:
+    """True if `entity` is named in text as a whole token (not a substring).
+
+    Uses alphanumeric boundaries so short IDs like "nac" don't match inside
+    words like "inactive" or "erinacine". Hyphens count as boundaries, so both
+    "nac" and the spaced "n-acetylcysteine" forms still match standalone.
+    """
+    spaced = entity.replace("-", " ")
+    alt = re.escape(entity) + r"|" + re.escape(spaced)
+    pattern = r"(?<![a-z0-9])(?:" + alt + r")(?![a-z0-9])"
+    return re.search(pattern, text_lower) is not None
+
+
 def extract_from_stacking(content: str, source: str, source_type: str) -> list[dict]:
     """Extract STACKS_WITH relationships from stacking-protocols.md files."""
     rels = []
@@ -143,8 +189,7 @@ def extract_from_stacking(content: str, source: str, source_type: str) -> list[d
         line_lower = line.lower()
         for entity in KNOWN_PEPTIDES | KNOWN_SUPPLEMENTS:
             # Check for the entity name with word boundaries
-            pattern = re.escape(entity.replace("-", " ")) + r"|" + re.escape(entity)
-            if re.search(pattern, line_lower):
+            if mentions_entity(entity, line_lower):
                 mentioned.add(entity)
 
         # Create edges between source and each mentioned entity
@@ -190,8 +235,7 @@ def extract_from_drug_interactions(content: str, source: str, source_type: str) 
 
         # Check for conditions
         for condition in KNOWN_CONDITIONS:
-            pattern = re.escape(condition.replace("-", " ")) + r"|" + re.escape(condition)
-            if re.search(pattern, line_lower):
+            if mentions_entity(condition, line_lower):
                 mechanism = line.strip("- *").split(":")[-1].strip()[:200] if ":" in line else ""
                 rels.append({
                     "source": source, "target": condition,
@@ -204,8 +248,7 @@ def extract_from_drug_interactions(content: str, source: str, source_type: str) 
         for entity in KNOWN_PEPTIDES | KNOWN_SUPPLEMENTS:
             if entity == source:
                 continue
-            pattern = re.escape(entity.replace("-", " ")) + r"|" + re.escape(entity)
-            if re.search(pattern, line_lower):
+            if mentions_entity(entity, line_lower):
                 mechanism = line.strip("- *")[:200]
                 relationship = "CONFLICTS_WITH"
 
@@ -272,8 +315,7 @@ def extract_from_supplement_interactions(content: str, source: str, source_type:
         for entity in KNOWN_PEPTIDES | KNOWN_SUPPLEMENTS:
             if entity == source:
                 continue
-            pattern = re.escape(entity.replace("-", " ")) + r"|" + re.escape(entity)
-            if re.search(pattern, line_lower):
+            if mentions_entity(entity, line_lower):
                 mechanism = line.strip("- *")[:200]
                 rels.append({
                     "source": source, "target": entity,
@@ -286,46 +328,52 @@ def extract_from_supplement_interactions(content: str, source: str, source_type:
 
 
 def extract_from_peptide_synergies(content: str, source: str, source_type: str) -> list[dict]:
-    """Extract SYNERGIZES_WITH from peptide-synergies.md (supplement files)."""
+    """Extract SYNERGIZES_WITH from peptide-synergies.md.
+
+    Links the source to peptides mentioned (the primary use), and ALSO to other
+    supplements mentioned — this captures supplement-supplement clusters like
+    GlyNAC (glycine + NAC), the joint stack (MSM + glucosamine + collagen + HA),
+    the functional-mushroom trio, and the testosterone cluster.
+    """
     rels = []
 
-    # These files have ### headers for each peptide
+    # ### headers may name a peptide that scopes the bullets beneath it
     current_peptide = None
+    targets_all = KNOWN_PEPTIDES | KNOWN_SUPPLEMENTS
     lines = content.split("\n")
 
     for line in lines:
         line_stripped = line.strip()
 
         if line_stripped.startswith("### "):
-            # Extract peptide name from header
-            header_text = line_stripped[4:].strip()
+            # Reset and re-scan the header for a peptide scope
+            header_text = line_stripped[4:].strip().lower()
+            current_peptide = None
             for peptide in KNOWN_PEPTIDES:
-                if peptide.replace("-", " ") in header_text.lower() or peptide in header_text.lower():
+                if peptide.replace("-", " ") in header_text or peptide in header_text:
                     current_peptide = peptide
                     break
 
-        elif line_stripped.startswith("- ") and current_peptide:
-            mechanism = line_stripped.strip("- *")[:200]
-            rels.append({
-                "source": source, "target": current_peptide,
-                "relationship": "SYNERGIZES_WITH",
-                "strength": "moderate",
-                "mechanism": mechanism,
-            })
-
-        # Also check for inline peptide mentions
         elif line_stripped.startswith("- "):
             line_lower = line_stripped.lower()
-            for peptide in KNOWN_PEPTIDES:
-                pattern = re.escape(peptide.replace("-", " ")) + r"|" + re.escape(peptide)
-                if re.search(pattern, line_lower):
-                    mechanism = line_stripped.strip("- *")[:200]
-                    rels.append({
-                        "source": source, "target": peptide,
-                        "relationship": "SYNERGIZES_WITH",
-                        "strength": "moderate",
-                        "mechanism": mechanism,
-                    })
+            mechanism = line_stripped.strip("- *")[:200]
+
+            matched = set()
+            if current_peptide:
+                matched.add(current_peptide)
+            # Inline mentions of any known peptide OR supplement
+            for entity in targets_all:
+                if mentions_entity(entity, line_lower):
+                    matched.add(entity)
+
+            matched.discard(source)
+            for target in matched:
+                rels.append({
+                    "source": source, "target": target,
+                    "relationship": "SYNERGIZES_WITH",
+                    "strength": "moderate",
+                    "mechanism": mechanism,
+                })
 
     return rels
 
@@ -344,8 +392,7 @@ def extract_from_connections(content: str, source: str, source_type: str, connec
 
         line_lower = line_stripped.lower()
         for entity in target_set:
-            pattern = re.escape(entity.replace("-", " ")) + r"|" + re.escape(entity)
-            if re.search(pattern, line_lower):
+            if mentions_entity(entity, line_lower):
                 mechanism = line_stripped.strip("- *")[:200]
                 rels.append({
                     "source": source, "target": entity,

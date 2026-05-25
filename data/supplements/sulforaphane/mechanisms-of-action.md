@@ -1,0 +1,11 @@
+# Sulforaphane
+## Mechanisms of Action
+
+- **Nrf2/ARE pathway activation (primary mechanism):** Sulforaphane modifies cysteine residues on Keap1, the protein that normally restrains Nrf2. This releases Nrf2 to enter the nucleus and bind the Antioxidant Response Element (ARE), switching on a battery of cytoprotective genes. This is an indirect, "switch on the defenses" mechanism rather than direct radical scavenging
+- **Upregulation of endogenous antioxidant enzymes:** Through Nrf2, sulforaphane increases production of superoxide dismutase (SOD), catalase, glutathione peroxidase, glutathione reductase, NQO1, and heme oxygenase-1. The body's own antioxidant machinery is amplified
+- **Glutathione synthesis support:** Nrf2 activation upregulates glutamate-cysteine ligase (the rate-limiting glutathione synthesis enzyme) and glutathione S-transferases, raising endogenous glutathione — complementing direct glutathione precursors
+- **Phase II detoxification induction:** Sulforaphane induces Phase II conjugating enzymes (glutathione S-transferases, UDP-glucuronosyltransferases, etc.) that conjugate and accelerate clearance of carcinogens, environmental pollutants, and xenobiotics. Human trials showed increased excretion of certain airborne pollutants
+- **Sustained, catalytic effect:** Because it works by inducing gene expression, a single dose elevates protective enzymes for hours to days — a durable effect distinct from direct antioxidants consumed on contact
+- **Anti-inflammatory signaling:** Sulforaphane suppresses NF-kB activation, lowering pro-inflammatory cytokines (TNF-alpha, IL-6, IL-1beta) and mediators (COX-2, iNOS), providing broad anti-inflammatory effects
+- **Epigenetic modulation:** Sulforaphane inhibits histone deacetylases (HDACs) and influences DNA methylation, mechanisms studied in cancer-prevention research (largely preclinical)
+- **Bioactivation requirement (critical):** Sulforaphane does not exist pre-formed in intact broccoli. The precursor glucoraphanin must be hydrolyzed by the enzyme myrosinase to yield sulforaphane. Myrosinase is destroyed by heat; gut bacteria can perform some conversion but inefficiently. This is why formulation (active myrosinase or pre-formed sulforaphane) governs real-world bioavailability

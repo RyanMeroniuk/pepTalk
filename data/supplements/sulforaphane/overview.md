@@ -1,0 +1,10 @@
+# Sulforaphane
+## Overview
+
+Sulforaphane is an isothiocyanate phytochemical, concentrated in broccoli sprouts, that is widely regarded as the most potent dietary activator of Nrf2 — the master transcription factor controlling the body's endogenous antioxidant and detoxification defenses. Rather than acting as a direct free-radical scavenger, sulforaphane works indirectly and durably: it switches on genes that produce the body's own protective enzymes (glutathione-related enzymes, superoxide dismutase, glutathione S-transferases, and others), upregulating antioxidant and Phase II detoxification capacity for hours to days after a single dose. It is one of the most-researched dietary phytochemicals, with human studies spanning detoxification, metabolic health, and neurological applications — though efficacy depends heavily on formulation.
+
+- **Why it matters:** By activating Nrf2, sulforaphane produces a sustained, amplifying antioxidant effect — the body keeps making protective enzymes long after the compound is cleared, unlike a direct antioxidant that is used up on contact.
+- **The myrosinase problem (critical):** Sulforaphane is not present in raw broccoli; it is created when the precursor glucoraphanin meets the enzyme myrosinase. Cooking destroys myrosinase, and many supplements supply glucoraphanin without active enzyme — so conversion to actual sulforaphane can be poor. Effective products either deliver pre-formed sulforaphane or combine glucoraphanin with active myrosinase.
+- **Detoxification:** Sulforaphane upregulates Phase II enzymes that conjugate and clear environmental toxins; human trials (e.g., in airborne-pollutant exposure) showed enhanced excretion of certain pollutants.
+- **Glutathione and antioxidant enzymes:** It raises endogenous glutathione and key antioxidant enzymes, complementing direct antioxidants and glutathione precursors.
+- **Honest framing:** Mechanistic and short-term human data are strong, but many therapeutic claims rest on preclinical or early trials. Real-world effect depends on getting bioavailable sulforaphane — formulation matters enormously. None of this is medical advice.

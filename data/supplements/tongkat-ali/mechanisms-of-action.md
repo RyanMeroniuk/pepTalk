@@ -1,0 +1,10 @@
+# Tongkat Ali
+## Mechanisms of Action
+
+- **SHBG reduction (primary mechanism):** The most consistently reported effect is a lowering of sex hormone-binding globulin (SHBG). SHBG binds circulating testosterone and renders it biologically inactive. By reducing SHBG, Tongkat Ali increases the *free* (bioavailable) testosterone fraction even when total testosterone changes little. This is the core reason it is described as a "free-T" herb rather than a testosterone booster in the steroid sense.
+- **Steroidogenesis support:** Eurycomanone and related quassinoids appear to support testosterone synthesis in Leydig cells, in part by inhibiting aromatase (the enzyme that converts testosterone to estradiol) and supporting the upstream conversion of pregnenolone and DHEA toward androgens. The net effect favors androgens over estrogens in some studies.
+- **HPG axis / cortisol modulation:** Tongkat Ali is positioned as an adaptogen. It appears to lower cortisol and improve the cortisol-to-testosterone ratio under stress. Because cortisol and testosterone are functionally antagonistic, reducing the stress hormone burden creates a more favorable environment for endogenous testosterone signaling.
+- **Anti-estrogenic / aromatase influence:** Some preclinical work suggests modest aromatase inhibition, which would preserve testosterone by reducing its conversion to estradiol. This is one proposed contributor to the improved androgen profile.
+- **Spermatogenesis and reproductive support:** Eurycomanone has been shown to improve sperm concentration, motility, and morphology in subfertile men, likely through a combination of hormonal optimization and antioxidant protection of reproductive tissue.
+- **Antioxidant activity:** The root extract has free-radical-scavenging properties that may protect Leydig cells and sperm from oxidative damage, supporting the reproductive and hormonal effects.
+- **Mood and well-being:** Improvements in tension, anger, and confusion on validated mood scales have been reported, consistent with both the cortisol-lowering and free-testosterone-raising effects acting on the central nervous system.

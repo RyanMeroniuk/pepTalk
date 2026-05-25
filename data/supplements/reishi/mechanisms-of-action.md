@@ -1,0 +1,11 @@
+# Reishi
+## Mechanisms of Action
+
+- **Beta-glucan immune modulation:** Reishi polysaccharides (beta-1,3/1,6-glucans) bind innate immune receptors — dectin-1, complement receptor 3 (CR3), and Toll-like receptors — on macrophages, NK cells, and dendritic cells. This produces immunomodulatory (balancing) rather than purely immunostimulant effects: it can up-regulate a sluggish immune response and help modulate an overactive one. This is reishi's best-characterized mechanism
+- **Triterpenoid (ganoderic acid) activity:** The bitter triterpenoids are responsible for much of reishi's anti-inflammatory, hepatoprotective, and calming activity. They inhibit inflammatory mediators, show antioxidant effects, and in preclinical models exhibit antihistamine-like and blood-pressure-modulating activity
+- **Calming / GABAergic and stress-axis effects:** Reishi's traditional "shen-calming" reputation is attributed to effects on the central nervous system and the HPA (stress) axis. Animal studies suggest anxiolytic and sedative-like effects and modulation of cortisol/stress signaling. Human mechanistic data is limited; the calming effect is supported more by tradition and animal models than by strong clinical trials
+- **Sleep support:** In rodent models, reishi extracts increased total sleep and non-REM sleep time, possibly via gut-microbiome and immune-mediated signaling and CNS modulation. This is the mechanistic basis for its evening, sleep-supporting use, but human sleep trials are sparse
+- **Anti-inflammatory and antioxidant:** Reishi reduces pro-inflammatory cytokines (TNF-alpha, IL-6) and oxidative stress markers in preclinical work, relevant to its general "healthy aging" and recovery framing
+- **Hepatoprotective:** Triterpenoids support liver function and show protective effects against chemical and oxidative liver injury in animal models — part of reishi's traditional detox/tonic reputation
+- **Cardiovascular and metabolic effects (preclinical):** Animal and small human data suggest possible blood-pressure-lowering, lipid-improving, and blood-glucose-lowering effects, attributed to triterpenoids and polysaccharides
+- **Antiplatelet activity:** Reishi (especially triterpenoids) may inhibit platelet aggregation, which underlies both a potential cardiovascular benefit and a bleeding-risk caution with anticoagulants

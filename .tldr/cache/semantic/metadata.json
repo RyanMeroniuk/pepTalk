@@ -1,88 +1,6 @@
 {
   "units": [
     {
-      "name": "lifespan",
-      "qualified_name": "backend.app.main.py.lifespan",
-      "file": "backend/app/main.py",
-      "line": 15,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def lifespan(app: FastAPI)",
-      "docstring": "Load ML model and ChromaDB on startup.",
-      "calls": [
-        "get_collection",
-        "get_model"
-      ],
-      "called_by": [
-        "<module>"
-      ],
-      "cfg_summary": "complexity:3, blocks:5",
-      "dfg_summary": "vars:7, def-use chains:0",
-      "dependencies": "os, contextlib, fastapi, fastapi.middleware.cors, app.config",
-      "code_preview": "async def lifespan(app: FastAPI):\n    \"\"\"Load ML model and ChromaDB on startup.\"\"\"\n    # Set API keys for LiteLLM\n    # LiteLLM's gemini/ provider checks GEMINI_API_KEY\n    if GOOGLE_API_KEY:\n        os.environ[\"GOOGLE_API_KEY\"] = GOOGLE_API_KEY\n        os.environ[\"GEMINI_API_KEY\"] = GOOGLE_API_KEY\n    if ANTHROPIC_API_KEY:\n        os.environ[\"ANTHROPIC_API_KEY\"] = ANTHROPIC_API_KEY\n"
-    },
-    {
-      "name": "health",
-      "qualified_name": "backend.app.main.py.health",
-      "file": "backend/app/main.py",
-      "line": 62,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def health()",
-      "docstring": "Health check endpoint.",
-      "calls": [
-        "get_collection"
-      ],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:2, def-use chains:0",
-      "dependencies": "os, contextlib, fastapi, fastapi.middleware.cors, app.config",
-      "code_preview": "async def health():\n    \"\"\"Health check endpoint.\"\"\"\n    collection = get_collection()\n    return {\n        \"status\": \"ok\",\n        \"documents\": collection.count(),"
-    },
-    {
-      "name": "get_model",
-      "qualified_name": "backend.app.dependencies.py.get_model",
-      "file": "backend/app/dependencies.py",
-      "line": 15,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def get_model() -> SentenceTransformer",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "search_knowledge_base",
-        "search",
-        "lifespan",
-        "get_stack_chunks"
-      ],
-      "cfg_summary": "complexity:2, blocks:4",
-      "dfg_summary": "vars:4, def-use chains:1",
-      "dependencies": "chromadb, sentence_transformers, app.config",
-      "code_preview": "def get_model() -> SentenceTransformer:\n    global _model\n    if _model is None:\n        _model = SentenceTransformer(str(MODEL_PATH))"
-    },
-    {
-      "name": "get_collection",
-      "qualified_name": "backend.app.dependencies.py.get_collection",
-      "file": "backend/app/dependencies.py",
-      "line": 22,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def get_collection() -> chromadb.Collection",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "health",
-        "search_knowledge_base",
-        "search",
-        "get_stack_chunks",
-        "lifespan"
-      ],
-      "cfg_summary": "complexity:2, blocks:4",
-      "dfg_summary": "vars:5, def-use chains:2",
-      "dependencies": "chromadb, sentence_transformers, app.config",
-      "code_preview": "def get_collection() -> chromadb.Collection:\n    global _chroma_collection\n    if _chroma_collection is None:\n        client = chromadb.PersistentClient(path=str(CHROMA_PATH))\n        _chroma_collection = client.get_collection(\"peptalk\")"
-    },
-    {
       "name": "get_metadata",
       "qualified_name": "backend.ingest.py.get_metadata",
       "file": "backend/ingest.py",
@@ -131,8 +49,8 @@
       "docstring": "",
       "calls": [
         "build_graph",
-        "process_file",
-        "load_documents"
+        "load_documents",
+        "process_file"
       ],
       "called_by": [
         "<module>",
@@ -142,6 +60,88 @@
       "dfg_summary": "vars:32, def-use chains:11",
       "dependencies": "os, time, chromadb, sentence_transformers, shutil",
       "code_preview": "def main():\n    print(\"PepTalk Knowledge Base Ingestion\")\n    print(\"=\" * 40)\n\n    # Load the embedding model\n    print(f\"\\nLoading embedding model from {MODEL_PATH}...\")\n    start = time.time()\n    model = SentenceTransformer(MODEL_PATH)\n    print(f\"Model loaded in {time.time() - start:.1f}s\")\n"
+    },
+    {
+      "name": "get_model",
+      "qualified_name": "backend.app.dependencies.py.get_model",
+      "file": "backend/app/dependencies.py",
+      "line": 15,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def get_model() -> SentenceTransformer",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "get_stack_chunks",
+        "search",
+        "lifespan",
+        "search_knowledge_base"
+      ],
+      "cfg_summary": "complexity:2, blocks:4",
+      "dfg_summary": "vars:4, def-use chains:1",
+      "dependencies": "chromadb, sentence_transformers, app.config",
+      "code_preview": "def get_model() -> SentenceTransformer:\n    global _model\n    if _model is None:\n        _model = SentenceTransformer(str(MODEL_PATH))"
+    },
+    {
+      "name": "get_collection",
+      "qualified_name": "backend.app.dependencies.py.get_collection",
+      "file": "backend/app/dependencies.py",
+      "line": 22,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def get_collection() -> chromadb.Collection",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "health",
+        "get_stack_chunks",
+        "search",
+        "lifespan",
+        "search_knowledge_base"
+      ],
+      "cfg_summary": "complexity:2, blocks:4",
+      "dfg_summary": "vars:5, def-use chains:2",
+      "dependencies": "chromadb, sentence_transformers, app.config",
+      "code_preview": "def get_collection() -> chromadb.Collection:\n    global _chroma_collection\n    if _chroma_collection is None:\n        client = chromadb.PersistentClient(path=str(CHROMA_PATH))\n        _chroma_collection = client.get_collection(\"peptalk\")"
+    },
+    {
+      "name": "lifespan",
+      "qualified_name": "backend.app.main.py.lifespan",
+      "file": "backend/app/main.py",
+      "line": 15,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def lifespan(app: FastAPI)",
+      "docstring": "Load ML model and ChromaDB on startup.",
+      "calls": [
+        "get_collection",
+        "get_model"
+      ],
+      "called_by": [
+        "<module>"
+      ],
+      "cfg_summary": "complexity:3, blocks:5",
+      "dfg_summary": "vars:7, def-use chains:0",
+      "dependencies": "os, contextlib, fastapi, fastapi.middleware.cors, app.config",
+      "code_preview": "async def lifespan(app: FastAPI):\n    \"\"\"Load ML model and ChromaDB on startup.\"\"\"\n    # Set API keys for LiteLLM\n    # LiteLLM's gemini/ provider checks GEMINI_API_KEY\n    if GOOGLE_API_KEY:\n        os.environ[\"GOOGLE_API_KEY\"] = GOOGLE_API_KEY\n        os.environ[\"GEMINI_API_KEY\"] = GOOGLE_API_KEY\n    if ANTHROPIC_API_KEY:\n        os.environ[\"ANTHROPIC_API_KEY\"] = ANTHROPIC_API_KEY\n"
+    },
+    {
+      "name": "health",
+      "qualified_name": "backend.app.main.py.health",
+      "file": "backend/app/main.py",
+      "line": 62,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def health()",
+      "docstring": "Health check endpoint.",
+      "calls": [
+        "get_collection"
+      ],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:2, def-use chains:0",
+      "dependencies": "os, contextlib, fastapi, fastapi.middleware.cors, app.config",
+      "code_preview": "async def health():\n    \"\"\"Health check endpoint.\"\"\"\n    collection = get_collection()\n    return {\n        \"status\": \"ok\",\n        \"documents\": collection.count(),"
     },
     {
       "name": "search",
@@ -172,8 +172,8 @@
       "signature": "def check_conflicts(request: ConflictRequest)",
       "docstring": "Check for known conflicts between items in the user's stack using the knowledge graph.",
       "calls": [
-        "get_timing_conflicts",
-        "get_conflicts"
+        "get_conflicts",
+        "get_timing_conflicts"
       ],
       "called_by": [],
       "cfg_summary": "complexity:1, blocks:2",
@@ -271,191 +271,6 @@
       "code_preview": ""
     },
     {
-      "name": "search_knowledge_base",
-      "qualified_name": "backend.app.routers.chat.py.search_knowledge_base",
-      "file": "backend/app/routers/chat.py",
-      "line": 39,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]",
-      "docstring": "Search ChromaDB for relevant chunks, boosting stack items.",
-      "calls": [
-        "get_collection",
-        "get_model"
-      ],
-      "called_by": [
-        "chat"
-      ],
-      "cfg_summary": "complexity:7, blocks:17",
-      "dfg_summary": "vars:21, def-use chains:18",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": "def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:\n    \"\"\"Search ChromaDB for relevant chunks, boosting stack items.\"\"\"\n    model = get_model()\n    collection = get_collection()\n\n    query_embedding = model.encode(query).tolist()\n\n    # Main search across everything\n    results = collection.query(\n        query_embeddings=[query_embedding],"
-    },
-    {
-      "name": "build_prompt",
-      "qualified_name": "backend.app.routers.chat.py.build_prompt",
-      "file": "backend/app/routers/chat.py",
-      "line": 90,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def build_prompt(message: str, stack: list[StackItem], history: list[ChatMessage], chunks: list[dict]) -> list[dict]",
-      "docstring": "Assemble the full prompt with system, context, history, and question.",
-      "calls": [
-        "get_stack_context"
-      ],
-      "called_by": [
-        "chat"
-      ],
-      "cfg_summary": "complexity:8, blocks:19",
-      "dfg_summary": "vars:15, def-use chains:39",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": "def build_prompt(\n    message: str,\n    stack: list[StackItem],\n    history: list[ChatMessage],\n    chunks: list[dict],\n) -> list[dict]:\n    \"\"\"Assemble the full prompt with system, context, history, and question.\"\"\"\n    messages = [{\"role\": \"system\", \"content\": SYSTEM_PROMPT}]\n\n    # Add user's stack context"
-    },
-    {
-      "name": "stream_response",
-      "qualified_name": "backend.app.routers.chat.py.stream_response",
-      "file": "backend/app/routers/chat.py",
-      "line": 132,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def stream_response(messages: list[dict], sources: list[str])",
-      "docstring": "Stream LLM response as Server-Sent Events.",
-      "calls": [],
-      "called_by": [
-        "chat",
-        "chat_stack_review"
-      ],
-      "cfg_summary": "complexity:2, blocks:3",
-      "dfg_summary": "vars:14, def-use chains:5",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": "async def stream_response(messages: list[dict], sources: list[str]):\n    \"\"\"Stream LLM response as Server-Sent Events.\"\"\"\n    try:\n        response = await acompletion(\n            model=LLM_MODEL,\n            messages=messages,\n            stream=True,\n        )\n\n        async for chunk in response:"
-    },
-    {
-      "name": "chat",
-      "qualified_name": "backend.app.routers.chat.py.chat",
-      "file": "backend/app/routers/chat.py",
-      "line": 161,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def chat(request: ChatRequest)",
-      "docstring": "RAG chat endpoint with streaming response.",
-      "calls": [
-        "build_prompt",
-        "stream_response",
-        "search_knowledge_base"
-      ],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:9, def-use chains:7",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": "async def chat(request: ChatRequest):\n    \"\"\"RAG chat endpoint with streaming response.\"\"\"\n    # Search the knowledge base\n    chunks = search_knowledge_base(request.message, request.stack)\n\n    # Build the full prompt\n    messages = build_prompt(\n        request.message, request.stack, request.history, chunks\n    )\n"
-    },
-    {
-      "name": "get_stack_chunks",
-      "qualified_name": "backend.app.routers.chat.py.get_stack_chunks",
-      "file": "backend/app/routers/chat.py",
-      "line": 185,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def get_stack_chunks(stack: list[StackItem]) -> list[dict]",
-      "docstring": "Pull the most relevant knowledge base chunks for each stack item.",
-      "calls": [
-        "get_collection",
-        "get_model"
-      ],
-      "called_by": [
-        "chat_stack_review"
-      ],
-      "cfg_summary": "complexity:5, blocks:12",
-      "dfg_summary": "vars:19, def-use chains:15",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": "def get_stack_chunks(stack: list[StackItem]) -> list[dict]:\n    \"\"\"Pull the most relevant knowledge base chunks for each stack item.\"\"\"\n    model = get_model()\n    collection = get_collection()\n    chunks = []\n    seen_ids = set()\n\n    for stack_item in stack[:10]:\n        # Search for key sections: interactions, dosing, side effects, stacking\n        review_query = f\"{stack_item.item} interactions dosing side effects stacking\""
-    },
-    {
-      "name": "chat_stack_review",
-      "qualified_name": "backend.app.routers.chat.py.chat_stack_review",
-      "file": "backend/app/routers/chat.py",
-      "line": 217,
-      "language": "python",
-      "unit_type": "function",
-      "signature": "def chat_stack_review(request: StackReviewRequest)",
-      "docstring": "AI-powered stack review \u2014 analyzes the full stack with a dedicated review prompt.",
-      "calls": [
-        "get_stack_chunks",
-        "stream_response",
-        "get_stack_context"
-      ],
-      "called_by": [],
-      "cfg_summary": "complexity:5, blocks:12",
-      "dfg_summary": "vars:16, def-use chains:26",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": "async def chat_stack_review(request: StackReviewRequest):\n    \"\"\"AI-powered stack review \u2014 analyzes the full stack with a dedicated review prompt.\"\"\"\n    # Get relevant chunks for each stack item\n    chunks = get_stack_chunks(request.stack)\n\n    # Build review prompt\n    messages = [{\"role\": \"system\", \"content\": STACK_REVIEW_PROMPT}]\n\n    # Stack listing\n    stack_text = \"USER'S CURRENT STACK:\\n\""
-    },
-    {
-      "name": "StackItem",
-      "qualified_name": "backend.app.routers.chat.py.StackItem",
-      "file": "backend/app/routers/chat.py",
-      "line": 18,
-      "language": "python",
-      "unit_type": "class",
-      "signature": "class StackItem",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "",
-      "dfg_summary": "",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": ""
-    },
-    {
-      "name": "ChatMessage",
-      "qualified_name": "backend.app.routers.chat.py.ChatMessage",
-      "file": "backend/app/routers/chat.py",
-      "line": 24,
-      "language": "python",
-      "unit_type": "class",
-      "signature": "class ChatMessage",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "",
-      "dfg_summary": "",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": ""
-    },
-    {
-      "name": "ChatRequest",
-      "qualified_name": "backend.app.routers.chat.py.ChatRequest",
-      "file": "backend/app/routers/chat.py",
-      "line": 29,
-      "language": "python",
-      "unit_type": "class",
-      "signature": "class ChatRequest",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "",
-      "dfg_summary": "",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": ""
-    },
-    {
-      "name": "StackReviewRequest",
-      "qualified_name": "backend.app.routers.chat.py.StackReviewRequest",
-      "file": "backend/app/routers/chat.py",
-      "line": 35,
-      "language": "python",
-      "unit_type": "class",
-      "signature": "class StackReviewRequest",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "",
-      "dfg_summary": "",
-      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
-      "code_preview": ""
-    },
-    {
       "name": "extract_name",
       "qualified_name": "backend.app.routers.browse.py.extract_name",
       "file": "backend/app/routers/browse.py",
@@ -466,8 +281,8 @@
       "docstring": "Extract the H1 title from a markdown file.",
       "calls": [],
       "called_by": [
-        "get_item_detail",
-        "list_items"
+        "list_items",
+        "get_item_detail"
       ],
       "cfg_summary": "complexity:3, blocks:8",
       "dfg_summary": "vars:4, def-use chains:3",
@@ -506,9 +321,9 @@
         "extract_name"
       ],
       "called_by": [
+        "list_lifestyle",
         "list_supplements",
-        "list_peptides",
-        "list_lifestyle"
+        "list_peptides"
       ],
       "cfg_summary": "complexity:6, blocks:16",
       "dfg_summary": "vars:11, def-use chains:9",
@@ -646,6 +461,191 @@
       "code_preview": "async def get_lifestyle_topic(slug: str):"
     },
     {
+      "name": "search_knowledge_base",
+      "qualified_name": "backend.app.routers.chat.py.search_knowledge_base",
+      "file": "backend/app/routers/chat.py",
+      "line": 39,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]",
+      "docstring": "Search ChromaDB for relevant chunks, boosting stack items.",
+      "calls": [
+        "get_collection",
+        "get_model"
+      ],
+      "called_by": [
+        "chat"
+      ],
+      "cfg_summary": "complexity:7, blocks:17",
+      "dfg_summary": "vars:21, def-use chains:18",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": "def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:\n    \"\"\"Search ChromaDB for relevant chunks, boosting stack items.\"\"\"\n    model = get_model()\n    collection = get_collection()\n\n    query_embedding = model.encode(query).tolist()\n\n    # Main search across everything\n    results = collection.query(\n        query_embeddings=[query_embedding],"
+    },
+    {
+      "name": "build_prompt",
+      "qualified_name": "backend.app.routers.chat.py.build_prompt",
+      "file": "backend/app/routers/chat.py",
+      "line": 90,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def build_prompt(message: str, stack: list[StackItem], history: list[ChatMessage], chunks: list[dict]) -> list[dict]",
+      "docstring": "Assemble the full prompt with system, context, history, and question.",
+      "calls": [
+        "get_stack_context"
+      ],
+      "called_by": [
+        "chat"
+      ],
+      "cfg_summary": "complexity:8, blocks:19",
+      "dfg_summary": "vars:15, def-use chains:39",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": "def build_prompt(\n    message: str,\n    stack: list[StackItem],\n    history: list[ChatMessage],\n    chunks: list[dict],\n) -> list[dict]:\n    \"\"\"Assemble the full prompt with system, context, history, and question.\"\"\"\n    messages = [{\"role\": \"system\", \"content\": SYSTEM_PROMPT}]\n\n    # Add user's stack context"
+    },
+    {
+      "name": "stream_response",
+      "qualified_name": "backend.app.routers.chat.py.stream_response",
+      "file": "backend/app/routers/chat.py",
+      "line": 132,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def stream_response(messages: list[dict], sources: list[str])",
+      "docstring": "Stream LLM response as Server-Sent Events.",
+      "calls": [],
+      "called_by": [
+        "chat_stack_review",
+        "chat"
+      ],
+      "cfg_summary": "complexity:2, blocks:3",
+      "dfg_summary": "vars:14, def-use chains:5",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": "async def stream_response(messages: list[dict], sources: list[str]):\n    \"\"\"Stream LLM response as Server-Sent Events.\"\"\"\n    try:\n        response = await acompletion(\n            model=LLM_MODEL,\n            messages=messages,\n            stream=True,\n        )\n\n        async for chunk in response:"
+    },
+    {
+      "name": "chat",
+      "qualified_name": "backend.app.routers.chat.py.chat",
+      "file": "backend/app/routers/chat.py",
+      "line": 161,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def chat(request: ChatRequest)",
+      "docstring": "RAG chat endpoint with streaming response.",
+      "calls": [
+        "search_knowledge_base",
+        "stream_response",
+        "build_prompt"
+      ],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:9, def-use chains:7",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": "async def chat(request: ChatRequest):\n    \"\"\"RAG chat endpoint with streaming response.\"\"\"\n    # Search the knowledge base\n    chunks = search_knowledge_base(request.message, request.stack)\n\n    # Build the full prompt\n    messages = build_prompt(\n        request.message, request.stack, request.history, chunks\n    )\n"
+    },
+    {
+      "name": "get_stack_chunks",
+      "qualified_name": "backend.app.routers.chat.py.get_stack_chunks",
+      "file": "backend/app/routers/chat.py",
+      "line": 185,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def get_stack_chunks(stack: list[StackItem]) -> list[dict]",
+      "docstring": "Pull the most relevant knowledge base chunks for each stack item.",
+      "calls": [
+        "get_collection",
+        "get_model"
+      ],
+      "called_by": [
+        "chat_stack_review"
+      ],
+      "cfg_summary": "complexity:5, blocks:12",
+      "dfg_summary": "vars:19, def-use chains:15",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": "def get_stack_chunks(stack: list[StackItem]) -> list[dict]:\n    \"\"\"Pull the most relevant knowledge base chunks for each stack item.\"\"\"\n    model = get_model()\n    collection = get_collection()\n    chunks = []\n    seen_ids = set()\n\n    for stack_item in stack[:10]:\n        # Search for key sections: interactions, dosing, side effects, stacking\n        review_query = f\"{stack_item.item} interactions dosing side effects stacking\""
+    },
+    {
+      "name": "chat_stack_review",
+      "qualified_name": "backend.app.routers.chat.py.chat_stack_review",
+      "file": "backend/app/routers/chat.py",
+      "line": 217,
+      "language": "python",
+      "unit_type": "function",
+      "signature": "def chat_stack_review(request: StackReviewRequest)",
+      "docstring": "AI-powered stack review \u2014 analyzes the full stack with a dedicated review prompt.",
+      "calls": [
+        "get_stack_chunks",
+        "stream_response",
+        "get_stack_context"
+      ],
+      "called_by": [],
+      "cfg_summary": "complexity:5, blocks:12",
+      "dfg_summary": "vars:16, def-use chains:26",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": "async def chat_stack_review(request: StackReviewRequest):\n    \"\"\"AI-powered stack review \u2014 analyzes the full stack with a dedicated review prompt.\"\"\"\n    # Get relevant chunks for each stack item\n    chunks = get_stack_chunks(request.stack)\n\n    # Build review prompt\n    messages = [{\"role\": \"system\", \"content\": STACK_REVIEW_PROMPT}]\n\n    # Stack listing\n    stack_text = \"USER'S CURRENT STACK:\\n\""
+    },
+    {
+      "name": "StackItem",
+      "qualified_name": "backend.app.routers.chat.py.StackItem",
+      "file": "backend/app/routers/chat.py",
+      "line": 18,
+      "language": "python",
+      "unit_type": "class",
+      "signature": "class StackItem",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "",
+      "dfg_summary": "",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": ""
+    },
+    {
+      "name": "ChatMessage",
+      "qualified_name": "backend.app.routers.chat.py.ChatMessage",
+      "file": "backend/app/routers/chat.py",
+      "line": 24,
+      "language": "python",
+      "unit_type": "class",
+      "signature": "class ChatMessage",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "",
+      "dfg_summary": "",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": ""
+    },
+    {
+      "name": "ChatRequest",
+      "qualified_name": "backend.app.routers.chat.py.ChatRequest",
+      "file": "backend/app/routers/chat.py",
+      "line": 29,
+      "language": "python",
+      "unit_type": "class",
+      "signature": "class ChatRequest",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "",
+      "dfg_summary": "",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": ""
+    },
+    {
+      "name": "StackReviewRequest",
+      "qualified_name": "backend.app.routers.chat.py.StackReviewRequest",
+      "file": "backend/app/routers/chat.py",
+      "line": 35,
+      "language": "python",
+      "unit_type": "class",
+      "signature": "class StackReviewRequest",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "",
+      "dfg_summary": "",
+      "dependencies": "json, typing, fastapi, fastapi.responses, litellm",
+      "code_preview": ""
+    },
+    {
       "name": "get_graph",
       "qualified_name": "backend.app.graph_utils.py.get_graph",
       "file": "backend/app/graph_utils.py",
@@ -657,10 +657,10 @@
       "calls": [],
       "called_by": [
         "get_conflicts",
-        "get_related_items",
-        "get_stack_context",
+        "get_synergies",
         "get_graph_stats",
-        "get_synergies"
+        "get_timing_conflicts",
+        "reload_graph"
       ],
       "cfg_summary": "complexity:3, blocks:7",
       "dfg_summary": "vars:8, def-use chains:3",
@@ -719,8 +719,8 @@
         "get_graph"
       ],
       "called_by": [
-        "stack_review",
         "check_conflicts",
+        "stack_review",
         "get_stack_context"
       ],
       "cfg_summary": "complexity:9, blocks:23",
@@ -832,7 +832,7 @@
       "name": "get_entity_type",
       "qualified_name": "backend.build_graph.py.get_entity_type",
       "file": "backend/build_graph.py",
-      "line": 116,
+      "line": 149,
       "language": "python",
       "unit_type": "function",
       "signature": "def get_entity_type(entity_id: str) -> str",
@@ -850,7 +850,7 @@
       "name": "extract_from_stacking",
       "qualified_name": "backend.build_graph.py.extract_from_stacking",
       "file": "backend/build_graph.py",
-      "line": 127,
+      "line": 160,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_stacking(content: str, source: str, source_type: str) -> list[dict]",
@@ -868,7 +868,7 @@
       "name": "extract_from_drug_interactions",
       "qualified_name": "backend.build_graph.py.extract_from_drug_interactions",
       "file": "backend/build_graph.py",
-      "line": 170,
+      "line": 203,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_drug_interactions(content: str, source: str, source_type: str) -> list[dict]",
@@ -886,7 +886,7 @@
       "name": "extract_from_supplement_interactions",
       "qualified_name": "backend.build_graph.py.extract_from_supplement_interactions",
       "file": "backend/build_graph.py",
-      "line": 249,
+      "line": 282,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_supplement_interactions(content: str, source: str, source_type: str) -> list[dict]",
@@ -904,25 +904,25 @@
       "name": "extract_from_peptide_synergies",
       "qualified_name": "backend.build_graph.py.extract_from_peptide_synergies",
       "file": "backend/build_graph.py",
-      "line": 288,
+      "line": 321,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_peptide_synergies(content: str, source: str, source_type: str) -> list[dict]",
-      "docstring": "Extract SYNERGIZES_WITH from peptide-synergies.md (supplement files).",
+      "docstring": "Extract SYNERGIZES_WITH from peptide-synergies.md.\n\nLinks the source to peptides mentioned (the primary use), and ALSO to other\nsupplements mentioned \u2014 this captures supplement-supplement clusters like\nGlyNAC (glycine + NAC), the joint stack (MSM + glucosamine + collagen + HA),\nthe functional-mushroom trio, and the testosterone cluster.",
       "calls": [],
       "called_by": [
         "process_file"
       ],
-      "cfg_summary": "complexity:9, blocks:24",
-      "dfg_summary": "vars:15, def-use chains:24",
+      "cfg_summary": "complexity:10, blocks:26",
+      "dfg_summary": "vars:21, def-use chains:26",
       "dependencies": "json, os, re, pathlib, networkx",
-      "code_preview": "def extract_from_peptide_synergies(content: str, source: str, source_type: str) -> list[dict]:\n    \"\"\"Extract SYNERGIZES_WITH from peptide-synergies.md (supplement files).\"\"\"\n    rels = []\n\n    # These files have ### headers for each peptide\n    current_peptide = None\n    lines = content.split(\"\\n\")\n\n    for line in lines:\n        line_stripped = line.strip()"
+      "code_preview": "def extract_from_peptide_synergies(content: str, source: str, source_type: str) -> list[dict]:\n    \"\"\"Extract SYNERGIZES_WITH from peptide-synergies.md.\n\n    Links the source to peptides mentioned (the primary use), and ALSO to other\n    supplements mentioned \u2014 this captures supplement-supplement clusters like\n    GlyNAC (glycine + NAC), the joint stack (MSM + glucosamine + collagen + HA),\n    the functional-mushroom trio, and the testosterone cluster.\n    \"\"\"\n    rels = []\n"
     },
     {
       "name": "extract_from_connections",
       "qualified_name": "backend.build_graph.py.extract_from_connections",
       "file": "backend/build_graph.py",
-      "line": 333,
+      "line": 373,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_connections(content: str, source: str, source_type: str, connection_type: str) -> list[dict]",
@@ -940,17 +940,17 @@
       "name": "process_file",
       "qualified_name": "backend.build_graph.py.process_file",
       "file": "backend/build_graph.py",
-      "line": 359,
+      "line": 399,
       "language": "python",
       "unit_type": "function",
       "signature": "def process_file(filepath: Path, source_entity: str, source_type: str) -> list[dict]",
       "docstring": "Process a single file and extract relationships.",
       "calls": [
-        "extract_from_peptide_synergies",
-        "extract_from_drug_interactions",
         "extract_from_stacking",
-        "extract_from_supplement_interactions",
-        "extract_from_connections"
+        "extract_from_drug_interactions",
+        "extract_from_connections",
+        "extract_from_peptide_synergies",
+        "extract_from_supplement_interactions"
       ],
       "called_by": [
         "main"
@@ -964,7 +964,7 @@
       "name": "build_graph",
       "qualified_name": "backend.build_graph.py.build_graph",
       "file": "backend/build_graph.py",
-      "line": 382,
+      "line": 422,
       "language": "python",
       "unit_type": "function",
       "signature": "def build_graph(all_relationships: list[dict]) -> nx.MultiDiGraph",
@@ -985,15 +985,15 @@
       "name": "main",
       "qualified_name": "backend.build_graph.py.main",
       "file": "backend/build_graph.py",
-      "line": 417,
+      "line": 457,
       "language": "python",
       "unit_type": "function",
       "signature": "def main()",
       "docstring": "",
       "calls": [
         "build_graph",
-        "process_file",
-        "load_documents"
+        "load_documents",
+        "process_file"
       ],
       "called_by": [
         "<module>",

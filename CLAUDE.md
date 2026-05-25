@@ -1,7 +1,7 @@
 # PepTalk - AI-Powered Peptide, Supplement & Lifestyle Optimization Coach
 
 ## Project Overview
-A mobile app that acts as a personalized health optimization coach. Users input their peptide and supplement stack, and PepTalk generates actionable recommendations — what to eat, what to avoid, how to train, how to sleep, and what supplements to pair — all tailored to their specific protocol. The AI chat is grounded in a curated knowledge base of 1,375 files, not hallucinated.
+A mobile app that acts as a personalized health optimization coach. Users input their peptide and supplement stack, and PepTalk generates actionable recommendations — what to eat, what to avoid, how to train, how to sleep, and what supplements to pair — all tailored to their specific protocol. The AI chat is grounded in a curated knowledge base of 1,837 files, not hallucinated.
 
 This is NOT just a reference tool. It's a coach that knows your stack and proactively advises.
 
@@ -11,7 +11,7 @@ pepTalk/
 ├── CLAUDE.md                              # This file — project context
 ├── README.md                              # Project overview and setup guide
 ├── .gitignore                             # Python, Node, models, ChromaDB, env files
-├── data/                                  # Knowledge base (1,375 markdown files)
+├── data/                                  # Knowledge base (1,837 markdown files)
 │   ├── peptides/                          # 61 peptide directories (14 sections each)
 │   │   ├── _subcutaneous-injections-guide.md
 │   │   ├── _stacking-and-supplements-guide/  # 5 split section files
@@ -31,7 +31,7 @@ pepTalk/
 │   │   │   ├── drug-interactions.md
 │   │   │   └── regulatory-status.md
 │   │   └── ... (61 peptide directories total — incl. blends like glow/klow and peptide hormones)
-│   ├── supplements/                       # 31 supplement directories (14 sections each)
+│   ├── supplements/                       # 64 supplement directories (14 sections each)
 │   │   └── ... (same structure but with forms-and-bioavailability.md, peptide-synergies.md, etc.)
 │   └── lifestyle/                         # 10 lifestyle topic directories (8 sections each)
 │       └── ... (overview, science, protocols, common-mistakes, peptide/supplement-connections, quick-wins, resources)
@@ -89,7 +89,7 @@ Mobile App (thin client)              Backend (FastAPI)
 | `/chat` | POST | Core RAG endpoint — streaming SSE response |
 | `/peptides` | GET | List all 61 peptides (slug, name, classification) |
 | `/peptides/{slug}` | GET | All sections for one peptide |
-| `/supplements` | GET | List all 31 supplements |
+| `/supplements` | GET | List all 64 supplements |
 | `/supplements/{slug}` | GET | All sections for one supplement |
 | `/lifestyle` | GET | List all 10 lifestyle topics |
 | `/lifestyle/{slug}` | GET | All sections for one lifestyle topic |
@@ -110,9 +110,9 @@ Mobile App (thin client)              Backend (FastAPI)
 ### Knowledge Graph (`backend/graph.json`, built by `build_graph.py`)
 An in-memory adjacency list (NetworkX MultiDiGraph) persisted as JSON. Stores explicit relationships extracted from the data files via regex parsing — no LLM needed to build.
 
-**Stats**: 132 nodes, 3,755 edges
-- **Nodes**: 60 peptides, 31 supplements, 27 drugs, 14 conditions
-- **Edge types**: SYNERGIZES_WITH (1,636), STACKS_WITH (808), CONFLICTS_WITH (686), CONTRAINDICATED_IN (384), SUPPORTS (213), TIMING_CONFLICT (28)
+**Stats**: 167 nodes, 5,932 edges
+- **Nodes**: 64 supplements, 60 peptides, 28 drugs, 15 conditions
+- **Edge types**: SYNERGIZES_WITH (3,300), CONFLICTS_WITH (985), STACKS_WITH (824), CONTRAINDICATED_IN (553), SUPPORTS (220), TIMING_CONFLICT (50)
 
 **How it enhances the RAG**:
 - Vector search returns relevant *content* (text chunks)
@@ -149,9 +149,9 @@ Like a calorie tracking app, but for peptides and supplements:
 ## Knowledge Base Details
 
 ### Data Stats
-- **1,375 markdown files** across 107 directories
+- **1,837 markdown files** across 140 directories
 - **61 peptides** × 14 sections = ~854 files (incl. blends like glow/klow and peptide hormones)
-- **31 supplements** × 14 sections = ~434 files
+- **64 supplements** × 14 sections = ~896 files
 - **10 lifestyle topics** × 8 sections = 80 files
 - **Guides**: SubQ injection guide + stacking/supplements guide (5 files)
 - Every file is a self-contained chunk optimized for RAG retrieval
@@ -213,10 +213,10 @@ notebooklm source list                      # List sources
 - Vector DB: negligible (dataset is a few MB, embedded with the server)
 
 ## Status
-- [x] Knowledge base — 61 peptides, 31 supplements, 10 lifestyle topics (1,375 files)
+- [x] Knowledge base — 61 peptides, 64 supplements, 10 lifestyle topics (1,837 files)
 - [x] Embedding model — all-MiniLM-L6-v2 running locally
 - [x] Vector database — ChromaDB ingested and searchable
-- [x] Knowledge graph — 132 nodes, 3,755 edges, fully operational
+- [x] Knowledge graph — 167 nodes, 5,932 edges, fully operational
 - [x] Backend API — FastAPI with browse, search, chat, and graph endpoints
 - [x] Chat endpoint — tested with Gemini 2.5 Flash, streaming responses working
 - [ ] Mobile app — Chat UI

@@ -1,0 +1,12 @@
+# Cordyceps
+## Benefits
+
+- **Aerobic capacity and VO2 support (mixed evidence):** The most-studied claim. A controlled trial in healthy older adults using CS-4 (Chen et al., 2010) reported improved metabolic and ventilatory threshold markers after 6 weeks, and a study using a Cordyceps-containing mushroom blend (Hirsch et al., 2017) reported improved VO2 max and time to exhaustion in young adults after 3 weeks. Other trials, especially in trained athletes, show no significant change. Net interpretation: modest aerobic benefit most likely in untrained or older individuals; unproven in elite athletes.
+- **Anti-fatigue and endurance:** Rodent endurance models consistently show extended swimming/running time to exhaustion, reduced lactate, and reduced oxidative stress. Human anti-fatigue reports exist but are largely subjective. Cordyceps is best framed as a stamina/anti-fatigue adjunct supported strongly in animals and modestly in humans.
+- **Exercise recovery:** Proposed reduction in exercise-induced oxidative stress and inflammation may support recovery between sessions, complementing its endurance positioning. Human evidence is preliminary.
+- **Metabolic health:** Animal studies show improved insulin sensitivity, lower blood glucose, and improved lipid profiles. Promising as a metabolic adaptogen, but human confirmation is limited.
+- **Immune modulation:** Beta-glucans support balanced innate immune function (macrophage and NK activity). Traditionally used to support resistance to illness and recovery from fatigue and convalescence.
+- **Lung and respiratory support:** A pillar of its traditional use ("for the lungs"). Some small studies suggest benefit for exercise tolerance and respiratory symptoms; mechanism may involve bronchodilation and improved oxygen utilization. Evidence is preliminary.
+- **Libido and vitality (traditional):** Traditionally used as a vitality and sexual-health tonic. Human clinical data is weak; this is primarily a traditional-use claim.
+- **Antioxidant and anti-inflammatory effects:** Cordycepin and polysaccharides reduce oxidative stress and inflammatory markers in preclinical models, the basis for the broader "healthy aging" framing.
+- **Stacks well with the mushroom trio:** Frequently combined with lion's mane (cognition) and reishi (calm/immune) for a complementary functional-mushroom protocol — Cordyceps contributes the energy/endurance angle.

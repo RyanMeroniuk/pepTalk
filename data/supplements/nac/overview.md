@@ -1,0 +1,10 @@
+# NAC (N-Acetylcysteine)
+## Overview
+
+N-acetylcysteine is the stabilized supplemental form of the amino acid cysteine, and its primary value comes from being the rate-limiting building block for glutathione — the body's master intracellular antioxidant. By delivering cysteine efficiently, NAC raises glutathione levels in the liver, lungs, brain, and immune cells, which underpins its long history of clinical use as an antidote for acetaminophen (paracetamol) overdose and as a mucolytic to thin respiratory secretions. Beyond these established medical uses, NAC is studied for liver support, antioxidant defense, and glutamate modulation in the brain, and it forms one half of the increasingly studied "GlyNAC" longevity combination when paired with glycine.
+
+- **Why it matters:** Glutathione cannot be supplemented efficiently in oral form because it is largely broken down in digestion. Supplying cysteine via NAC lets the body manufacture its own glutathione, which is the more reliable route to raising intracellular levels.
+- **Clinical pedigree:** NAC is on the WHO Model List of Essential Medicines. In hospitals it is the standard antidote for acetaminophen poisoning (it replenishes the glutathione that toxic acetaminophen metabolites deplete) and is used to break down thick mucus in chronic lung conditions.
+- **GlyNAC longevity stack:** Pairing NAC (cysteine donor) with glycine (the other amino acid glutathione is built from) addresses both rate-limiting substrates simultaneously. Pilot human trials of GlyNAC report restored glutathione, lower oxidative stress, and improved mitochondrial markers in older adults — though this research is still early.
+- **Brain and glutamate:** NAC modulates the cystine-glutamate antiporter and is researched as an adjunct in obsessive-compulsive spectrum conditions, addiction, and mood — an area of active but not yet definitive study.
+- **Safety:** Decades of clinical use establish a strong safety record at typical doses, with mild GI effects being the most common complaint.
