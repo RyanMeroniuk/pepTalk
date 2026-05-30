@@ -1,3 +1,9 @@
+// PepTalk — Syringe Calculator (presented as a modal from Stack quick actions).
+// Light-theme redesign matching design inspo/claudeDesignCode/syringe-app.jsx.
+//
+// Calculation math is unchanged from the original (it was correct); this is a
+// presentation rewrite. Insulin syringes are 100 units / mL.
+
 import { useState } from 'react';
 import {
   View,
@@ -6,8 +12,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from '../components/Icon';
+import Badge from '../components/Badge';
+import PrimaryButton from '../components/PrimaryButton';
+import { COLORS, RADII, SPACING, FONT_SIZES, SHADOWS } from '../theme/tokens';
 
 const SYRINGE_OPTIONS = [
   { label: '0.3 mL', totalUnits: 30, mlCapacity: 0.3 },
@@ -15,293 +27,505 @@ const SYRINGE_OPTIONS = [
   { label: '1 mL', totalUnits: 100, mlCapacity: 1.0 },
 ];
 
+const UNITS_PER_ML = 100;
+
 export default function SyringeCalculatorScreen({ navigation }) {
-  const [syringeIndex, setSyringeIndex] = useState(0);
+  const insets = useSafeAreaInsets();
+  const [syringeIndex, setSyringeIndex] = useState(1); // default 0.5 mL
   const [peptideMg, setPeptideMg] = useState('');
   const [waterMl, setWaterMl] = useState('');
   const [targetMcg, setTargetMcg] = useState('');
+  const [focusedField, setFocusedField] = useState(null);
 
   const syringe = SYRINGE_OPTIONS[syringeIndex];
-
-  // All insulin syringes are 100 units/mL
-  const UNITS_PER_ML = 100;
 
   const peptideNum = parseFloat(peptideMg);
   const waterNum = parseFloat(waterMl);
   const targetNum = parseFloat(targetMcg);
-
   const canCalculate = peptideNum > 0 && waterNum > 0 && targetNum > 0;
 
-  let units = null;
-  let volumeMl = null;
-  let overCapacity = false;
+  let units = 0;
+  let volumeMl = 0;
+  let concentration = 0;
+  let mcgPerUnit = 0;
+  let state = 'empty';
 
   if (canCalculate) {
-    const concentrationMgPerMl = peptideNum / waterNum;
-    const doseMg = targetNum / 1000;
-    volumeMl = doseMg / concentrationMgPerMl;
-    units = volumeMl * UNITS_PER_ML;
-    overCapacity = units > syringe.totalUnits;
+    concentration = peptideNum / waterNum; // mg/mL
+    mcgPerUnit = (concentration * 1000) / UNITS_PER_ML; // mcg per 1 unit
+    units = targetNum / mcgPerUnit;
+    volumeMl = units / UNITS_PER_ML;
+    state = units > syringe.totalUnits ? 'warning' : 'valid';
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.s }]}>
+        <View style={styles.headerTop}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
+            hitSlop={8}
+          >
+            <Icon name="back" size={16} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+          <View style={{ flex: 1 }} />
+          <View style={styles.toolPill}>
+            <Icon name="syringe" size={12} color={COLORS.bluePrimary} />
+            <Text style={styles.toolPillText}>Tool</Text>
+          </View>
+        </View>
         <Text style={styles.title}>Syringe Calculator</Text>
         <Text style={styles.subtitle}>
-          Calculate how many units to draw for your target dose
+          Calculate how many units to draw for your target dose.
         </Text>
+      </View>
 
-        {/* Syringe Type */}
-        <Text style={styles.label}>Syringe Type</Text>
-        <View style={styles.segmented}>
-          {SYRINGE_OPTIONS.map((opt, i) => (
-            <TouchableOpacity
-              key={opt.label}
-              style={[styles.segment, i === syringeIndex && styles.segmentActive]}
-              onPress={() => setSyringeIndex(i)}
-            >
-              <Text style={[styles.segmentText, i === syringeIndex && styles.segmentTextActive]}>
-                {opt.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Syringe size segmented control */}
+          <View>
+            <Text style={styles.fieldLabel}>SYRINGE SIZE</Text>
+            <View style={styles.segmented}>
+              {SYRINGE_OPTIONS.map((opt, i) => {
+                const active = i === syringeIndex;
+                return (
+                  <TouchableOpacity
+                    key={opt.label}
+                    activeOpacity={0.8}
+                    onPress={() => setSyringeIndex(i)}
+                    style={[styles.segment, active && styles.segmentActive]}
+                  >
+                    <Text style={[styles.segmentText, active && styles.segmentTextActive]}>
+                      {opt.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+
+          <InputField
+            label="PEPTIDE AMOUNT"
+            hint="Total mg in your vial"
+            suffix="mg"
+            value={peptideMg}
+            onChangeText={setPeptideMg}
+            focused={focusedField === 'peptide'}
+            onFocus={() => setFocusedField('peptide')}
+            onBlur={() => setFocusedField(null)}
+          />
+          <InputField
+            label="BACTERIOSTATIC WATER"
+            hint="How much BAC water you reconstituted with"
+            suffix="mL"
+            value={waterMl}
+            onChangeText={setWaterMl}
+            focused={focusedField === 'water'}
+            onFocus={() => setFocusedField('water')}
+            onBlur={() => setFocusedField(null)}
+          />
+          <InputField
+            label="TARGET DOSE"
+            hint="Your desired dose per injection"
+            suffix="mcg"
+            value={targetMcg}
+            onChangeText={setTargetMcg}
+            focused={focusedField === 'target'}
+            onFocus={() => setFocusedField('target')}
+            onBlur={() => setFocusedField(null)}
+          />
+
+          <ResultCard
+            state={state}
+            units={units}
+            volumeMl={volumeMl}
+            syringeLabel={syringe.label}
+          />
+
+          <ReconInfo
+            concentration={concentration}
+            mcgPerUnit={mcgPerUnit}
+            hasInputs={canCalculate}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      {/* Fixed Done button */}
+      <View style={[styles.footer, { paddingBottom: insets.bottom + SPACING.m }]}>
+        <PrimaryButton label="Done" onPress={() => navigation.goBack()} />
+      </View>
+    </View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// InputField — labeled numeric input with focus-border + suffix
+// ─────────────────────────────────────────────────────────────
+function InputField({ label, hint, suffix, value, onChangeText, focused, onFocus, onBlur }) {
+  return (
+    <View>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <View style={[styles.inputWrap, focused && styles.inputWrapFocused]}>
+        <TextInput
+          style={styles.input}
+          value={value}
+          onChangeText={onChangeText}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          keyboardType="decimal-pad"
+          placeholder="—"
+          placeholderTextColor={COLORS.textTertiary}
+        />
+        <Text style={styles.suffix}>{suffix}</Text>
+      </View>
+      <Text style={styles.hint}>{hint}</Text>
+    </View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// ResultCard — empty / valid / warning
+// ─────────────────────────────────────────────────────────────
+function ResultCard({ state, units, volumeMl, syringeLabel }) {
+  if (state === 'empty') {
+    return (
+      <View style={styles.resultEmpty}>
+        <View style={styles.resultEmptyIcon}>
+          <Icon name="info" size={18} color={COLORS.textSecondary} />
         </View>
+        <Text style={styles.resultEmptyText}>Fill in all fields to see your result.</Text>
+      </View>
+    );
+  }
 
-        {/* Peptide Amount */}
-        <Text style={styles.label}>Peptide Amount (mg)</Text>
-        <Text style={styles.hint}>Total mg in your vial (e.g. 10, 20)</Text>
-        <TextInput
-          style={styles.input}
-          value={peptideMg}
-          onChangeText={setPeptideMg}
-          keyboardType="decimal-pad"
-          placeholder="e.g. 10"
-          placeholderTextColor="#555"
-        />
+  const warn = state === 'warning';
+  const accent = warn ? COLORS.amber : COLORS.bluePrimary;
+  const unitsText = units.toFixed(units >= 10 ? 1 : 2);
 
-        {/* BAC Water */}
-        <Text style={styles.label}>Bacteriostatic Water (mL)</Text>
-        <Text style={styles.hint}>How much BAC water you reconstituted with</Text>
-        <TextInput
-          style={styles.input}
-          value={waterMl}
-          onChangeText={setWaterMl}
-          keyboardType="decimal-pad"
-          placeholder="e.g. 2"
-          placeholderTextColor="#555"
-        />
+  return (
+    <View style={[styles.resultCard, warn ? styles.resultCardWarn : SHADOWS.elevated]}>
+      {warn && (
+        <View style={styles.overBadge}>
+          <Icon name="alert" size={11} color={COLORS.amberDeep} strokeWidth={2.5} />
+          <Text style={styles.overBadgeText}>OVER CAPACITY</Text>
+        </View>
+      )}
+      <View style={styles.resultNumberRow}>
+        <Text style={[styles.resultNumber, { color: accent }]}>{unitsText}</Text>
+        <Text style={styles.resultUnits}>units</Text>
+      </View>
+      <Text style={styles.resultDetail}>
+        ({volumeMl.toFixed(3)} mL on a {syringeLabel} syringe)
+      </Text>
+      {warn && (
+        <View style={styles.warnBox}>
+          <Icon name="alert" size={14} color={COLORS.amberDeep} strokeWidth={2} />
+          <Text style={styles.warnText}>
+            Exceeds {syringeLabel} syringe capacity — use a larger syringe or split the draw.
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
 
-        {/* Target Dose */}
-        <Text style={styles.label}>Target Dose (mcg)</Text>
-        <Text style={styles.hint}>Your desired dose per injection</Text>
-        <TextInput
-          style={styles.input}
-          value={targetMcg}
-          onChangeText={setTargetMcg}
-          keyboardType="decimal-pad"
-          placeholder="e.g. 250"
-          placeholderTextColor="#555"
-        />
+// ─────────────────────────────────────────────────────────────
+// ReconInfo — concentration + mcg-per-unit panel
+// ─────────────────────────────────────────────────────────────
+function ReconInfo({ concentration, mcgPerUnit, hasInputs }) {
+  return (
+    <View style={styles.reconCard}>
+      <Text style={styles.reconTitle}>RECONSTITUTION INFO</Text>
+      <ReconRow label="Concentration" value={hasInputs ? `${concentration.toFixed(2)} mg/mL` : '—'} />
+      <ReconRow label="Each unit" value={hasInputs ? `${mcgPerUnit.toFixed(1)} mcg` : '—'} />
+    </View>
+  );
+}
 
-        {/* Result */}
-        {canCalculate && (
-          <View style={[styles.resultCard, overCapacity && styles.resultCardWarning]}>
-            <Text style={styles.resultNumber}>{units.toFixed(1)}</Text>
-            <Text style={styles.resultLabel}>units</Text>
-            <Text style={styles.resultDetail}>
-              ({volumeMl.toFixed(3)} mL on a {syringe.label} syringe)
-            </Text>
-            {overCapacity && (
-              <View style={styles.warningBadge}>
-                <Text style={styles.warningText}>
-                  Exceeds {syringe.label} syringe capacity ({syringe.totalUnits} units).
-                  Use a larger syringe or split into multiple draws.
-                </Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {!canCalculate && (
-          <View style={styles.resultCardEmpty}>
-            <Text style={styles.resultEmptyText}>
-              Fill in all fields above to see your result
-            </Text>
-          </View>
-        )}
-
-        {/* Concentration info */}
-        {canCalculate && (
-          <View style={styles.infoCard}>
-            <Text style={styles.infoTitle}>Reconstitution Info</Text>
-            <Text style={styles.infoText}>
-              Concentration: {(peptideNum / waterNum).toFixed(2)} mg/mL
-            </Text>
-            <Text style={styles.infoText}>
-              Each unit = {((peptideNum / waterNum) / UNITS_PER_ML * 1000).toFixed(1)} mcg
-            </Text>
-          </View>
-        )}
-      </ScrollView>
-
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.closeButtonText}>Done</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+function ReconRow({ label, value }) {
+  return (
+    <View style={styles.reconRow}>
+      <Text style={styles.reconLabel}>{label}</Text>
+      <Text style={styles.reconValue}>{value}</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111',
+    backgroundColor: COLORS.background,
   },
-  scroll: {
-    padding: 20,
-    paddingBottom: 100,
+  header: {
+    paddingHorizontal: SPACING.l,
+    paddingBottom: SPACING.ms,
+    backgroundColor: COLORS.background,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.hairline,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  backBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: RADII.iconSquare,
+    backgroundColor: COLORS.panel,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toolPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xxs,
+    backgroundColor: COLORS.blueTint,
+    borderRadius: RADII.full,
+  },
+  toolPillText: {
+    color: COLORS.bluePrimary,
+    fontSize: 11.5,
+    fontWeight: '600',
   },
   title: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: '800',
-    marginBottom: 4,
+    fontSize: FONT_SIZES.sectionTitle,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    color: '#888',
-    fontSize: 14,
-    marginBottom: 28,
+    fontSize: 13.5,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.xxs,
+    lineHeight: 19,
   },
-  label: {
-    color: '#fff',
-    fontSize: 15,
+  scroll: {
+    padding: SPACING.l,
+    paddingBottom: SPACING.xxl,
+    gap: SPACING.l,
+  },
+  fieldLabel: {
+    fontSize: FONT_SIZES.caption,
     fontWeight: '600',
-    marginTop: 20,
-    marginBottom: 4,
+    color: COLORS.textSecondary,
+    letterSpacing: 0.8,
+    marginBottom: SPACING.s,
   },
-  hint: {
-    color: '#666',
-    fontSize: 12,
-    marginBottom: 8,
-  },
+
+  // Segmented control
   segmented: {
     flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
-    borderRadius: 10,
-    padding: 3,
-    marginTop: 4,
+    gap: SPACING.xxs,
+    padding: SPACING.xxs,
+    backgroundColor: COLORS.panel,
+    borderRadius: RADII.input,
   },
   segment: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 9,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 9,
   },
   segmentActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: COLORS.bluePrimary,
+    ...SHADOWS.cta,
   },
   segmentText: {
-    color: '#888',
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: '600',
+    color: COLORS.textPrimary,
+    fontVariant: ['tabular-nums'],
   },
   segmentTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
+  },
+
+  // Input field
+  inputWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderWidth: 1.5,
+    borderColor: COLORS.hairline,
+    borderRadius: RADII.input,
+    paddingHorizontal: SPACING.ms,
+    paddingVertical: SPACING.m,
+  },
+  inputWrapFocused: {
+    borderColor: COLORS.bluePrimary,
   },
   input: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    color: '#fff',
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  resultCard: {
-    backgroundColor: '#0a1a2e',
-    borderRadius: 16,
-    padding: 24,
-    alignItems: 'center',
-    marginTop: 32,
-    borderWidth: 1,
-    borderColor: '#2563eb',
-  },
-  resultCardWarning: {
-    borderColor: '#f59e0b',
-    backgroundColor: '#1a1500',
-  },
-  resultCardEmpty: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 16,
-    padding: 24,
-    alignItems: 'center',
-    marginTop: 32,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  resultNumber: {
-    color: '#2563eb',
-    fontSize: 56,
-    fontWeight: '800',
-  },
-  resultLabel: {
-    color: '#888',
-    fontSize: 18,
+    flex: 1,
+    fontSize: 22,
     fontWeight: '600',
-    marginTop: -4,
+    color: COLORS.textPrimary,
+    letterSpacing: -0.2,
+    padding: 0,
   },
-  resultDetail: {
-    color: '#666',
-    fontSize: 13,
-    marginTop: 8,
+  suffix: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.textTertiary,
+  },
+  hint: {
+    fontSize: 11.5,
+    color: COLORS.textTertiary,
+    marginTop: SPACING.xs,
+    lineHeight: 16,
+  },
+
+  // Result — empty
+  resultEmpty: {
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.hairline,
+    borderStyle: 'dashed',
+    borderRadius: RADII.answer,
+    paddingVertical: 26,
+    paddingHorizontal: SPACING.l,
+    alignItems: 'center',
+    gap: SPACING.s,
+  },
+  resultEmptyIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: RADII.panel,
+    backgroundColor: COLORS.panel,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   resultEmptyText: {
-    color: '#555',
-    fontSize: 14,
-  },
-  warningBadge: {
-    backgroundColor: '#332200',
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-  },
-  warningText: {
-    color: '#f59e0b',
-    fontSize: 13,
+    fontSize: 13.5,
+    color: COLORS.textSecondary,
     textAlign: 'center',
+    maxWidth: 240,
+    lineHeight: 19,
+  },
+
+  // Result — valid/warning
+  resultCard: {
+    backgroundColor: COLORS.surface,
+    borderWidth: 1.5,
+    borderColor: COLORS.hairline,
+    borderRadius: RADII.answer,
+    paddingTop: SPACING.xl,
+    paddingHorizontal: SPACING.l,
+    paddingBottom: SPACING.l,
+  },
+  resultCardWarn: {
+    backgroundColor: COLORS.amberTint,
+    borderColor: COLORS.amber,
+  },
+  overBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 9,
+    paddingVertical: SPACING.xxs,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: COLORS.amber,
+    borderRadius: RADII.full,
+    marginBottom: SPACING.sm,
+  },
+  overBadgeText: {
+    color: COLORS.amberDeep,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.4,
+  },
+  resultNumberRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: SPACING.xs,
+  },
+  resultNumber: {
+    fontSize: FONT_SIZES.display,
+    fontWeight: '700',
+    letterSpacing: -2,
+    fontVariant: ['tabular-nums'],
+  },
+  resultUnits: {
+    fontSize: FONT_SIZES.navTitle,
+    fontWeight: '600',
+    color: COLORS.textSecondary,
+  },
+  resultDetail: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.xs,
+    fontVariant: ['tabular-nums'],
+  },
+  warnBox: {
+    flexDirection: 'row',
+    gap: SPACING.s,
+    alignItems: 'flex-start',
+    marginTop: SPACING.m,
+    padding: SPACING.m,
+    backgroundColor: '#FFFFFF',
+    borderRadius: RADII.panel,
+    borderWidth: 1,
+    borderColor: COLORS.amberTint,
+  },
+  warnText: {
+    flex: 1,
+    fontSize: 12.5,
+    color: COLORS.amberDeep,
     lineHeight: 18,
+    fontWeight: '500',
   },
-  infoCard: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 16,
+
+  // Recon info
+  reconCard: {
+    backgroundColor: COLORS.panel,
+    borderRadius: RADII.card,
+    paddingVertical: SPACING.ms,
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.s,
   },
-  infoTitle: {
-    color: '#fff',
+  reconTitle: {
+    fontSize: FONT_SIZES.caption,
+    fontWeight: '700',
+    color: COLORS.textSecondary,
+    letterSpacing: 0.8,
+    marginBottom: SPACING.xs,
+  },
+  reconRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+  },
+  reconLabel: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+  },
+  reconValue: {
     fontSize: 14,
     fontWeight: '600',
-    marginBottom: 8,
+    color: COLORS.textPrimary,
+    fontVariant: ['tabular-nums'],
   },
-  infoText: {
-    color: '#aaa',
-    fontSize: 13,
-    marginBottom: 4,
-  },
-  closeButton: {
-    position: 'absolute',
-    bottom: 40,
-    left: 20,
-    right: 20,
-    backgroundColor: '#2563eb',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
+
+  // Footer
+  footer: {
+    paddingHorizontal: SPACING.l,
+    paddingTop: SPACING.m,
+    backgroundColor: COLORS.background,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.hairline,
   },
 });

@@ -49,8 +49,8 @@
       "docstring": "",
       "calls": [
         "build_graph",
-        "load_documents",
-        "process_file"
+        "process_file",
+        "load_documents"
       ],
       "called_by": [
         "<module>",
@@ -73,9 +73,9 @@
       "calls": [],
       "called_by": [
         "get_stack_chunks",
-        "search",
+        "search_knowledge_base",
         "lifespan",
-        "search_knowledge_base"
+        "search"
       ],
       "cfg_summary": "complexity:2, blocks:4",
       "dfg_summary": "vars:4, def-use chains:1",
@@ -93,11 +93,11 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "health",
         "get_stack_chunks",
+        "search_knowledge_base",
         "search",
         "lifespan",
-        "search_knowledge_base"
+        "health"
       ],
       "cfg_summary": "complexity:2, blocks:4",
       "dfg_summary": "vars:5, def-use chains:2",
@@ -172,8 +172,8 @@
       "signature": "def check_conflicts(request: ConflictRequest)",
       "docstring": "Check for known conflicts between items in the user's stack using the knowledge graph.",
       "calls": [
-        "get_conflicts",
-        "get_timing_conflicts"
+        "get_timing_conflicts",
+        "get_conflicts"
       ],
       "called_by": [],
       "cfg_summary": "complexity:1, blocks:2",
@@ -191,10 +191,10 @@
       "signature": "def stack_review(request: ConflictRequest)",
       "docstring": "Full stack review \u2014 conflicts, synergies, timing issues from the knowledge graph.",
       "calls": [
-        "get_stack_context",
-        "get_timing_conflicts",
+        "get_synergies",
         "get_conflicts",
-        "get_synergies"
+        "get_stack_context",
+        "get_timing_conflicts"
       ],
       "called_by": [],
       "cfg_summary": "complexity:4, blocks:10",
@@ -281,8 +281,8 @@
       "docstring": "Extract the H1 title from a markdown file.",
       "calls": [],
       "called_by": [
-        "list_items",
-        "get_item_detail"
+        "get_item_detail",
+        "list_items"
       ],
       "cfg_summary": "complexity:3, blocks:8",
       "dfg_summary": "vars:4, def-use chains:3",
@@ -317,8 +317,8 @@
       "signature": "def list_items(category: str) -> list[dict]",
       "docstring": "List all items in a category directory.",
       "calls": [
-        "extract_classification",
-        "extract_name"
+        "extract_name",
+        "extract_classification"
       ],
       "called_by": [
         "list_lifestyle",
@@ -344,8 +344,8 @@
       ],
       "called_by": [
         "get_lifestyle_topic",
-        "get_supplement",
-        "get_peptide"
+        "get_peptide",
+        "get_supplement"
       ],
       "cfg_summary": "complexity:6, blocks:14",
       "dfg_summary": "vars:17, def-use chains:17",
@@ -656,10 +656,10 @@
       "docstring": "Load the knowledge graph (cached after first load).",
       "calls": [],
       "called_by": [
-        "get_conflicts",
-        "get_synergies",
         "get_graph_stats",
+        "get_synergies",
         "get_timing_conflicts",
+        "get_related_items",
         "reload_graph"
       ],
       "cfg_summary": "complexity:3, blocks:7",
@@ -698,8 +698,8 @@
         "get_graph"
       ],
       "called_by": [
-        "item_synergies",
-        "stack_review"
+        "stack_review",
+        "item_synergies"
       ],
       "cfg_summary": "complexity:6, blocks:15",
       "dfg_summary": "vars:11, def-use chains:16",
@@ -719,8 +719,8 @@
         "get_graph"
       ],
       "called_by": [
-        "check_conflicts",
         "stack_review",
+        "check_conflicts",
         "get_stack_context"
       ],
       "cfg_summary": "complexity:9, blocks:23",
@@ -741,8 +741,8 @@
         "get_graph"
       ],
       "called_by": [
-        "stack_review",
-        "check_conflicts"
+        "check_conflicts",
+        "stack_review"
       ],
       "cfg_summary": "complexity:9, blocks:23",
       "dfg_summary": "vars:19, def-use chains:19",
@@ -847,20 +847,44 @@
       "code_preview": "def get_entity_type(entity_id: str) -> str:\n    \"\"\"Determine entity type from its normalized ID.\"\"\"\n    if entity_id in KNOWN_PEPTIDES:\n        return \"peptide\"\n    if entity_id in KNOWN_SUPPLEMENTS:\n        return \"supplement\"\n    if entity_id in KNOWN_CONDITIONS:\n        return \"condition\""
     },
     {
-      "name": "extract_from_stacking",
-      "qualified_name": "backend.build_graph.py.extract_from_stacking",
+      "name": "mentions_entity",
+      "qualified_name": "backend.build_graph.py.mentions_entity",
       "file": "backend/build_graph.py",
       "line": 160,
       "language": "python",
       "unit_type": "function",
+      "signature": "def mentions_entity(entity: str, text_lower: str) -> bool",
+      "docstring": "True if `entity` is named in text as a whole token (not a substring).\n\nUses alphanumeric boundaries so short IDs like \"nac\" don't match inside\nwords like \"inactive\" or \"erinacine\". Hyphens count as boundaries, so both\n\"nac\" and the spaced \"n-acetylcysteine\" forms still match standalone.",
+      "calls": [],
+      "called_by": [
+        "extract_from_supplement_interactions",
+        "extract_from_connections",
+        "extract_from_peptide_synergies",
+        "extract_from_drug_interactions",
+        "extract_from_stacking"
+      ],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:6, def-use chains:6",
+      "dependencies": "json, os, re, pathlib, networkx",
+      "code_preview": "def mentions_entity(entity: str, text_lower: str) -> bool:\n    \"\"\"True if `entity` is named in text as a whole token (not a substring).\n\n    Uses alphanumeric boundaries so short IDs like \"nac\" don't match inside\n    words like \"inactive\" or \"erinacine\". Hyphens count as boundaries, so both\n    \"nac\" and the spaced \"n-acetylcysteine\" forms still match standalone.\n    \"\"\"\n    spaced = entity.replace(\"-\", \" \")\n    alt = re.escape(entity) + r\"|\" + re.escape(spaced)\n    pattern = r\"(?<![a-z0-9])(?:\" + alt + r\")(?![a-z0-9])\""
+    },
+    {
+      "name": "extract_from_stacking",
+      "qualified_name": "backend.build_graph.py.extract_from_stacking",
+      "file": "backend/build_graph.py",
+      "line": 173,
+      "language": "python",
+      "unit_type": "function",
       "signature": "def extract_from_stacking(content: str, source: str, source_type: str) -> list[dict]",
       "docstring": "Extract STACKS_WITH relationships from stacking-protocols.md files.",
-      "calls": [],
+      "calls": [
+        "mentions_entity"
+      ],
       "called_by": [
         "process_file"
       ],
       "cfg_summary": "complexity:8, blocks:22",
-      "dfg_summary": "vars:19, def-use chains:13",
+      "dfg_summary": "vars:19, def-use chains:11",
       "dependencies": "json, os, re, pathlib, networkx",
       "code_preview": "def extract_from_stacking(content: str, source: str, source_type: str) -> list[dict]:\n    \"\"\"Extract STACKS_WITH relationships from stacking-protocols.md files.\"\"\"\n    rels = []\n    # Match patterns like: \"**Stack Name**: Peptide1 (dose) + Peptide2 (dose) \u2014 purpose\"\n    lines = content.split(\"\\n\")\n    for line in lines:\n        line = line.strip()\n        if not line.startswith(\"- \"):\n            continue\n"
     },
@@ -868,17 +892,19 @@
       "name": "extract_from_drug_interactions",
       "qualified_name": "backend.build_graph.py.extract_from_drug_interactions",
       "file": "backend/build_graph.py",
-      "line": 203,
+      "line": 215,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_drug_interactions(content: str, source: str, source_type: str) -> list[dict]",
       "docstring": "Extract CONFLICTS_WITH and CONTRAINDICATED_IN from drug-interactions.md.",
-      "calls": [],
+      "calls": [
+        "mentions_entity"
+      ],
       "called_by": [
         "process_file"
       ],
       "cfg_summary": "complexity:14, blocks:36",
-      "dfg_summary": "vars:22, def-use chains:33",
+      "dfg_summary": "vars:21, def-use chains:29",
       "dependencies": "json, os, re, pathlib, networkx",
       "code_preview": "def extract_from_drug_interactions(content: str, source: str, source_type: str) -> list[dict]:\n    \"\"\"Extract CONFLICTS_WITH and CONTRAINDICATED_IN from drug-interactions.md.\"\"\"\n    rels = []\n    lines = content.split(\"\\n\")\n\n    for line in lines:\n        line = line.strip()\n        if not line.startswith(\"- \"):\n            continue\n"
     },
@@ -886,17 +912,19 @@
       "name": "extract_from_supplement_interactions",
       "qualified_name": "backend.build_graph.py.extract_from_supplement_interactions",
       "file": "backend/build_graph.py",
-      "line": 282,
+      "line": 292,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_supplement_interactions(content: str, source: str, source_type: str) -> list[dict]",
       "docstring": "Extract SYNERGIZES_WITH and SUPPORTS from supplement-interactions.md.",
-      "calls": [],
+      "calls": [
+        "mentions_entity"
+      ],
       "called_by": [
         "process_file"
       ],
       "cfg_summary": "complexity:8, blocks:21",
-      "dfg_summary": "vars:17, def-use chains:21",
+      "dfg_summary": "vars:16, def-use chains:19",
       "dependencies": "json, os, re, pathlib, networkx",
       "code_preview": "def extract_from_supplement_interactions(content: str, source: str, source_type: str) -> list[dict]:\n    \"\"\"Extract SYNERGIZES_WITH and SUPPORTS from supplement-interactions.md.\"\"\"\n    rels = []\n    lines = content.split(\"\\n\")\n\n    for line in lines:\n        line = line.strip()\n        if not line.startswith(\"- \"):\n            continue\n"
     },
@@ -904,17 +932,19 @@
       "name": "extract_from_peptide_synergies",
       "qualified_name": "backend.build_graph.py.extract_from_peptide_synergies",
       "file": "backend/build_graph.py",
-      "line": 321,
+      "line": 330,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_peptide_synergies(content: str, source: str, source_type: str) -> list[dict]",
       "docstring": "Extract SYNERGIZES_WITH from peptide-synergies.md.\n\nLinks the source to peptides mentioned (the primary use), and ALSO to other\nsupplements mentioned \u2014 this captures supplement-supplement clusters like\nGlyNAC (glycine + NAC), the joint stack (MSM + glucosamine + collagen + HA),\nthe functional-mushroom trio, and the testosterone cluster.",
-      "calls": [],
+      "calls": [
+        "mentions_entity"
+      ],
       "called_by": [
         "process_file"
       ],
       "cfg_summary": "complexity:10, blocks:26",
-      "dfg_summary": "vars:21, def-use chains:26",
+      "dfg_summary": "vars:20, def-use chains:24",
       "dependencies": "json, os, re, pathlib, networkx",
       "code_preview": "def extract_from_peptide_synergies(content: str, source: str, source_type: str) -> list[dict]:\n    \"\"\"Extract SYNERGIZES_WITH from peptide-synergies.md.\n\n    Links the source to peptides mentioned (the primary use), and ALSO to other\n    supplements mentioned \u2014 this captures supplement-supplement clusters like\n    GlyNAC (glycine + NAC), the joint stack (MSM + glucosamine + collagen + HA),\n    the functional-mushroom trio, and the testosterone cluster.\n    \"\"\"\n    rels = []\n"
     },
@@ -922,17 +952,19 @@
       "name": "extract_from_connections",
       "qualified_name": "backend.build_graph.py.extract_from_connections",
       "file": "backend/build_graph.py",
-      "line": 373,
+      "line": 381,
       "language": "python",
       "unit_type": "function",
       "signature": "def extract_from_connections(content: str, source: str, source_type: str, connection_type: str) -> list[dict]",
       "docstring": "Extract from lifestyle peptide-connections.md and supplement-connections.md.",
-      "calls": [],
+      "calls": [
+        "mentions_entity"
+      ],
       "called_by": [
         "process_file"
       ],
       "cfg_summary": "complexity:5, blocks:13",
-      "dfg_summary": "vars:16, def-use chains:9",
+      "dfg_summary": "vars:15, def-use chains:7",
       "dependencies": "json, os, re, pathlib, networkx",
       "code_preview": "def extract_from_connections(content: str, source: str, source_type: str, connection_type: str) -> list[dict]:\n    \"\"\"Extract from lifestyle peptide-connections.md and supplement-connections.md.\"\"\"\n    rels = []\n    lines = content.split(\"\\n\")\n\n    target_set = KNOWN_PEPTIDES if connection_type == \"peptide\" else KNOWN_SUPPLEMENTS\n\n    for line in lines:\n        line_stripped = line.strip()\n        if not line_stripped.startswith(\"- \"):"
     },
@@ -940,17 +972,17 @@
       "name": "process_file",
       "qualified_name": "backend.build_graph.py.process_file",
       "file": "backend/build_graph.py",
-      "line": 399,
+      "line": 406,
       "language": "python",
       "unit_type": "function",
       "signature": "def process_file(filepath: Path, source_entity: str, source_type: str) -> list[dict]",
       "docstring": "Process a single file and extract relationships.",
       "calls": [
         "extract_from_stacking",
-        "extract_from_drug_interactions",
+        "extract_from_supplement_interactions",
         "extract_from_connections",
-        "extract_from_peptide_synergies",
-        "extract_from_supplement_interactions"
+        "extract_from_drug_interactions",
+        "extract_from_peptide_synergies"
       ],
       "called_by": [
         "main"
@@ -964,14 +996,14 @@
       "name": "build_graph",
       "qualified_name": "backend.build_graph.py.build_graph",
       "file": "backend/build_graph.py",
-      "line": 422,
+      "line": 429,
       "language": "python",
       "unit_type": "function",
       "signature": "def build_graph(all_relationships: list[dict]) -> nx.MultiDiGraph",
       "docstring": "Build a NetworkX graph from extracted relationships.",
       "calls": [
-        "get_entity_type",
-        "normalize_id"
+        "normalize_id",
+        "get_entity_type"
       ],
       "called_by": [
         "main"
@@ -985,15 +1017,15 @@
       "name": "main",
       "qualified_name": "backend.build_graph.py.main",
       "file": "backend/build_graph.py",
-      "line": 457,
+      "line": 464,
       "language": "python",
       "unit_type": "function",
       "signature": "def main()",
       "docstring": "",
       "calls": [
         "build_graph",
-        "load_documents",
-        "process_file"
+        "process_file",
+        "load_documents"
       ],
       "called_by": [
         "<module>",
@@ -1007,5 +1039,5 @@
   ],
   "model": "BAAI/bge-large-en-v1.5",
   "dimension": 1024,
-  "count": 52
+  "count": 53
 }

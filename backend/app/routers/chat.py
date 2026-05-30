@@ -1,6 +1,7 @@
 """Chat endpoint — the core RAG pipeline."""
 
 import json
+import re
 from typing import Optional
 
 from fastapi import APIRouter
@@ -19,6 +20,19 @@ class StackItem(BaseModel):
     item: str
     category: str  # "peptide", "supplement"
     dose: Optional[str] = None
+    slug: Optional[str] = None  # directory slug, matches ChromaDB "item" metadata
+
+
+def resolve_item_key(stack_item: StackItem) -> str:
+    """Map a stack item to its ChromaDB 'item' metadata key.
+
+    ChromaDB stores the directory slug (e.g. 'retatrutide'), but the app sends
+    the display name (e.g. 'Retatrutide'). Prefer the slug the client provides;
+    otherwise slugify the display name as a best-effort fallback.
+    """
+    if stack_item.slug:
+        return stack_item.slug
+    return re.sub(r"[^a-z0-9]+", "-", stack_item.item.lower()).strip("-")
 
 
 class ChatMessage(BaseModel):
@@ -67,7 +81,7 @@ def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:
         item_results = collection.query(
             query_embeddings=[query_embedding],
             n_results=3,
-            where={"item": stack_item.item},
+            where={"item": resolve_item_key(stack_item)},
         )
         for doc_id, document, distance in zip(
             item_results["ids"][0],
@@ -197,7 +211,7 @@ def get_stack_chunks(stack: list[StackItem]) -> list[dict]:
         results = collection.query(
             query_embeddings=[query_embedding],
             n_results=3,
-            where={"item": stack_item.item},
+            where={"item": resolve_item_key(stack_item)},
         )
 
         for doc_id, document, distance in zip(

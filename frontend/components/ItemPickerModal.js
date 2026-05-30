@@ -9,6 +9,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
+import { COLORS, RADII, SPACING, FONT_SIZES } from '../theme/tokens';
 
 export default function ItemPickerModal({ visible, onClose, onSelect, items, title }) {
   const [search, setSearch] = useState('');
@@ -40,7 +41,7 @@ export default function ItemPickerModal({ visible, onClose, onSelect, items, tit
         <TextInput
           style={styles.search}
           placeholder="Search..."
-          placeholderTextColor="#666"
+          placeholderTextColor={COLORS.textTertiary}
           value={search}
           onChangeText={setSearch}
           autoFocus
@@ -71,62 +72,67 @@ export default function ItemPickerModal({ visible, onClose, onSelect, items, tit
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
+    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: SPACING.l,
+    paddingVertical: SPACING.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#222',
+    borderBottomColor: COLORS.hairline,
   },
   title: {
-    color: '#fff',
-    fontSize: 18,
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.navTitle,
     fontWeight: '700',
   },
   closeBtn: {
     padding: 4,
   },
   closeBtnText: {
-    color: '#2563eb',
-    fontSize: 16,
+    color: COLORS.bluePrimary,
+    fontSize: FONT_SIZES.body,
+    fontWeight: '600',
   },
   search: {
-    backgroundColor: '#1e1e1e',
-    color: '#fff',
-    margin: 16,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 15,
+    backgroundColor: COLORS.surface,
+    color: COLORS.textPrimary,
+    margin: SPACING.md,
+    borderRadius: RADII.input,
+    borderWidth: 1,
+    borderColor: COLORS.hairline,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.m,
+    fontSize: FONT_SIZES.body,
   },
   list: {
-    paddingHorizontal: 16,
+    paddingHorizontal: SPACING.md,
     paddingBottom: 40,
   },
   item: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 8,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADII.input,
+    borderWidth: 1,
+    borderColor: COLORS.hairline,
+    padding: SPACING.ms,
+    marginBottom: SPACING.s,
   },
   itemName: {
-    color: '#fff',
-    fontSize: 16,
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.body,
     fontWeight: '600',
   },
   itemClass: {
-    color: '#888',
+    color: COLORS.textSecondary,
     fontSize: 13,
     marginTop: 3,
   },
   empty: {
-    color: '#555',
+    color: COLORS.textTertiary,
     textAlign: 'center',
     marginTop: 40,
-    fontSize: 15,
+    fontSize: FONT_SIZES.body,
   },
 });

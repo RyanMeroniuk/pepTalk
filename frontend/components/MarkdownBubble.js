@@ -1,35 +1,41 @@
+// Light-theme markdown renderer for AI answers. The backend streams real
+// markdown, so rendering it (vs flattening to plain text) preserves headings,
+// bold, and bullet structure — matching the design's rich answer body.
+
 import { Platform, StyleSheet } from 'react-native';
 import Markdown from 'react-native-markdown-display';
+import { COLORS } from '../theme/tokens';
 
 const markdownStyles = StyleSheet.create({
   body: {
-    color: '#ddd',
+    color: COLORS.textPrimary,
     fontSize: 15,
     lineHeight: 22,
+    letterSpacing: -0.1,
   },
   heading1: {
-    color: '#fff',
-    fontSize: 20,
+    color: COLORS.textPrimary,
+    fontSize: 19,
     fontWeight: '700',
-    marginTop: 8,
-    marginBottom: 4,
+    marginTop: 14,
+    marginBottom: 6,
   },
   heading2: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 6,
-    marginBottom: 4,
+    color: COLORS.textPrimary,
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 14,
+    marginBottom: 6,
   },
   heading3: {
-    color: '#eee',
+    color: COLORS.textPrimary,
     fontSize: 16,
     fontWeight: '600',
-    marginTop: 4,
-    marginBottom: 2,
+    marginTop: 10,
+    marginBottom: 4,
   },
   strong: {
-    color: '#fff',
+    color: COLORS.textPrimary,
     fontWeight: '700',
   },
   em: {
@@ -37,7 +43,7 @@ const markdownStyles = StyleSheet.create({
   },
   paragraph: {
     marginTop: 0,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   bullet_list: {
     marginVertical: 4,
@@ -49,27 +55,27 @@ const markdownStyles = StyleSheet.create({
     marginVertical: 2,
   },
   bullet_list_icon: {
-    color: '#888',
+    color: COLORS.textTertiary,
     fontSize: 8,
-    marginTop: 7,
-    marginRight: 8,
+    marginTop: 8,
+    marginRight: 10,
   },
   ordered_list_icon: {
-    color: '#888',
+    color: COLORS.textSecondary,
     fontSize: 14,
     marginRight: 8,
   },
   code_inline: {
-    backgroundColor: '#2a2a2a',
-    color: '#7dd3fc',
+    backgroundColor: COLORS.panel,
+    color: COLORS.blueDeep,
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 13,
     paddingHorizontal: 4,
     borderRadius: 3,
   },
   fence: {
-    backgroundColor: '#151515',
-    color: '#7dd3fc',
+    backgroundColor: COLORS.panel,
+    color: COLORS.textPrimary,
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 13,
     padding: 10,
@@ -77,8 +83,8 @@ const markdownStyles = StyleSheet.create({
     marginVertical: 6,
   },
   code_block: {
-    backgroundColor: '#151515',
-    color: '#7dd3fc',
+    backgroundColor: COLORS.panel,
+    color: COLORS.textPrimary,
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 13,
     padding: 10,
@@ -86,18 +92,18 @@ const markdownStyles = StyleSheet.create({
     marginVertical: 6,
   },
   hr: {
-    backgroundColor: '#333',
+    backgroundColor: COLORS.hairline,
     height: 1,
     marginVertical: 8,
   },
   blockquote: {
     borderLeftWidth: 3,
-    borderLeftColor: '#444',
+    borderLeftColor: COLORS.hairline,
     paddingLeft: 10,
     marginVertical: 4,
   },
   link: {
-    color: '#60a5fa',
+    color: COLORS.bluePrimary,
   },
 });
 

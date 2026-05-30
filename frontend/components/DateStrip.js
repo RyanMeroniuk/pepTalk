@@ -1,8 +1,15 @@
+// Horizontal date picker — 7-day window into a 180-day range (90 past, 90 future).
+// Active day fills with brand blue, inactive days show the day-of-week label in
+// secondary text + day-of-month in primary text.
+//
+// Keeps the existing imperative `scrollToToday()` ref API used by StackScreen.
+
 import { useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { generateDateRange } from '../utils/schedule';
+import { COLORS, RADII, FONT_SIZES, SPACING } from '../theme/tokens';
 
-const CELL_WIDTH = 56;
+const CELL_WIDTH = 48;
 const PAST_DAYS = 90;
 const FUTURE_DAYS = 90;
 const TODAY_INDEX = PAST_DAYS;
@@ -20,8 +27,8 @@ const DateStrip = forwardRef(function DateStrip({ selectedDate, onSelectDate }, 
 
   const getItemLayout = useCallback(
     (_, index) => ({
-      length: CELL_WIDTH,
-      offset: CELL_WIDTH * index,
+      length: CELL_WIDTH + 6, // cell + horizontal margin
+      offset: (CELL_WIDTH + 6) * index,
       index,
     }),
     []
@@ -30,21 +37,28 @@ const DateStrip = forwardRef(function DateStrip({ selectedDate, onSelectDate }, 
   const renderItem = useCallback(
     ({ item }) => {
       const isSelected = item.dateString === selectedDate;
-      const isToday = item.isToday;
-
       return (
         <TouchableOpacity
-          style={[styles.cell, isSelected && styles.cellSelected]}
-          onPress={() => onSelectDate(item.dateString)}
           activeOpacity={0.7}
+          onPress={() => onSelectDate(item.dateString)}
+          style={[styles.cell, isSelected && styles.cellSelected]}
         >
-          <Text style={[styles.dayOfWeek, isSelected && styles.textSelected, isToday && !isSelected && styles.textToday]}>
-            {item.dayOfWeek}
+          <Text
+            style={[
+              styles.dow,
+              isSelected ? styles.dowActive : item.isToday && styles.dowToday,
+            ]}
+          >
+            {item.dayOfWeek.toUpperCase()}
           </Text>
-          <Text style={[styles.dayOfMonth, isSelected && styles.textSelected, isToday && !isSelected && styles.textToday]}>
+          <Text
+            style={[
+              styles.dom,
+              isSelected ? styles.domActive : item.isToday && styles.domToday,
+            ]}
+          >
             {item.dayOfMonth}
           </Text>
-          {isToday && !isSelected && <View style={styles.todayDot} />}
         </TouchableOpacity>
       );
     },
@@ -72,43 +86,46 @@ export default DateStrip;
 const styles = StyleSheet.create({
   list: {
     flexGrow: 0,
-    marginBottom: 16,
   },
   content: {
-    paddingHorizontal: 8,
+    paddingHorizontal: SPACING.ms,
+    paddingTop: SPACING.xxs,
+    paddingBottom: SPACING.ms,
   },
   cell: {
     width: CELL_WIDTH,
-    paddingVertical: 10,
+    paddingVertical: SPACING.s,
     alignItems: 'center',
-    borderRadius: 12,
-    marginHorizontal: 2,
+    borderRadius: RADII.input,
+    marginHorizontal: 3,
+    gap: SPACING.xxs,
   },
   cellSelected: {
-    backgroundColor: '#2563eb',
+    backgroundColor: COLORS.bluePrimary,
   },
-  dayOfWeek: {
-    color: '#666',
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  dayOfMonth: {
-    color: '#aaa',
-    fontSize: 18,
+  dow: {
+    fontSize: 10.5,
     fontWeight: '700',
+    letterSpacing: 0.7,
+    color: COLORS.textSecondary,
   },
-  textSelected: {
-    color: '#fff',
+  dowActive: {
+    color: '#FFFFFF',
+    opacity: 0.85,
   },
-  textToday: {
-    color: '#2563eb',
+  dowToday: {
+    color: COLORS.bluePrimary,
   },
-  todayDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#2563eb',
-    marginTop: 4,
+  dom: {
+    fontSize: FONT_SIZES.navTitle,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+    letterSpacing: -0.2,
+  },
+  domActive: {
+    color: '#FFFFFF',
+  },
+  domToday: {
+    color: COLORS.bluePrimary,
   },
 });

@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { WEEKDAYS, describeDays } from '../utils/schedule';
+import { COLORS, RADII, SPACING, FONT_SIZES } from '../theme/tokens';
 
 const TIME_SLOTS = ['morning', 'night'];
 const ROUTES = [
@@ -72,7 +73,7 @@ export default function ScheduleFormModal({ visible, itemName, onConfirm, onClos
           <TextInput
             style={styles.input}
             placeholder="e.g. 250mcg, 500mg, 2 capsules"
-            placeholderTextColor="#555"
+            placeholderTextColor={COLORS.textTertiary}
             value={dose}
             onChangeText={setDose}
             autoFocus
@@ -198,63 +199,64 @@ export default function ScheduleFormModal({ visible, itemName, onConfirm, onClos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111',
+    backgroundColor: COLORS.background,
   },
   scroll: {
-    padding: 24,
+    padding: SPACING.xl,
     paddingBottom: 140,
   },
   title: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: '800',
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.sectionTitle,
+    fontWeight: '700',
+    letterSpacing: -0.5,
     marginBottom: 4,
   },
   subtitle: {
-    color: '#888',
+    color: COLORS.textSecondary,
     fontSize: 14,
-    marginBottom: 28,
+    marginBottom: SPACING.xxl,
   },
   label: {
-    color: '#fff',
-    fontSize: 15,
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.body,
     fontWeight: '600',
-    marginTop: 20,
-    marginBottom: 8,
+    marginTop: SPACING.l,
+    marginBottom: SPACING.s,
   },
   hint: {
-    color: '#666',
+    color: COLORS.textTertiary,
     fontSize: 13,
-    marginBottom: 12,
+    marginBottom: SPACING.m,
     marginTop: -4,
   },
   input: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    color: '#fff',
-    fontSize: 16,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADII.input,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.ms,
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.body,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: COLORS.hairline,
   },
   segmented: {
     flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
-    borderRadius: 10,
+    backgroundColor: COLORS.panel,
+    borderRadius: RADII.panel,
     padding: 3,
   },
   segment: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: SPACING.sm,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: RADII.iconSquare,
   },
   segmentActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: COLORS.bluePrimary,
   },
   segmentText: {
-    color: '#888',
+    color: COLORS.textSecondary,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -264,22 +266,22 @@ const styles = StyleSheet.create({
   pillRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: SPACING.s,
   },
   pill: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
     borderRadius: 20,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: COLORS.hairline,
   },
   pillActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: COLORS.bluePrimary,
+    borderColor: COLORS.bluePrimary,
   },
   pillText: {
-    color: '#888',
+    color: COLORS.textSecondary,
     fontSize: 14,
     fontWeight: '500',
   },
@@ -289,23 +291,23 @@ const styles = StyleSheet.create({
   // Day picker
   presetRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 16,
+    gap: SPACING.s,
+    marginBottom: SPACING.md,
   },
   presetBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.s,
     borderRadius: 20,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: COLORS.hairline,
   },
   presetBtnActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: COLORS.bluePrimary,
+    borderColor: COLORS.bluePrimary,
   },
   presetText: {
-    color: '#888',
+    color: COLORS.textSecondary,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -322,16 +324,16 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: COLORS.surface,
     borderWidth: 1.5,
-    borderColor: '#333',
+    borderColor: COLORS.hairline,
   },
   dayCircleActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: COLORS.bluePrimary,
+    borderColor: COLORS.bluePrimary,
   },
   dayLetter: {
-    color: '#666',
+    color: COLORS.textSecondary,
     fontSize: 16,
     fontWeight: '700',
   },
@@ -339,28 +341,28 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   dayLabel: {
-    color: '#555',
+    color: COLORS.textTertiary,
     fontSize: 9,
     fontWeight: '500',
     marginTop: 1,
   },
   dayLabelActive: {
-    color: 'rgba(255,255,255,0.7)',
+    color: 'rgba(255,255,255,0.8)',
   },
   summaryCard: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    padding: 14,
-    marginTop: 16,
+    backgroundColor: COLORS.panel,
+    borderRadius: RADII.input,
+    padding: SPACING.ms,
+    marginTop: SPACING.md,
     alignItems: 'center',
   },
   summaryText: {
-    color: '#fff',
+    color: COLORS.textPrimary,
     fontSize: 14,
     fontWeight: '600',
   },
   summaryCount: {
-    color: '#666',
+    color: COLORS.textSecondary,
     fontSize: 12,
     marginTop: 4,
   },
@@ -370,33 +372,33 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 20,
+    padding: SPACING.l,
     paddingBottom: 40,
-    backgroundColor: '#111',
+    backgroundColor: COLORS.surface,
     borderTopWidth: 1,
-    borderTopColor: '#222',
+    borderTopColor: COLORS.hairline,
   },
   confirmBtn: {
-    backgroundColor: '#2563eb',
-    borderRadius: 12,
-    paddingVertical: 16,
+    backgroundColor: COLORS.bluePrimary,
+    borderRadius: RADII.input,
+    paddingVertical: SPACING.md,
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: SPACING.s,
   },
   confirmBtnDisabled: {
     opacity: 0.4,
   },
   confirmBtnText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: FONT_SIZES.body,
     fontWeight: '700',
   },
   cancelBtn: {
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: SPACING.m,
   },
   cancelBtnText: {
-    color: '#888',
-    fontSize: 15,
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.body,
   },
 });
