@@ -2,6 +2,27 @@
 
 All notable changes to PepTalk are documented here. Newest first.
 
+## 2026-05-30 — Fix intermittently truncated LLM answers
+
+- **Problem:** a chat asking for a daily supplement/lifestyle routine cut off
+  mid-sentence before giving any recommendations. The stream completed normally
+  (sources rendered), so the model stopped early — most likely an intermittent
+  Gemini safety-filter trip on the health/peptide content (it did not reproduce
+  deterministically; the same prompt later returned a full answer). The code
+  passed no safety settings and discarded `finish_reason`, so the cause was invisible.
+- **Fix (`backend/app/routers/chat.py::stream_response` + `config.py`):**
+  - Relaxed Gemini safety thresholds to `BLOCK_ONLY_HIGH` (`GEMINI_SAFETY_SETTINGS`),
+    appropriate for an educational, grounded tool with disclaimers — reduces
+    intermittent blocks on legitimate peptide/supplement content.
+  - Set explicit `LLM_MAX_TOKENS` (4096) and a bounded `LLM_REASONING_EFFORT`
+    (`low`) so Gemini 2.5's thinking can't starve the visible answer.
+  - Gemini-only params are attached conditionally so swapping providers via
+    LiteLLM still works.
+  - **Capture `finish_reason`** (and whether any content streamed): logged
+    server-side, included in the `done` SSE event, and — when the model stops
+    abnormally (length/safety/empty) — an inline notice is appended to the answer
+    so truncation is never silent again.
+
 ## 2026-05-30 — Query-aware retrieval & dynamic chat starters
 
 Compound-specific questions now actually work, and the chat starter prompts no

@@ -11,6 +11,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.config import (
     LLM_MODEL,
+    LLM_MAX_TOKENS,
+    LLM_REASONING_EFFORT,
+    GEMINI_SAFETY_SETTINGS,
     RAG_TOP_K,
     RAG_SCORE_THRESHOLD,
     RAG_PER_ITEM_RELEVANT_K,
@@ -324,24 +327,55 @@ def build_prompt(
 async def stream_response(messages: list[dict], sources: list[str]):
     """Stream LLM response as Server-Sent Events."""
     try:
-        response = await acompletion(
-            model=LLM_MODEL,
-            messages=messages,
-            stream=True,
-        )
+        kwargs = {
+            "model": LLM_MODEL,
+            "messages": messages,
+            "stream": True,
+            "max_tokens": LLM_MAX_TOKENS,
+        }
+        # Gemini-specific params (safe to omit for other providers via LiteLLM).
+        if LLM_MODEL.startswith(("gemini", "vertex")):
+            kwargs["safety_settings"] = GEMINI_SAFETY_SETTINGS
+            if LLM_REASONING_EFFORT:
+                kwargs["reasoning_effort"] = LLM_REASONING_EFFORT
 
+        response = await acompletion(**kwargs)
+
+        finish_reason = None
+        got_content = False
         async for chunk in response:
-            delta = chunk.choices[0].delta
-            if delta.content:
-                event = json.dumps({"type": "token", "content": delta.content})
+            choice = chunk.choices[0]
+            if choice.finish_reason:
+                finish_reason = choice.finish_reason
+            if choice.delta.content:
+                got_content = True
+                event = json.dumps({"type": "token", "content": choice.delta.content})
                 yield f"data: {event}\n\n"
+
+        # Server-side visibility into why generation ended (truncation/safety/etc.)
+        print(f"[chat] finish_reason={finish_reason!r} got_content={got_content}")
+
+        # If the model stopped abnormally (cut off / filtered / empty), tell the
+        # user inline via the existing token stream — no frontend change needed.
+        if not got_content or finish_reason not in ("stop", "end_turn", None):
+            notices = {
+                "length": "\n\n_(Response was cut off at the length limit.)_",
+                "max_tokens": "\n\n_(Response was cut off at the length limit.)_",
+                "content_filter": "\n\n_(Response was cut short by the model's safety filter — try rephrasing.)_",
+                "safety": "\n\n_(Response was cut short by the model's safety filter — try rephrasing.)_",
+            }
+            notice = notices.get(finish_reason)
+            if notice is None and not got_content:
+                notice = "\n\n_(No response was generated — please try again or rephrase.)_"
+            if notice:
+                yield f"data: {json.dumps({'type': 'token', 'content': notice})}\n\n"
 
         # Send sources after the response is complete
         source_event = json.dumps({"type": "sources", "sources": sources})
         yield f"data: {source_event}\n\n"
 
-        # Signal completion
-        done_event = json.dumps({"type": "done"})
+        # Signal completion (finish_reason exposed for future UI use)
+        done_event = json.dumps({"type": "done", "finish_reason": finish_reason})
         yield f"data: {done_event}\n\n"
 
     except Exception as e:

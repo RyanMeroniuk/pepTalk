@@ -18,6 +18,24 @@ LLM_MODEL = os.getenv("LLM_MODEL", "gemini/gemini-2.0-flash")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
+# LLM generation controls
+LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "4096"))  # answer length cap
+LLM_REASONING_EFFORT = os.getenv("LLM_REASONING_EFFORT", "low")  # bound Gemini thinking; "" disables passing it
+
+# Gemini safety thresholds — relaxed to BLOCK_ONLY_HIGH for this educational tool.
+# Gemini's default thresholds intermittently block legitimate peptide/supplement
+# content (e.g. "design a daily routine"), truncating answers. Passed only for
+# Gemini/Vertex models.
+GEMINI_SAFETY_SETTINGS = [
+    {"category": category, "threshold": "BLOCK_ONLY_HIGH"}
+    for category in (
+        "HARM_CATEGORY_HARASSMENT",
+        "HARM_CATEGORY_HATE_SPEECH",
+        "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "HARM_CATEGORY_DANGEROUS_CONTENT",
+    )
+]
+
 # RAG settings
 RAG_TOP_K = 8  # global discovery chunks per query
 RAG_SCORE_THRESHOLD = 0.3  # minimum similarity for the global discovery pass

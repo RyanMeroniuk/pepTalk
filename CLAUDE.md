@@ -141,6 +141,9 @@ An in-memory adjacency list (NetworkX MultiDiGraph) persisted as JSON. Stores ex
 - `RAG_MAX_STACK_ITEMS = 8` — stack items expanded in retrieval
 - `RAG_MAX_QUERY_ITEMS = 3` — items detected in the question (not in stack) to expand
 - `LLM_MODEL` — set in `.env`, defaults to `gemini/gemini-2.5-flash`
+- `LLM_MAX_TOKENS = 4096` — answer length cap
+- `LLM_REASONING_EFFORT = "low"` — bounds Gemini 2.5 thinking so it can't starve the answer
+- `GEMINI_SAFETY_SETTINGS` — Gemini safety thresholds relaxed to `BLOCK_ONLY_HIGH` (educational tool; defaults intermittently block peptide/supplement content). Applied only for Gemini/Vertex models; `stream_response` captures `finish_reason` and surfaces abnormal stops.
 - System prompt is defined here — enforces grounded answers only
 
 ### Scheduler & Tracker (mobile app, not backend)
