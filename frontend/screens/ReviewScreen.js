@@ -42,7 +42,17 @@ export default function ReviewScreen({ navigation }) {
   const [aiReview, setAiReview] = useState(null);
 
   const stackPayload = useCallback(
-    () => stack.map((s) => ({ item: s.item, category: s.category, dose: s.dose, slug: s.slug })),
+    () =>
+      stack.map((s) => ({
+        item: s.item,
+        category: s.category,
+        slug: s.slug,
+        doseAmount: s.doseAmount,
+        doseUnit: s.doseUnit,
+        daysOfWeek: s.daysOfWeek,
+        timeSlot: s.timeSlot,
+        route: s.route,
+      })),
     [stack]
   );
 

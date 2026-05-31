@@ -82,7 +82,16 @@ export default function ChatScreen() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: text,
-            stack: stack.map((s) => ({ item: s.item, category: s.category, dose: s.dose, slug: s.slug })),
+            stack: stack.map((s) => ({
+              item: s.item,
+              category: s.category,
+              slug: s.slug,
+              doseAmount: s.doseAmount,
+              doseUnit: s.doseUnit,
+              daysOfWeek: s.daysOfWeek,
+              timeSlot: s.timeSlot,
+              route: s.route,
+            })),
             history,
           }),
         });

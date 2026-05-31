@@ -7,20 +7,139 @@ from typing import Optional
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from litellm import acompletion
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
-from app.config import LLM_MODEL, RAG_TOP_K, RAG_SCORE_THRESHOLD, SYSTEM_PROMPT, STACK_REVIEW_PROMPT
+from app.config import (
+    LLM_MODEL,
+    RAG_TOP_K,
+    RAG_SCORE_THRESHOLD,
+    RAG_PER_ITEM_RELEVANT_K,
+    RAG_MAX_STACK_ITEMS,
+    SYSTEM_PROMPT,
+    STACK_REVIEW_PROMPT,
+)
 from app.dependencies import get_collection, get_model
 from app.graph_utils import get_stack_context
 
 router = APIRouter()
 
+_DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+# Sections always included for each relevant item — the safety/interaction context
+# that should never be missing when discussing an item, fetched deterministically by
+# metadata rather than left to fuzzy similarity. The $in fetch returns only the
+# sections that exist for a given item (peptides have supplement-interactions;
+# supplements have peptide-synergies), so listing both names is harmless.
+CORE_ITEM_SECTIONS = [
+    "dosing-protocols",
+    "side-effects",
+    "drug-interactions",
+    "things-to-avoid",
+    "supplement-interactions",
+    "peptide-synergies",
+]
+
+# Stack review pulls a comprehensive set: the core sections plus stacking and
+# timing (lifestyle-recommendations) context for the Synergies/Timing sections.
+REVIEW_SECTIONS = CORE_ITEM_SECTIONS + ["stacking-protocols", "lifestyle-recommendations"]
+
 
 class StackItem(BaseModel):
+    # Frontend sends camelCase; accept both that and snake_case field names.
+    model_config = ConfigDict(populate_by_name=True)
+
     item: str
     category: str  # "peptide", "supplement"
-    dose: Optional[str] = None
     slug: Optional[str] = None  # directory slug, matches ChromaDB "item" metadata
+    dose: Optional[str] = None  # legacy free-text, still accepted
+    dose_amount: Optional[float] = Field(None, alias="doseAmount")
+    dose_unit: Optional[str] = Field(None, alias="doseUnit")
+    days_of_week: Optional[list[int]] = Field(None, alias="daysOfWeek")
+    time_slot: Optional[str] = Field(None, alias="timeSlot")
+    route: Optional[str] = None
+
+
+def _fmt_num(n: float) -> str:
+    """Format a number without trailing zeros: 2.0 → '2', 0.25 → '0.25'."""
+    return f"{n:g}"
+
+
+def describe_frequency(days_of_week: Optional[list[int]]) -> Optional[str]:
+    """Python port of the frontend describeFrequency().
+
+    [0..6] → "Daily"; [1,5] → "2×/week (Mon, Fri)"; None/[] → None.
+    """
+    if not days_of_week:
+        return None
+    if len(days_of_week) == 7:
+        return "Daily"
+    labels = ", ".join(_DAY_LABELS[d] for d in sorted(days_of_week) if 0 <= d <= 6)
+    return f"{len(days_of_week)}×/week ({labels})"
+
+
+def format_stack_for_prompt(stack: list["StackItem"]) -> str:
+    """Serialize a stack into prompt lines with unit-labeled dose figures.
+
+    Each figure is pre-computed and labeled with its unit so the LLM never does
+    the math itself and can match against whatever unit the knowledge base uses
+    for that item (per day, per dose/injection, or per week). Example lines:
+      - GHK-Cu [peptide] — 2 mg per dose; taken Daily; = 2 mg per day; = 14 mg per week [subcutaneous]
+      - Retatrutide [peptide] — 2 mg per dose; taken 2×/week (Mon, Fri); = 4 mg per week
+    Degrades gracefully when amount/schedule are missing.
+    """
+    lines = []
+    for item in stack:
+        # --- Per-dose clause (always present in some form) ---
+        if item.dose_amount is not None and item.dose_unit:
+            per_dose = f"{_fmt_num(item.dose_amount)} {item.dose_unit}"
+        elif item.dose:
+            per_dose = item.dose  # legacy free-text fallback
+        elif item.dose_unit:
+            per_dose = item.dose_unit  # non-numeric, e.g. "as needed"
+        else:
+            per_dose = None
+
+        n = len(item.days_of_week) if item.days_of_week else 0
+        freq = describe_frequency(item.days_of_week)
+
+        # --- Per-day clause: only for truly daily items (n == 7) ---
+        # For N×/week items a per-day average is meaningless (no dose on off
+        # days) and would invite a wrong comparison, so we omit it. When daily,
+        # per-day == per-dose; the label is what lets the LLM match "mg/day" KB
+        # ranges directly.
+        per_day = None
+        if item.dose_amount is not None and item.dose_unit and n == 7:
+            per_day = f"{_fmt_num(item.dose_amount)} {item.dose_unit} per day"
+
+        # --- Weekly total: numeric amount AND a schedule. ---
+        # NOTE: this assumes the dose is taken on every selected day. It
+        # over-counts sub-weekly cadences (e.g. "every other day") that
+        # daysOfWeek (weekly granularity) cannot represent — known limitation.
+        weekly = None
+        if item.dose_amount is not None and item.dose_unit and n:
+            total = item.dose_amount * n
+            weekly = f"{_fmt_num(total)} {item.dose_unit} per week"
+
+        # --- Assemble ---
+        line = f"- {item.item} [{item.category}]"
+        if per_dose:
+            line += f" — {per_dose} per dose" if item.dose_amount is not None else f" — {per_dose}"
+        else:
+            line += " — dose not set"
+        if freq:
+            line += f"; taken {freq}"
+        if per_day:
+            line += f"; = {per_day}"
+        if weekly:
+            line += f"; = {weekly}"
+
+        extras = [e for e in (item.route, item.time_slot) if e]
+        if extras:
+            line += f" [{', '.join(extras)}]"
+
+        lines.append(line)
+
+    return "\n".join(lines)
 
 
 def resolve_item_key(stack_item: StackItem) -> str:
@@ -33,6 +152,44 @@ def resolve_item_key(stack_item: StackItem) -> str:
     if stack_item.slug:
         return stack_item.slug
     return re.sub(r"[^a-z0-9]+", "-", stack_item.item.lower()).strip("-")
+
+
+# --- Reusable retrieval primitives (also usable as agent tools later) ----------
+
+def fetch_item_sections(collection, item_key: str, sections: list[str]) -> list[dict]:
+    """Deterministically fetch named sections for one item by metadata.
+
+    No embedding involved — guarantees the requested sections are returned
+    regardless of similarity, so critical context (dosing, interactions) is never
+    dropped. Returns only the sections that actually exist for the item.
+    """
+    results = collection.get(
+        where={"$and": [{"item": item_key}, {"section": {"$in": sections}}]},
+    )
+    return [
+        {"id": doc_id, "content": document, "score": 1.0}
+        for doc_id, document in zip(results["ids"], results["documents"])
+    ]
+
+
+def rank_item_sections(collection, item_key: str, query_embedding, top_k: int) -> list[dict]:
+    """Rank one item's own sections by similarity to the query; take the best top_k.
+
+    Ranking within a single item's ~14 sections is far more reliable than ranking
+    one section among all 1,837, so no score threshold is applied here — we trust
+    the relative ordering within the item.
+    """
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k,
+        where={"item": item_key},
+    )
+    return [
+        {"id": doc_id, "content": document, "score": 1 - distance}
+        for doc_id, document, distance in zip(
+            results["ids"][0], results["documents"][0], results["distances"][0]
+        )
+    ]
 
 
 class ChatMessage(BaseModel):
@@ -51,54 +208,48 @@ class StackReviewRequest(BaseModel):
 
 
 def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:
-    """Search ChromaDB for relevant chunks, boosting stack items."""
+    """Structure-first hybrid retrieval.
+
+    1. Global discovery pass — semantic search across everything (catches lifestyle
+       topics, guides, and items the user didn't name).
+    2. Per-stack-item structural pass — for each stack item, ALWAYS include its
+       safety-core sections (deterministic) plus the most query-relevant of its own
+       sections (ranked within the item). This is the part that makes context
+       reliable: the dosing/safety sections are never dropped, and the section that
+       actually answers the question (foods, lifestyle, …) is surfaced by ranking
+       within the item rather than competing against all 1,837 chunks.
+    """
     model = get_model()
     collection = get_collection()
-
     query_embedding = model.encode(query).tolist()
-
-    # Main search across everything
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=RAG_TOP_K,
-    )
 
     chunks = []
     seen_ids = set()
 
+    def add(chunk: dict) -> None:
+        if chunk["id"] not in seen_ids:
+            chunks.append(chunk)
+            seen_ids.add(chunk["id"])
+
+    # 1. Global discovery pass (similarity, with threshold)
+    results = collection.query(query_embeddings=[query_embedding], n_results=RAG_TOP_K)
     for doc_id, document, distance in zip(
         results["ids"][0], results["documents"][0], results["distances"][0]
     ):
-        similarity = 1 - distance
-        if similarity >= RAG_SCORE_THRESHOLD:
-            chunks.append(
-                {"id": doc_id, "content": document, "score": similarity}
-            )
-            seen_ids.add(doc_id)
+        if 1 - distance >= RAG_SCORE_THRESHOLD:
+            add({"id": doc_id, "content": document, "score": 1 - distance})
 
-    # If the user has a stack, also pull relevant sections for their items
-    for stack_item in stack[:5]:  # limit to avoid too many extra searches
-        item_results = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=3,
-            where={"item": resolve_item_key(stack_item)},
-        )
-        for doc_id, document, distance in zip(
-            item_results["ids"][0],
-            item_results["documents"][0],
-            item_results["distances"][0],
+    # 2. Per-stack-item structural pass: core sections (always) + query-relevant
+    for stack_item in stack[:RAG_MAX_STACK_ITEMS]:
+        item_key = resolve_item_key(stack_item)
+        for chunk in fetch_item_sections(collection, item_key, CORE_ITEM_SECTIONS):
+            add(chunk)
+        for chunk in rank_item_sections(
+            collection, item_key, query_embedding, RAG_PER_ITEM_RELEVANT_K
         ):
-            if doc_id not in seen_ids:
-                similarity = 1 - distance
-                if similarity >= RAG_SCORE_THRESHOLD:
-                    chunks.append(
-                        {"id": doc_id, "content": document, "score": similarity}
-                    )
-                    seen_ids.add(doc_id)
+            add(chunk)
 
-    # Sort by relevance and limit total context
-    chunks.sort(key=lambda x: x["score"], reverse=True)
-    return chunks[:12]  # cap at 12 chunks to stay within token limits
+    return chunks
 
 
 def build_prompt(
@@ -112,10 +263,7 @@ def build_prompt(
 
     # Add user's stack context
     if stack:
-        stack_text = "The user is currently taking:\n"
-        for item in stack:
-            dose_str = f" ({item.dose})" if item.dose else ""
-            stack_text += f"- {item.item} [{item.category}]{dose_str}\n"
+        stack_text = "The user is currently taking:\n" + format_stack_for_prompt(stack)
         messages.append({"role": "system", "content": stack_text})
 
     # Add knowledge graph relationship context
@@ -197,34 +345,25 @@ async def chat(request: ChatRequest):
 
 
 def get_stack_chunks(stack: list[StackItem]) -> list[dict]:
-    """Pull the most relevant knowledge base chunks for each stack item."""
-    model = get_model()
+    """Deterministically pull the review-critical sections (REVIEW_SECTIONS) for
+    each stack item.
+
+    Fetched by metadata so the dosing protocol — and the other sections the review
+    needs — are guaranteed present, regardless of embedding similarity to any query.
+    """
     collection = get_collection()
     chunks = []
     seen_ids = set()
 
-    for stack_item in stack[:10]:
-        # Search for key sections: interactions, dosing, side effects, stacking
-        review_query = f"{stack_item.item} interactions dosing side effects stacking"
-        query_embedding = model.encode(review_query).tolist()
-
-        results = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=3,
-            where={"item": resolve_item_key(stack_item)},
-        )
-
-        for doc_id, document, distance in zip(
-            results["ids"][0], results["documents"][0], results["distances"][0]
+    for stack_item in stack[:RAG_MAX_STACK_ITEMS]:
+        for chunk in fetch_item_sections(
+            collection, resolve_item_key(stack_item), REVIEW_SECTIONS
         ):
-            if doc_id not in seen_ids:
-                similarity = 1 - distance
-                if similarity >= RAG_SCORE_THRESHOLD:
-                    chunks.append({"id": doc_id, "content": document, "score": similarity})
-                    seen_ids.add(doc_id)
+            if chunk["id"] not in seen_ids:
+                chunks.append(chunk)
+                seen_ids.add(chunk["id"])
 
-    chunks.sort(key=lambda x: x["score"], reverse=True)
-    return chunks[:20]  # allow more chunks for a thorough review
+    return chunks
 
 
 @router.post("/chat/stack-review")
@@ -237,10 +376,7 @@ async def chat_stack_review(request: StackReviewRequest):
     messages = [{"role": "system", "content": STACK_REVIEW_PROMPT}]
 
     # Stack listing
-    stack_text = "USER'S CURRENT STACK:\n"
-    for item in request.stack:
-        dose_str = f" ({item.dose})" if item.dose else ""
-        stack_text += f"- {item.item} [{item.category}]{dose_str}\n"
+    stack_text = "USER'S CURRENT STACK:\n" + format_stack_for_prompt(request.stack)
     messages.append({"role": "system", "content": stack_text})
 
     # Graph context

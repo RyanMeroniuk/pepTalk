@@ -113,28 +113,80 @@ export function describeDays(daysOfWeek) {
 }
 
 /**
+ * Describe a daysOfWeek array as a dose-frequency string.
+ * e.g. [0..6] → "Daily"
+ *      [1,5] → "2×/week (Mon, Fri)"
+ */
+export function describeFrequency(daysOfWeek) {
+  if (!daysOfWeek || daysOfWeek.length === 0) return '';
+  if (daysOfWeek.length === 7) return 'Daily';
+  return `${daysOfWeek.length}×/week (${describeDays(daysOfWeek)})`;
+}
+
+/**
+ * Parse a free-text dose string into structured { doseAmount, doseUnit }.
+ * "2 mg" → { doseAmount: 2, doseUnit: "mg" }
+ * "500mcg" → { doseAmount: 500, doseUnit: "mcg" }
+ * "as needed" → { doseAmount: null, doseUnit: "as needed" }
+ * "" → { doseAmount: null, doseUnit: "" }
+ */
+export function parseDose(doseStr) {
+  if (!doseStr || typeof doseStr !== 'string') {
+    return { doseAmount: null, doseUnit: '' };
+  }
+  const match = doseStr.trim().match(/^\s*([\d.]+)\s*(.*)$/);
+  if (match && match[1] !== '' && !Number.isNaN(parseFloat(match[1]))) {
+    return { doseAmount: parseFloat(match[1]), doseUnit: match[2].trim() || 'mg' };
+  }
+  return { doseAmount: null, doseUnit: doseStr.trim() };
+}
+
+/**
+ * Build a display string for a stack item's dose from structured fields.
+ * Falls back to the legacy free-text `dose` if structured fields are absent.
+ * Returns '' when there's nothing to show.
+ */
+export function formatDose(item) {
+  if (item.doseAmount != null && item.doseUnit) {
+    // Trim trailing zeros (2.0 → "2") for clean display.
+    const amount = Number(item.doseAmount);
+    return `${amount} ${item.doseUnit}`;
+  }
+  if (item.doseUnit) return item.doseUnit; // non-numeric like "as needed"
+  if (item.dose) return item.dose; // legacy, not yet migrated
+  return '';
+}
+
+/**
  * Apply default values to a stack item that may be missing new fields.
  * Migrates old frequency-based items to daysOfWeek.
  */
 export function migrateItem(item) {
-  // Already has daysOfWeek — no migration needed
-  if (item.daysOfWeek && Array.isArray(item.daysOfWeek)) {
-    return { route: null, ...item };
+  // Backfill structured dose fields from the legacy free-text `dose` string.
+  // Only parse when structured fields are absent, so re-saving never clobbers them.
+  const withDose =
+    item.doseAmount === undefined && item.doseUnit === undefined
+      ? { ...item, ...parseDose(item.dose) }
+      : item;
+
+  // Already has daysOfWeek — no further migration needed
+  if (withDose.daysOfWeek && Array.isArray(withDose.daysOfWeek)) {
+    return { route: null, ...withDose };
   }
 
   // Convert old frequency format to daysOfWeek
   let daysOfWeek = [0, 1, 2, 3, 4, 5, 6]; // default: every day
 
-  if (item.frequency === 'weekly' && item.startDate) {
-    const d = new Date(item.startDate + 'T00:00:00');
+  if (withDose.frequency === 'weekly' && withDose.startDate) {
+    const d = new Date(withDose.startDate + 'T00:00:00');
     daysOfWeek = [d.getDay()];
-  } else if (item.frequency === 'biweekly' && item.startDate) {
+  } else if (withDose.frequency === 'biweekly' && withDose.startDate) {
     // Can't perfectly represent biweekly as days-of-week, default to that one day
-    const d = new Date(item.startDate + 'T00:00:00');
+    const d = new Date(withDose.startDate + 'T00:00:00');
     daysOfWeek = [d.getDay()];
   }
 
-  const migrated = { ...item, daysOfWeek, route: item.route || null };
+  const migrated = { ...withDose, daysOfWeek, route: withDose.route || null };
   // Clean up old fields
   delete migrated.frequency;
   delete migrated.startDate;

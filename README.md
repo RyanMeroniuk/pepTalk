@@ -21,26 +21,35 @@ It's not just a reference tool. It's a coach.
 ┌─────────────────────┐              ┌────────────────────────────────┐
 │                     │              │                                │
 │   Mobile App        │   question   │   Backend (FastAPI)            │
-│                     │─────────────→│                                │
-│   • Chat UI         │              │   1. Search vector database    │
-│   • Scheduler       │              │   2. Retrieve relevant data    │
-│   • Your stack      │              │   3. Add user context (stack)  │
-│   • Settings        │              │   4. Call LLM (Gemini/Claude)  │
-│                     │←─────────────│   5. Return answer             │
-│                     │   response   │                                │
+│                     │   + stack    │                                │
+│   • Chat UI         │─────────────→│   1. Embed question (local)    │
+│   • Scheduler       │              │   2. Hybrid retrieval:         │
+│   • Your stack      │              │      structure + semantic      │
+│   • Settings        │              │   3. Add stack + graph context │
+│                     │←─────────────│   4. Stream answer from LLM    │
+│                     │   response   │   5. Cite sources              │
 │                     │              │                                │
 └─────────────────────┘              └────────────────────────────────┘
 ```
 
-The mobile app is a thin client — all intelligence lives on the backend. The app sends your question plus your current stack, the backend searches its knowledge base, builds a context-rich prompt, calls the LLM, and returns a grounded answer.
+The mobile app is a thin client — all intelligence lives on the backend. The app sends your question plus your current stack, the backend retrieves the right knowledge-base context, builds a context-rich prompt, calls the LLM, and streams back a grounded, cited answer.
+
+### Retrieval: structure-first hybrid
+
+PepTalk's knowledge base is small and rigidly structured — every peptide and supplement is split into the same fixed set of section files, each tagged with `item` and `section` metadata. The retrieval pipeline exploits that structure instead of relying on fuzzy vector similarity alone:
+
+- **Global discovery (semantic)** — the question is embedded locally and matched across the whole knowledge base, surfacing relevant content including lifestyle topics and items not in your stack.
+- **Per-stack-item (structural)** — for each item in your stack, PepTalk always pulls its safety-critical sections (dosing, side effects, drug interactions, things to avoid, interactions) directly by metadata — guaranteed, never dropped — and additionally ranks that item's *own* sections against your question to include whatever best answers it (foods, lifestyle, timing, etc.).
+
+This guarantees the AI always has the dosing and safety context for what you're actually taking, while still surfacing the section that answers your specific question — without depending on one section out-ranking 1,800+ others in a pure similarity search.
 
 ## Knowledge Graph
 
 On top of vector search, PepTalk uses a **knowledge graph** — an adjacency list of every relationship between peptides, supplements, drugs, conditions, and lifestyle factors. It's built with NetworkX (Python library, no external database) and persisted as a JSON file.
 
 ### What it stores
-- **103 nodes**: 32 peptides, 31 supplements, 27 drugs, 13 conditions
-- **2,493 edges**: synergies, conflicts, stacking protocols, contraindications, timing conflicts, and support relationships
+- **167 nodes**: 64 supplements, 60 peptides, 28 drugs, 15 conditions
+- **5,867 edges**: SYNERGIZES_WITH (3,272), CONFLICTS_WITH (965), STACKS_WITH (814), CONTRAINDICATED_IN (551), SUPPORTS (217), TIMING_CONFLICT (48)
 
 ### Why it matters
 Vector search finds *similar text*. The graph finds *explicit relationships*. Together they give the AI both relevant content and structured facts:
@@ -72,7 +81,7 @@ The scheduler feeds into the chat. When you ask "what supplements should I add?"
 
 PepTalk's data layer is comprehensive and pre-built. Every entry is split into individual section files optimized for RAG retrieval.
 
-### Peptides (32 compounds)
+### Peptides (61 compounds)
 Covering growth hormone secretagogues, healing peptides, GLP-1 weight loss drugs, nootropics, sleep peptides, immune support, sexual health, and anti-aging compounds. Each peptide has 14 section files:
 
 | Section | Description |
@@ -92,7 +101,7 @@ Covering growth hormone secretagogues, healing peptides, GLP-1 weight loss drugs
 | Drug Interactions | Medication conflicts and contraindications |
 | Regulatory Status | FDA approval, legal status, availability |
 
-### Supplements (31 compounds)
+### Supplements (64 compounds)
 Covering minerals, vitamins, amino acids, herbal extracts, mitochondrial support, sleep aids, and gut health compounds. Each supplement has 14 section files:
 
 | Section | Description |
@@ -131,7 +140,7 @@ Covering sleep, exercise, nutrition, stress management, hydration, sunlight, blo
 - **Stacking & Supplements Master Guide** — Popular stacks, universal supplement recommendations by peptide category, contraindications
 
 ### Data Stats
-- **969 markdown files** across 74 directories
+- **1,837 markdown files** across 140 directories
 - Every file is a self-contained section optimized for vector search retrieval
 - Peptides, supplements, and lifestyle topics are cross-referenced throughout
 
@@ -143,7 +152,7 @@ Covering sleep, exercise, nutrition, stress management, hydration, sunlight, blo
 | **Backend API** | Python (FastAPI) | Lightweight, async, perfect for API + RAG |
 | **LLM** | Gemini Flash (primary), Claude Haiku (fallback) | Free tier for dev, swappable via LiteLLM |
 | **Vector Database** | ChromaDB | Lightweight, embeds with Python, good for small datasets |
-| **Knowledge Base** | 969 markdown files | Curated, structured, split by section for clean chunking |
+| **Knowledge Base** | 1,837 markdown files | Curated, structured, split by section for clean chunking |
 
 ## Architecture Principles
 
@@ -184,14 +193,14 @@ pepTalk/
 │   │   │   ├── stacking-protocols.md
 │   │   │   ├── drug-interactions.md
 │   │   │   └── regulatory-status.md
-│   │   └── ... (32 peptide directories)
+│   │   └── ... (61 peptide directories)
 │   ├── supplements/
 │   │   ├── magnesium/
 │   │   │   ├── overview.md
 │   │   │   ├── forms-and-bioavailability.md
 │   │   │   ├── peptide-synergies.md
 │   │   │   └── ... (14 files each)
-│   │   └── ... (31 supplement directories)
+│   │   └── ... (64 supplement directories)
 │   └── lifestyle/
 │       ├── sleep/
 │       │   ├── overview.md
@@ -247,7 +256,7 @@ cp .env.example .env
 # Edit .env and add your GOOGLE_API_KEY (from https://aistudio.google.com/apikey)
 
 # Build the vector database and knowledge graph
-python ingest.py        # Embeds 969 files into ChromaDB (~6 seconds)
+python ingest.py        # Embeds 1,837 files into ChromaDB (~6 seconds)
 python build_graph.py   # Extracts relationships into graph.json (~1 second)
 
 # Start the server
@@ -267,15 +276,17 @@ The embedding model, vector database, and knowledge graph are all gitignored (la
 
 ## Status
 
-- [x] Knowledge base — 32 peptides with full coverage
-- [x] Knowledge base — 31 supplements with full coverage
+- [x] Knowledge base — 61 peptides with full coverage
+- [x] Knowledge base — 64 supplements with full coverage
 - [x] Knowledge base — 10 lifestyle topics with full coverage
 - [x] Injection and stacking guides
-- [ ] Backend API (FastAPI + RAG pipeline)
-- [ ] Vector database ingestion
-- [ ] Mobile app — Chat UI
-- [ ] Mobile app — Scheduler & tracker
-- [ ] Mobile app — User stack management
+- [x] Backend API (FastAPI + RAG pipeline)
+- [x] Vector database ingestion
+- [x] Knowledge graph (167 nodes, 5,867 edges)
+- [x] Structure-first hybrid retrieval
+- [x] Mobile app — Chat UI
+- [x] Mobile app — Scheduler & tracker
+- [x] Mobile app — User stack management
 - [ ] Push notifications for dosing reminders
 - [ ] App Store deployment
 

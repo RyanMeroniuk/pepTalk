@@ -101,18 +101,22 @@ Mobile App (thin client)              Backend (FastAPI)
 ### RAG Pipeline (in `backend/app/routers/chat.py`)
 1. User sends message + their active stack + conversation history
 2. Question is embedded locally via sentence-transformers (~5ms)
-3. ChromaDB searched for top 8 relevant chunks (boosted for stack items)
+3. **Structure-first hybrid retrieval** (`search_knowledge_base`):
+   - **Global discovery (semantic)** — top `RAG_TOP_K` chunks across the whole KB, above `RAG_SCORE_THRESHOLD` (catches lifestyle topics, guides, items not in the stack).
+   - **Per-stack-item (structural)** — for each stack item, always fetch its safety-core sections by metadata (`CORE_ITEM_SECTIONS`: dosing-protocols, side-effects, drug-interactions, things-to-avoid, interactions) via `fetch_item_sections`, PLUS the most query-relevant of that item's own sections via `rank_item_sections` (ranked within the item, no threshold). This guarantees dosing/safety context is never dropped and reliably surfaces the section that answers the question.
 4. Knowledge graph traversed for the user's stack — extracts conflicts, synergies, and key relationships
-5. Prompt assembled: system prompt + stack context + **graph context** + retrieved chunks + history + question
+5. Prompt assembled: system prompt + stack context (unit-labeled doses) + **graph context** + retrieved chunks + history + question
 6. Response streamed via LiteLLM → Gemini 2.5 Flash as Server-Sent Events
 7. Sources appended at end of stream for citation
+
+**Why hybrid, not pure vector search:** each section is one coarse chunk embedded by a small model, so a relevant section (e.g. a peptide's dosing protocol) often fails to rank into a global top-K. Because the KB is small and rigidly structured (fixed sections per item, tagged with `item`/`section` metadata), the per-item structural pass fetches known-needed sections deterministically instead of hoping similarity surfaces them. `fetch_item_sections` / `rank_item_sections` are written so an agent could call them as tools later. **Stack review** (`get_stack_chunks`) uses the same deterministic fetch with a comprehensive `REVIEW_SECTIONS` set.
 
 ### Knowledge Graph (`backend/graph.json`, built by `build_graph.py`)
 An in-memory adjacency list (NetworkX MultiDiGraph) persisted as JSON. Stores explicit relationships extracted from the data files via regex parsing — no LLM needed to build.
 
-**Stats**: 167 nodes, 5,932 edges
+**Stats**: 167 nodes, 5,867 edges
 - **Nodes**: 64 supplements, 60 peptides, 28 drugs, 15 conditions
-- **Edge types**: SYNERGIZES_WITH (3,300), CONFLICTS_WITH (985), STACKS_WITH (824), CONTRAINDICATED_IN (553), SUPPORTS (220), TIMING_CONFLICT (50)
+- **Edge types**: SYNERGIZES_WITH (3,272), CONFLICTS_WITH (965), STACKS_WITH (814), CONTRAINDICATED_IN (551), SUPPORTS (217), TIMING_CONFLICT (48)
 
 **How it enhances the RAG**:
 - Vector search returns relevant *content* (text chunks)
@@ -129,8 +133,10 @@ An in-memory adjacency list (NetworkX MultiDiGraph) persisted as JSON. Stores ex
 **Conflict detection** (`POST /check-conflicts`) uses direct graph edge lookup — instant and accurate vs the old pairwise vector search approach.
 
 ### Key Config (`backend/app/config.py`)
-- `RAG_TOP_K = 8` — chunks retrieved per query
-- `RAG_SCORE_THRESHOLD = 0.3` — minimum similarity to include
+- `RAG_TOP_K = 8` — global discovery chunks per query
+- `RAG_SCORE_THRESHOLD = 0.3` — minimum similarity for the global discovery pass
+- `RAG_PER_ITEM_RELEVANT_K = 3` — query-relevant sections per stack item (beyond core)
+- `RAG_MAX_STACK_ITEMS = 8` — stack items expanded in retrieval
 - `LLM_MODEL` — set in `.env`, defaults to `gemini/gemini-2.5-flash`
 - System prompt is defined here — enforces grounded answers only
 
@@ -187,6 +193,14 @@ sleep, exercise, nutrition, stress-management, hydration, sunlight, blood-work, 
 - **Do it right the first time.** Never take a shortcut with plans to "fix it later." That's lazy and leads to compounding tech debt. The only exception is when doing it properly would be insanely difficult or when there's a clear logical reason to defer.
 - Build to the final standard from day one — data formats, file structures, naming conventions, API contracts.
 
+## Changelog Convention
+Keep `CHANGELOG.md` (repo root) current. **After any sufficiently meaningful change, add a changelog entry as part of the same work — before considering the task done.**
+
+- **What counts as "sufficient":** new feature or endpoint; a behavior/logic change a user or developer would notice; an architecture or data-flow change (e.g. retrieval pipeline, prompt strategy, schema/data-model); a meaningful bug fix; config/contract changes. **Skip** trivial edits: typos, formatting, comments, pure refactors with no behavior change, doc-only tweaks.
+- **How to write it:** newest entry first, grouped under a dated `## YYYY-MM-DD — <short title>` heading (use the real current date). State the *problem* and the *fix/outcome*, not just a file diff. Name the key files/functions touched. Note any known limitations. Match the style of existing entries.
+- **Keep the docs in sync:** if a change alters how the system works or its stats (counts, architecture), update the affected `README.md` / `CLAUDE.md` sections too — the changelog is history, the README/CLAUDE.md describe current state.
+- This is a convention, not an enforced hook — apply it by default; the user can waive it for a given change.
+
 ## Development Environment
 - Primary dev machine: MacBook Air M4 13-inch, 16GB RAM, macOS Tahoe 26.3.1
 - Gemini Flash free tier: 15 req/min, 1M tokens/day
@@ -216,11 +230,12 @@ notebooklm source list                      # List sources
 - [x] Knowledge base — 61 peptides, 64 supplements, 10 lifestyle topics (1,837 files)
 - [x] Embedding model — all-MiniLM-L6-v2 running locally
 - [x] Vector database — ChromaDB ingested and searchable
-- [x] Knowledge graph — 167 nodes, 5,932 edges, fully operational
+- [x] Knowledge graph — 167 nodes, 5,867 edges, fully operational
 - [x] Backend API — FastAPI with browse, search, chat, and graph endpoints
 - [x] Chat endpoint — tested with Gemini 2.5 Flash, streaming responses working
-- [ ] Mobile app — Chat UI
-- [ ] Mobile app — Scheduler & tracker
-- [ ] Mobile app — User stack management
+- [x] Structure-first hybrid retrieval — per-stack-item core + query-relevant sections
+- [x] Mobile app — Chat UI
+- [x] Mobile app — Scheduler & tracker
+- [x] Mobile app — User stack management
 - [ ] Push notifications
 - [ ] App Store deployment

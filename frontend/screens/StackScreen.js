@@ -25,6 +25,7 @@ import {
   todayString,
   formatDateHeader,
   describeDays,
+  formatDose,
 } from '../utils/schedule';
 import DateStrip from '../components/DateStrip';
 import QuickActions from '../components/QuickActions';
@@ -446,7 +447,7 @@ function DoseCard({ item, checked, onToggle, onMore }) {
           </Badge>
         </View>
         <View style={dcStyles.metaRow}>
-          {item.dose ? <Text style={dcStyles.dose}>{item.dose}</Text> : null}
+          {formatDose(item) ? <Text style={dcStyles.dose}>{formatDose(item)}</Text> : null}
           {routeLabel && <Badge variant="route">{routeLabel}</Badge>}
           {scheduleLabel && (
             <Text style={dcStyles.schedule}>· {scheduleLabel}</Text>

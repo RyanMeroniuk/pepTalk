@@ -18,11 +18,13 @@ const ROUTES = [
   { key: 'intranasal', label: 'Intranasal' },
   { key: 'intramuscular', label: 'IM' },
 ];
+const UNITS = ['mg', 'mcg', 'IU', 'g', 'mL', 'capsule', 'tablet', 'drop', 'spray', 'scoop'];
 
 const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
 export default function ScheduleFormModal({ visible, itemName, onConfirm, onClose }) {
-  const [dose, setDose] = useState('');
+  const [doseAmount, setDoseAmount] = useState('');
+  const [doseUnit, setDoseUnit] = useState('mg');
   const [timeSlot, setTimeSlot] = useState('morning');
   const [route, setRoute] = useState(null);
   const [daysOfWeek, setDaysOfWeek] = useState(ALL_DAYS);
@@ -40,7 +42,8 @@ export default function ScheduleFormModal({ visible, itemName, onConfirm, onClos
 
   const handleConfirm = () => {
     onConfirm({
-      dose: dose.trim(),
+      doseAmount: parseFloat(doseAmount) || null,
+      doseUnit,
       timeSlot,
       route,
       daysOfWeek,
@@ -49,7 +52,8 @@ export default function ScheduleFormModal({ visible, itemName, onConfirm, onClos
   };
 
   const resetForm = () => {
-    setDose('');
+    setDoseAmount('');
+    setDoseUnit('mg');
     setTimeSlot('morning');
     setRoute(null);
     setDaysOfWeek(ALL_DAYS);
@@ -68,16 +72,30 @@ export default function ScheduleFormModal({ visible, itemName, onConfirm, onClos
           <Text style={styles.title}>{itemName}</Text>
           <Text style={styles.subtitle}>Configure your protocol</Text>
 
-          {/* Dose */}
+          {/* Dose — amount + unit */}
           <Text style={styles.label}>Dose</Text>
           <TextInput
             style={styles.input}
-            placeholder="e.g. 250mcg, 500mg, 2 capsules"
+            placeholder="Amount (e.g. 2, 500, 0.25)"
             placeholderTextColor={COLORS.textTertiary}
-            value={dose}
-            onChangeText={setDose}
+            value={doseAmount}
+            onChangeText={setDoseAmount}
+            keyboardType="decimal-pad"
             autoFocus
           />
+          <View style={[styles.pillRow, { marginTop: SPACING.s }]}>
+            {UNITS.map((u) => (
+              <TouchableOpacity
+                key={u}
+                style={[styles.pill, doseUnit === u && styles.pillActive]}
+                onPress={() => setDoseUnit(u)}
+              >
+                <Text style={[styles.pillText, doseUnit === u && styles.pillTextActive]}>
+                  {u}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
           {/* Time Slot */}
           <Text style={styles.label}>Time of Day</Text>
