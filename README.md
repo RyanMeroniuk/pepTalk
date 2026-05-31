@@ -40,6 +40,7 @@ PepTalk's knowledge base is small and rigidly structured — every peptide and s
 
 - **Global discovery (semantic)** — the question is embedded locally and matched across the whole knowledge base, surfacing relevant content including lifestyle topics and items not in your stack.
 - **Per-stack-item (structural)** — for each item in your stack, PepTalk always pulls its safety-critical sections (dosing, side effects, drug interactions, things to avoid, interactions) directly by metadata — guaranteed, never dropped — and additionally ranks that item's *own* sections against your question to include whatever best answers it (foods, lifestyle, timing, etc.).
+- **Query-mentioned items (structural)** — if you name a peptide or supplement that *isn't* in your stack (e.g. "what should I eat on tirzepatide?"), PepTalk detects it (brand names and dev codes included — Ozempic, Mounjaro, etc.) and pulls its sections too, so the answer is about what you actually asked.
 
 This guarantees the AI always has the dosing and safety context for what you're actually taking, while still surfacing the section that answers your specific question — without depending on one section out-ranking 1,800+ others in a pure similarity search.
 

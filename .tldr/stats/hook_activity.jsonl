@@ -215,3 +215,6 @@
 {"hook_name": "edit-context-inject", "invocations": 2, "successes": 2, "failures": 0, "metrics": {"edits_processed": 2, "symbols_shown": 11}, "timestamp": "2026-05-31T00:37:59.883131+00:00"}
 {"hook_name": "post-edit-diagnostics", "invocations": 1, "successes": 1, "failures": 0, "metrics": {"edits_analyzed": 1, "type_errors": 0, "lint_issues": 0}, "timestamp": "2026-05-31T00:37:59.883131+00:00"}
 {"hook_name": "post-edit-notify", "invocations": 2, "successes": 2, "failures": 0, "metrics": {"edits_notified": 2, "reindexes_triggered": 0}, "timestamp": "2026-05-31T01:10:15.842553+00:00"}
+{"hook_name": "post-edit-notify", "invocations": 3, "successes": 3, "failures": 0, "metrics": {"edits_notified": 3, "reindexes_triggered": 0}, "timestamp": "2026-05-31T01:43:54.066058+00:00"}
+{"hook_name": "edit-context-inject", "invocations": 1, "successes": 1, "failures": 0, "metrics": {"edits_processed": 1, "symbols_shown": 8}, "timestamp": "2026-05-31T01:43:54.066058+00:00"}
+{"hook_name": "post-edit-diagnostics", "invocations": 1, "successes": 1, "failures": 0, "metrics": {"edits_analyzed": 1, "type_errors": 0, "lint_issues": 0}, "timestamp": "2026-05-31T01:43:54.066058+00:00"}

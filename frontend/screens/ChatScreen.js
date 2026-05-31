@@ -6,7 +6,7 @@
 // flight we show an animated StreamingCard; on completion we render the full
 // answer card. Source IDs come from the backend's {type:'sources'} SSE event.
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import {
   StyleSheet,
   Text,
@@ -28,12 +28,37 @@ import { useStack } from '../context/StackContext';
 import { COLORS, RADII, SPACING, FONT_SIZES, SHADOWS } from '../theme/tokens';
 import { API_URL } from '../config';
 
-const STARTER_PROMPTS = [
-  { icon: 'shield', title: 'Review my stack for conflicts', sub: 'Checked against 1,837 files' },
-  { icon: 'fork', title: 'What should I eat on tirzepatide?', sub: 'Macros, timing, protein floor' },
-  { icon: 'moon', title: 'Best supplements for sleep', sub: 'Compare melatonin, glycine, magnesium' },
-  { icon: 'flame', title: 'Build a recomp protocol', sub: 'Personalized to your stack' },
-];
+// Starter prompts are built from the user's actual stack so they always retrieve
+// real context (a question about an item you take pulls that item's sections).
+// When the stack is empty we fall back to general/educational prompts — the
+// compound-specific ones still work thanks to backend query→item detection.
+function buildStarters(stack) {
+  if (stack.length > 0) {
+    const foodTarget = stack.find((s) => s.category === 'peptide') || stack[0];
+    const starters = [
+      { icon: 'shield', title: 'Review my stack for conflicts', sub: 'Checked against your stack' },
+    ];
+    if (foodTarget) {
+      starters.push({
+        icon: 'fork',
+        title: `What should I eat on ${foodTarget.item}?`,
+        sub: 'Foods to favor, foods to avoid, timing',
+      });
+    }
+    starters.push(
+      { icon: 'flame', title: 'Build a recomp protocol', sub: 'Personalized to your stack' },
+      { icon: 'moon', title: 'Best supplements for sleep', sub: 'Compare melatonin, glycine, magnesium' }
+    );
+    return starters;
+  }
+
+  return [
+    { icon: 'fork', title: 'What should I eat on tirzepatide?', sub: 'Foods to favor, foods to avoid, timing' },
+    { icon: 'shield', title: 'How does semaglutide work?', sub: 'Mechanism, benefits, dosing' },
+    { icon: 'flame', title: 'What is BPC-157 used for?', sub: 'Healing, dosing, stacking' },
+    { icon: 'moon', title: 'Best supplements for sleep', sub: 'Compare melatonin, glycine, magnesium' },
+  ];
+}
 
 // Format a backend source id ("peptides/semaglutide/dosing-protocols") into a
 // readable breadcrumb + kind. Defensive: works for any "/"-delimited id.
@@ -62,6 +87,7 @@ export default function ChatScreen() {
 
   const loading = streamingQuestion !== null;
   const isEmpty = turns.length === 0 && !loading;
+  const starters = useMemo(() => buildStarters(stack), [stack]);
 
   const scrollToEnd = useCallback(() => {
     requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
@@ -182,7 +208,7 @@ export default function ChatScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {isEmpty ? (
-            <EmptyState onPick={(q) => send(q)} />
+            <EmptyState onPick={(q) => send(q)} prompts={starters} />
           ) : (
             <View style={styles.turnList}>
               {turns.map((t, i) => (
@@ -238,7 +264,7 @@ export default function ChatScreen() {
 // ─────────────────────────────────────────────────────────────
 // Empty state — intro + starter prompts
 // ─────────────────────────────────────────────────────────────
-function EmptyState({ onPick }) {
+function EmptyState({ onPick, prompts }) {
   return (
     <View style={es.wrap}>
       <View style={es.intro}>
@@ -259,7 +285,7 @@ function EmptyState({ onPick }) {
 
       <View style={es.starters}>
         <Text style={es.startHere}>START HERE</Text>
-        {STARTER_PROMPTS.map((s, i) => (
+        {prompts.map((s, i) => (
           <TouchableOpacity
             key={i}
             activeOpacity={0.7}

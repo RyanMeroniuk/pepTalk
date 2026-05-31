@@ -41,6 +41,7 @@ pepTalk/
 │   │   ├── main.py                        # FastAPI entry point, CORS, lifespan
 │   │   ├── config.py                      # Settings, paths, system prompt
 │   │   ├── dependencies.py                # Shared model + ChromaDB singletons
+│   │   ├── item_registry.py               # Item slugs + alias map + query→item detection (shared w/ build_graph)
 │   │   └── routers/
 │   │       ├── chat.py                    # POST /chat — RAG streaming endpoint
 │   │       ├── browse.py                  # GET /peptides, /supplements, /lifestyle
@@ -103,7 +104,8 @@ Mobile App (thin client)              Backend (FastAPI)
 2. Question is embedded locally via sentence-transformers (~5ms)
 3. **Structure-first hybrid retrieval** (`search_knowledge_base`):
    - **Global discovery (semantic)** — top `RAG_TOP_K` chunks across the whole KB, above `RAG_SCORE_THRESHOLD` (catches lifestyle topics, guides, items not in the stack).
-   - **Per-stack-item (structural)** — for each stack item, always fetch its safety-core sections by metadata (`CORE_ITEM_SECTIONS`: dosing-protocols, side-effects, drug-interactions, things-to-avoid, interactions) via `fetch_item_sections`, PLUS the most query-relevant of that item's own sections via `rank_item_sections` (ranked within the item, no threshold). This guarantees dosing/safety context is never dropped and reliably surfaces the section that answers the question.
+   - **Per-stack-item (structural)** — for each stack item, always fetch its safety-core sections by metadata (`CORE_ITEM_SECTIONS`: dosing-protocols, side-effects, drug-interactions, things-to-avoid, interactions) via `fetch_item_sections`. Additionally rank-expand that item's other sections via `rank_item_sections` **only when the question is general (names no specific item) or names that stack item** — so a question about a different compound doesn't drag in every stack item's foods/lifestyle. Core is always present (safety/interaction awareness); query-relevant expansion is targeted.
+   - **Query-mentioned items (structural)** — `detect_items()` (`app/item_registry.py`) finds peptides/supplements named in the question that aren't in the stack (alias-aware: Ozempic→semaglutide, Mounjaro→tirzepatide) and expands them the same way, so e.g. "what should I eat on tirzepatide?" answers about tirzepatide even when it's not in the stack.
 4. Knowledge graph traversed for the user's stack — extracts conflicts, synergies, and key relationships
 5. Prompt assembled: system prompt + stack context (unit-labeled doses) + **graph context** + retrieved chunks + history + question
 6. Response streamed via LiteLLM → Gemini 2.5 Flash as Server-Sent Events
@@ -137,6 +139,7 @@ An in-memory adjacency list (NetworkX MultiDiGraph) persisted as JSON. Stores ex
 - `RAG_SCORE_THRESHOLD = 0.3` — minimum similarity for the global discovery pass
 - `RAG_PER_ITEM_RELEVANT_K = 3` — query-relevant sections per stack item (beyond core)
 - `RAG_MAX_STACK_ITEMS = 8` — stack items expanded in retrieval
+- `RAG_MAX_QUERY_ITEMS = 3` — items detected in the question (not in stack) to expand
 - `LLM_MODEL` — set in `.env`, defaults to `gemini/gemini-2.5-flash`
 - System prompt is defined here — enforces grounded answers only
 

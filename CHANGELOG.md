@@ -2,6 +2,46 @@
 
 All notable changes to PepTalk are documented here. Newest first.
 
+## 2026-05-30 — Query-aware retrieval & dynamic chat starters
+
+Compound-specific questions now actually work, and the chat starter prompts no
+longer mislead.
+
+### Query→item detection (backend)
+- **Problem:** Retrieval only guaranteed sections for items in the user's stack.
+  A question about a compound *not* in the stack (e.g. the "What should I eat on
+  tirzepatide?" starter) pulled no tirzepatide sections, so — combined with the
+  prompt's bias toward the stack — the AI answered about the user's stack instead.
+- **Fix:** New `backend/app/item_registry.py` is the single source of truth for
+  item slugs + the brand/dev-code/alias map (e.g. Ozempic→semaglutide,
+  Mounjaro→tirzepatide), shared with `build_graph.py` (its `normalize_id` now
+  imports from here — no behavior change, graph rebuild verified identical).
+  `detect_items(text)` finds peptides/supplements named in a question (whole-word,
+  longest-match-first, alias-aware). `search_knowledge_base` now adds a third pass
+  that expands detected non-stack items with their core + query-relevant sections.
+- Added `RAG_MAX_QUERY_ITEMS` config. Added a `SYSTEM_PROMPT` line telling the model
+  to answer about a specifically-asked item directly, using the stack only as context.
+
+### Focused retrieval — don't over-share un-asked stack items (backend)
+- **Problem:** when a question named one item (e.g. "foods on tirzepatide?"), the
+  per-stack-item pass still rank-expanded *every* stack item, dragging each one's
+  foods/lifestyle into context — so the answer padded in foods for unrelated stack
+  items (GHK-Cu, etc.).
+- **Fix:** stack items always contribute their safety-core sections (so interactions
+  and overlaps are still caught), but a stack item's other sections are rank-expanded
+  only when the question is general or names that item. Strengthened `SYSTEM_PROMPT`
+  to mention stack items only for a genuine interaction/overlap/caution, not padding.
+  (Semantically-related siblings — e.g. retatrutide when asking about tirzepatide,
+  both GLP-1s — can still surface via the global discovery pass, which is desired.)
+
+### Dynamic chat starter prompts (frontend)
+- `ChatScreen.js` starter prompts are now built from the user's actual stack
+  (`buildStarters`) — e.g. the food question targets a peptide they really take —
+  so they always retrieve real context. Empty-stack users get general/educational
+  prompts, which also work now via query→item detection.
+- Previously the starters just sent their hardcoded `title` as a plain `/chat`
+  message (the "tirzepatide" one assumed a compound the user wasn't taking).
+
 ## 2026-05-30 — Dose accuracy & retrieval overhaul (backend + scheduler)
 
 ### Structure-first hybrid retrieval (backend)

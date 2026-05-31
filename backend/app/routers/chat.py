@@ -15,11 +15,13 @@ from app.config import (
     RAG_SCORE_THRESHOLD,
     RAG_PER_ITEM_RELEVANT_K,
     RAG_MAX_STACK_ITEMS,
+    RAG_MAX_QUERY_ITEMS,
     SYSTEM_PROMPT,
     STACK_REVIEW_PROMPT,
 )
 from app.dependencies import get_collection, get_model
 from app.graph_utils import get_stack_context
+from app.item_registry import detect_items
 
 router = APIRouter()
 
@@ -231,6 +233,18 @@ def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:
             chunks.append(chunk)
             seen_ids.add(chunk["id"])
 
+    def add_core(item_key: str) -> None:
+        """Safety/interaction sections — always relevant for what the user is on."""
+        for chunk in fetch_item_sections(collection, item_key, CORE_ITEM_SECTIONS):
+            add(chunk)
+
+    def add_relevant(item_key: str) -> None:
+        """The item's most query-relevant sections (foods, lifestyle, …)."""
+        for chunk in rank_item_sections(
+            collection, item_key, query_embedding, RAG_PER_ITEM_RELEVANT_K
+        ):
+            add(chunk)
+
     # 1. Global discovery pass (similarity, with threshold)
     results = collection.query(query_embeddings=[query_embedding], n_results=RAG_TOP_K)
     for doc_id, document, distance in zip(
@@ -239,15 +253,31 @@ def search_knowledge_base(query: str, stack: list[StackItem]) -> list[dict]:
         if 1 - distance >= RAG_SCORE_THRESHOLD:
             add({"id": doc_id, "content": document, "score": 1 - distance})
 
-    # 2. Per-stack-item structural pass: core sections (always) + query-relevant
-    for stack_item in stack[:RAG_MAX_STACK_ITEMS]:
-        item_key = resolve_item_key(stack_item)
-        for chunk in fetch_item_sections(collection, item_key, CORE_ITEM_SECTIONS):
-            add(chunk)
-        for chunk in rank_item_sections(
-            collection, item_key, query_embedding, RAG_PER_ITEM_RELEVANT_K
-        ):
-            add(chunk)
+    # Which items does the question explicitly name (stack or not)?
+    named = detect_items(query)
+    named_set = set(named)
+    asks_specific_item = bool(named_set)
+
+    # 2. Stack items: ALWAYS include safety-core (so the AI knows what the user is
+    #    on and can flag interactions/overlaps). Only rank-expand a stack item's
+    #    other sections when the question is general OR names that item —
+    #    otherwise a question about something else would drag in, e.g., every
+    #    stack item's foods.
+    stack_keys = [resolve_item_key(s) for s in stack[:RAG_MAX_STACK_ITEMS]]
+    stack_set = set(stack_keys)
+    for item_key in stack_keys:
+        add_core(item_key)
+        if not asks_specific_item or item_key in named_set:
+            add_relevant(item_key)
+
+    # 3. Items named in the question but not in the stack (e.g. "what should I eat
+    #    on tirzepatide?" when tirzepatide isn't in the stack) — expand fully so
+    #    the answer is about what was actually asked.
+    for item_key in named[:RAG_MAX_QUERY_ITEMS]:
+        if item_key in stack_set:
+            continue
+        add_core(item_key)
+        add_relevant(item_key)
 
     return chunks
 
