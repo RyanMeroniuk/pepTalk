@@ -98,14 +98,62 @@ def normalize_id(name: str) -> str:
 @lru_cache(maxsize=1)
 def _item_slugs() -> frozenset:
     """Valid peptide + supplement directory slugs (excludes _guide dirs)."""
-    slugs = set()
+    return frozenset(_item_catalog().keys())
+
+
+# Singular category labels, matching the stack item `category` field the app stores.
+_CATEGORY_LABEL = {"peptides": "peptide", "supplements": "supplement"}
+
+
+def _extract_h1_name(filepath) -> str:
+    """Return the first markdown H1 ("# Title") in a file, or "" if none."""
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("# "):
+                    return line[2:].strip()
+    except (FileNotFoundError, UnicodeDecodeError):
+        pass
+    return ""
+
+
+@lru_cache(maxsize=1)
+def _item_catalog() -> dict:
+    """Map each valid slug → {"name": display name, "category": "peptide"|"supplement"}.
+
+    Display name is the H1 of the item's overview.md (falling back to a title-cased
+    slug). Cached — the data directory is static at runtime.
+    """
+    catalog = {}
     for category in ("peptides", "supplements"):
         category_dir = DATA_DIR / category
-        if category_dir.exists():
-            for entry in category_dir.iterdir():
-                if entry.is_dir() and not entry.name.startswith("_"):
-                    slugs.add(entry.name)
-    return frozenset(slugs)
+        if not category_dir.exists():
+            continue
+        for entry in category_dir.iterdir():
+            if not entry.is_dir() or entry.name.startswith("_"):
+                continue
+            name = _extract_h1_name(entry / "overview.md")
+            if not name:
+                name = entry.name.replace("-", " ").title()
+            catalog[entry.name] = {"name": name, "category": _CATEGORY_LABEL[category]}
+    return catalog
+
+
+def resolve_recommendation(raw_name: str) -> dict | None:
+    """Resolve a free-text item name to {slug, name, category}, or None if unknown.
+
+    Uses the same alias-aware normalization as the graph/retrieval pipeline, then
+    validates against the real slug catalog so hallucinated or mistyped names are
+    dropped rather than added to a user's stack.
+    """
+    if not raw_name or not raw_name.strip():
+        return None
+    slug = normalize_id(raw_name)
+    meta = _item_catalog().get(slug)
+    if not meta:
+        return None
+    return {"slug": slug, "name": meta["name"], "category": meta["category"]}
 
 
 @lru_cache(maxsize=1)

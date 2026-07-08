@@ -24,6 +24,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MarkdownBubble from '../components/MarkdownBubble';
 import Icon from '../components/Icon';
 import SparkAvatar from '../components/SparkAvatar';
+import StackSuggestions from '../components/StackSuggestions';
 import { useStack } from '../context/StackContext';
 import { COLORS, RADII, SPACING, FONT_SIZES, SHADOWS } from '../theme/tokens';
 import { API_URL } from '../config';
@@ -59,6 +60,11 @@ function buildStarters(stack) {
     { icon: 'moon', title: 'Best supplements for sleep', sub: 'Compare melatonin, glycine, magnesium' },
   ];
 }
+
+// Strip the hidden add-to-stack recommendation block from a displayed answer.
+// The backend parses it separately into the structured `suggestions` event; it
+// must never render as text. (See backend chat.py PEPTALK_RECOMMEND.)
+const RECOMMEND_BLOCK_RE = /\s*<!--\s*PEPTALK_RECOMMEND[\s\S]*?-->\s*/gi;
 
 // Format a backend source id ("peptides/semaglutide/dosing-protocols") into a
 // readable breadcrumb + kind. Defensive: works for any "/"-delimited id.
@@ -130,6 +136,7 @@ export default function ChatScreen() {
         const rawText = await res.text();
         let fullReply = '';
         let sources = [];
+        let suggestions = [];
 
         for (const line of rawText.split('\n')) {
           if (!line.startsWith('data: ')) continue;
@@ -139,19 +146,23 @@ export default function ChatScreen() {
             const event = JSON.parse(jsonStr);
             if (event.type === 'token') fullReply += event.content;
             else if (event.type === 'sources') sources = event.sources || [];
+            else if (event.type === 'suggestions') suggestions = event.suggestions || [];
             else if (event.type === 'error') throw new Error(event.content);
           } catch {
             // skip malformed SSE line
           }
         }
 
-        // Strip any inline "Sources:" tail the model may append (we render the
-        // structured sources event instead).
-        fullReply = fullReply.replace(/\n{1,3}---\n*Sources?:.*$/s, '').trim();
+        // Strip the hidden recommendation block, then any inline "Sources:" tail
+        // the model may append (we render structured events for both instead).
+        fullReply = fullReply
+          .replace(RECOMMEND_BLOCK_RE, '')
+          .replace(/\n{1,3}---\n*Sources?:.*$/s, '')
+          .trim();
 
         setTurns((prev) => [
           ...prev,
-          { question: text, answer: fullReply || 'No response.', sources },
+          { question: text, answer: fullReply || 'No response.', sources, suggestions },
         ]);
         setHistory((prev) => [
           ...prev,
@@ -340,6 +351,10 @@ function Turn({ turn }) {
 
         {turn.sources && turn.sources.length > 0 && (
           <SourcesFooter sources={turn.sources} />
+        )}
+
+        {turn.suggestions && turn.suggestions.length > 0 && (
+          <StackSuggestions suggestions={turn.suggestions} />
         )}
       </View>
     </View>

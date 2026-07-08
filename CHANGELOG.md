@@ -2,6 +2,46 @@
 
 All notable changes to PepTalk are documented here. Newest first.
 
+## 2026-06-15 — One-tap "Add to stack" from AI answers & Stack Review
+
+- **Problem:** when the AI recommended a peptide/supplement, the user had to
+  leave the answer, open the Stack tab, run the 3-step add flow, and re-find the
+  item by name. There was no path from a recommendation to the user's stack.
+- **Outcome:** the AI now tags the items it actively recommends (and that the user
+  isn't already taking) in a hidden, markdown-invisible block at the end of its
+  answer. The backend validates each against the item registry and streams a new
+  `suggestions` SSE event; the app renders one "+ <item>" chip per recommendation
+  under the answer — in **both** regular chat and the Stack Review AI deep-dive.
+  Tapping a chip opens the existing schedule form **pre-filled with the AI's
+  suggested dose/unit/time**; confirming adds it to the stack.
+- **Backend:**
+  - `app/config.py` — appended a `<!--PEPTALK_RECOMMEND ... -->` block spec to
+    both `SYSTEM_PROMPT` and `STACK_REVIEW_PROMPT` (one `Name | amount | unit |
+    timeSlot` line per recommended item; emitted only when recommending new items).
+  - `app/item_registry.py` — new cached `_item_catalog()` (slug → name/category,
+    name from each item's `overview.md` H1) and `resolve_recommendation(raw_name)`,
+    which normalizes (alias-aware) and validates against real slugs. `_item_slugs()`
+    now derives from the catalog (single source).
+  - `app/routers/chat.py` — `parse_recommendations()` extracts the block, resolves
+    + dedupes items, drops anything in the user's stack, and parses dose fields;
+    `stream_response()` buffers the answer and emits the `suggestions` event before
+    `done`. Both `/chat` and `/chat/stack-review` pass the stack's slugs as the
+    exclusion set.
+- **Frontend:**
+  - `components/StackSuggestions.js` (new) — shared chip row + schedule modal;
+    filters items already in the stack or added this session; `addItem()` on confirm.
+  - `components/ScheduleFormModal.js` — new optional `initialValues` prop, synced to
+    the form each time it opens (manual add flow unchanged); unknown emitted units
+    fall back to `mg`.
+  - `screens/ChatScreen.js` / `screens/ReviewScreen.js` — handle the `suggestions`
+    event, strip the recommendation block from displayed text, render
+    `<StackSuggestions>`.
+- **Known limitations:** days-of-week is left at the default (every day) for the
+  user to adjust — the model emits dose/unit/time only, not a weekly cadence
+  (reliable schedule emission is the brittle part). If the model omits the block
+  entirely, the backend falls back to free-text item detection over the answer,
+  which is lower-precision (can surface items mentioned as cautions).
+
 ## 2026-05-30 — Fix intermittently truncated LLM answers
 
 - **Problem:** a chat asking for a daily supplement/lifestyle routine cut off

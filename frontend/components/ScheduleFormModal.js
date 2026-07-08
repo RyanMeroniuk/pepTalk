@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -22,12 +22,37 @@ const UNITS = ['mg', 'mcg', 'IU', 'g', 'mL', 'capsule', 'tablet', 'drop', 'spray
 
 const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
-export default function ScheduleFormModal({ visible, itemName, onConfirm, onClose }) {
+// Coerce an externally-supplied dose unit to one of the known pills (fallback
+// 'mg'), so a unit the AI emits that we don't render still leaves a valid form.
+function normalizeUnit(unit) {
+  return UNITS.includes(unit) ? unit : 'mg';
+}
+
+export default function ScheduleFormModal({
+  visible,
+  itemName,
+  initialValues,
+  onConfirm,
+  onClose,
+}) {
   const [doseAmount, setDoseAmount] = useState('');
   const [doseUnit, setDoseUnit] = useState('mg');
   const [timeSlot, setTimeSlot] = useState('morning');
   const [route, setRoute] = useState(null);
   const [daysOfWeek, setDaysOfWeek] = useState(ALL_DAYS);
+
+  // Sync the form to the item's pre-filled values each time the modal opens, so
+  // reusing one modal instance across different items always reflects the latest.
+  // With no initialValues (e.g. the manual Stack add flow) it resets to defaults.
+  useEffect(() => {
+    if (!visible) return;
+    const iv = initialValues || {};
+    setDoseAmount(iv.doseAmount != null ? String(iv.doseAmount) : '');
+    setDoseUnit(iv.doseUnit ? normalizeUnit(iv.doseUnit) : 'mg');
+    setTimeSlot(iv.timeSlot || 'morning');
+    setRoute(iv.route || null);
+    setDaysOfWeek(iv.daysOfWeek || ALL_DAYS);
+  }, [visible, initialValues]);
 
   const toggleDay = (dayIndex) => {
     setDaysOfWeek((prev) =>

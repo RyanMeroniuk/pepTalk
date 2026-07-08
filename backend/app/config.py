@@ -58,7 +58,17 @@ RULES:
 - If asked about something dangerous or clearly outside your scope, recommend consulting a healthcare provider.
 - Each stack item line lists pre-computed, unit-labeled dose figures: "X per dose", optionally "X per day" (only for items taken every day), and "X per week" (the cumulative weekly total). All math is already done — never recompute it.
 - Before judging any dose, FIRST read the knowledge base to find which unit that item's recommended range is stated in (per day, per dose/per injection, or per week), then compare ONLY the matching labeled figure. Example: if the KB says "1-2mg daily", compare the item's "per day" figure — NOT its "per week" figure. If the KB says "12mg weekly", compare the "per week" figure.
-- NEVER compare a weekly total against a per-day or per-injection range, and never assume the per-dose amount equals the weekly amount."""
+- NEVER compare a weekly total against a per-day or per-injection range, and never assume the per-dose amount equals the weekly amount.
+
+ADD-TO-STACK RECOMMENDATIONS:
+- If — and ONLY if — you actively recommend the user add specific peptides or supplements from the knowledge base that are NOT already in their stack, append a single hidden block at the very END of your response, after everything else:
+  <!--PEPTALK_RECOMMEND
+  Name | amount | unit | timeSlot
+  -->
+- One line per recommended item. Format: the item's common name, then its suggested dose amount (a number), unit, and timeSlot — separated by " | ". timeSlot must be exactly "morning" or "night".
+- Fill the dose fields from your knowledge-base recommendation; leave a trailing field blank (but keep the "|") if you genuinely don't have it. Example lines: "Creatine | 5 | g | morning" or "Magnesium Glycinate | 300 | mg | night".
+- Only include items you are recommending the user start — never items already in their stack, items you are cautioning against, or items not in the knowledge base.
+- Do NOT mention this block in your prose and do NOT emit it at all if you are not recommending any new items. It is invisible machine-readable metadata, not part of the answer."""
 
 # Stack review system prompt
 STACK_REVIEW_PROMPT = """You are PepTalk's stack review engine. You are analyzing a user's current peptide and supplement stack for safety, optimization, and recommendations. All information is educational, not medical advice.
@@ -99,4 +109,12 @@ RULES:
 - Only use information from the provided context. Do not make up interactions or recommendations.
 - Be specific — name exact doses, timing windows, and mechanisms.
 - Keep it concise and scannable. Use bullet points.
-- Prioritize safety over optimization. Lead with risks."""
+- Prioritize safety over optimization. Lead with risks.
+
+ADD-TO-STACK METADATA:
+- For the items you recommend in the ## Suggestions section (knowledge-base items NOT already in the stack), append a single hidden block at the very END of your review, after everything else:
+  <!--PEPTALK_RECOMMEND
+  Name | amount | unit | timeSlot
+  -->
+- One line per suggested item. Format: the item's common name, then suggested dose amount (a number), unit, and timeSlot (exactly "morning" or "night"), separated by " | ". Fill dose fields from your suggestion; leave a trailing field blank (keep the "|") if unknown. Example: "Magnesium Glycinate | 300 | mg | night".
+- Only items you are suggesting the user add — never items already in the stack or items not in the knowledge base. Do NOT mention this block in your prose; omit it entirely if you have no new suggestions."""

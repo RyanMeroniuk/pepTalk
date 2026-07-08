@@ -24,11 +24,82 @@ from app.config import (
 )
 from app.dependencies import get_collection, get_model
 from app.graph_utils import get_stack_context
-from app.item_registry import detect_items
+from app.item_registry import detect_items, resolve_recommendation
 
 router = APIRouter()
 
 _DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+# --- Recommendation block ------------------------------------------------------
+# The model ends its answer with a hidden, markdown-invisible block listing items
+# it actively recommends the user add. We strip it from the displayed answer and
+# parse it into a structured "suggestions" SSE event for the add-to-stack chips.
+#   <!--PEPTALK_RECOMMEND
+#   Creatine | 5 | g | morning
+#   Magnesium Glycinate | 300 | mg | night
+#   -->
+RECOMMEND_BLOCK_RE = re.compile(r"<!--\s*PEPTALK_RECOMMEND\b(.*?)-->", re.DOTALL | re.IGNORECASE)
+_VALID_TIME_SLOTS = {"morning", "night"}
+
+
+def _parse_amount(raw: str):
+    """Parse a dose amount field to float, or None if blank/non-numeric."""
+    raw = raw.strip()
+    if not raw:
+        return None
+    try:
+        return float(raw)
+    except ValueError:
+        return None
+
+
+def parse_recommendations(text: str, exclude_slugs: frozenset = frozenset()) -> list[dict]:
+    """Extract add-to-stack suggestions from a generated answer.
+
+    Primary path: parse the hidden PEPTALK_RECOMMEND block — one item per line,
+    "Name | amount | unit | timeSlot" (trailing fields optional). Each name is
+    resolved + validated against the item registry; unknown items and anything in
+    ``exclude_slugs`` (the user's current stack) are dropped; results are deduped
+    by slug.
+
+    Fallback: if NO block is present at all, run free-text detection over the
+    answer (lower precision — may surface items mentioned as cautions).
+    """
+    match = RECOMMEND_BLOCK_RE.search(text)
+    suggestions = []
+    seen = set(exclude_slugs)
+
+    if match:
+        for line in match.group(1).splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            parts = [p.strip() for p in line.split("|")]
+            resolved = resolve_recommendation(parts[0])
+            if not resolved or resolved["slug"] in seen:
+                continue
+            seen.add(resolved["slug"])
+            unit = parts[2] if len(parts) > 2 and parts[2] else None
+            time_slot = parts[3].lower() if len(parts) > 3 and parts[3] else None
+            suggestions.append(
+                {
+                    **resolved,
+                    "doseAmount": _parse_amount(parts[1]) if len(parts) > 1 else None,
+                    "doseUnit": unit,
+                    "timeSlot": time_slot if time_slot in _VALID_TIME_SLOTS else None,
+                }
+            )
+        return suggestions
+
+    # No block — conservative free-text fallback.
+    for slug in detect_items(text, exclude=frozenset(exclude_slugs)):
+        resolved = resolve_recommendation(slug)
+        if resolved and resolved["slug"] not in seen:
+            seen.add(resolved["slug"])
+            suggestions.append(
+                {**resolved, "doseAmount": None, "doseUnit": None, "timeSlot": None}
+            )
+    return suggestions
 
 # Sections always included for each relevant item — the safety/interaction context
 # that should never be missing when discussing an item, fetched deterministically by
@@ -324,8 +395,16 @@ def build_prompt(
     return messages
 
 
-async def stream_response(messages: list[dict], sources: list[str]):
-    """Stream LLM response as Server-Sent Events."""
+async def stream_response(
+    messages: list[dict],
+    sources: list[str],
+    exclude_slugs: frozenset = frozenset(),
+):
+    """Stream LLM response as Server-Sent Events.
+
+    ``exclude_slugs`` are the user's current stack slugs — excluded from the
+    add-to-stack suggestions parsed out of the completed answer.
+    """
     try:
         kwargs = {
             "model": LLM_MODEL,
@@ -343,12 +422,14 @@ async def stream_response(messages: list[dict], sources: list[str]):
 
         finish_reason = None
         got_content = False
+        answer_buffer = ""
         async for chunk in response:
             choice = chunk.choices[0]
             if choice.finish_reason:
                 finish_reason = choice.finish_reason
             if choice.delta.content:
                 got_content = True
+                answer_buffer += choice.delta.content
                 event = json.dumps({"type": "token", "content": choice.delta.content})
                 yield f"data: {event}\n\n"
 
@@ -374,6 +455,12 @@ async def stream_response(messages: list[dict], sources: list[str]):
         source_event = json.dumps({"type": "sources", "sources": sources})
         yield f"data: {source_event}\n\n"
 
+        # Parse add-to-stack suggestions from the completed answer and send them.
+        suggestions = parse_recommendations(answer_buffer, exclude_slugs)
+        if suggestions:
+            sugg_event = json.dumps({"type": "suggestions", "suggestions": suggestions})
+            yield f"data: {sugg_event}\n\n"
+
         # Signal completion (finish_reason exposed for future UI use)
         done_event = json.dumps({"type": "done", "finish_reason": finish_reason})
         yield f"data: {done_event}\n\n"
@@ -397,8 +484,11 @@ async def chat(request: ChatRequest):
     # Collect source file paths for citation
     sources = [chunk["id"] for chunk in chunks]
 
+    # Stack slugs are excluded from add-to-stack suggestions (already taking them).
+    exclude_slugs = frozenset(resolve_item_key(s) for s in request.stack)
+
     return StreamingResponse(
-        stream_response(messages, sources),
+        stream_response(messages, sources, exclude_slugs),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -462,8 +552,10 @@ async def chat_stack_review(request: StackReviewRequest):
 
     sources = [chunk["id"] for chunk in chunks]
 
+    exclude_slugs = frozenset(resolve_item_key(s) for s in request.stack)
+
     return StreamingResponse(
-        stream_response(messages, sources),
+        stream_response(messages, sources, exclude_slugs),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

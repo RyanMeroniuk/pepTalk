@@ -27,8 +27,13 @@ import Spinner from '../components/Spinner';
 import SparkAvatar from '../components/SparkAvatar';
 import PrimaryButton from '../components/PrimaryButton';
 import MarkdownBubble from '../components/MarkdownBubble';
+import StackSuggestions from '../components/StackSuggestions';
 import { COLORS, RADII, SPACING, FONT_SIZES, SHADOWS } from '../theme/tokens';
 import { API_URL } from '../config';
+
+// Hidden add-to-stack recommendation block — parsed into the structured
+// `suggestions` event by the backend; stripped from displayed text here.
+const RECOMMEND_BLOCK_RE = /\s*<!--\s*PEPTALK_RECOMMEND[\s\S]*?-->\s*/gi;
 
 export default function ReviewScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -40,6 +45,7 @@ export default function ReviewScreen({ navigation }) {
 
   const [aiState, setAiState] = useState('idle'); // idle | loading | done
   const [aiReview, setAiReview] = useState(null);
+  const [aiSuggestions, setAiSuggestions] = useState([]);
 
   const stackPayload = useCallback(
     () =>
@@ -91,6 +97,7 @@ export default function ReviewScreen({ navigation }) {
       });
       const rawText = await res.text();
       let fullReply = '';
+      let suggestions = [];
       for (const line of rawText.split('\n')) {
         if (!line.startsWith('data: ')) continue;
         const jsonStr = line.slice(6).trim();
@@ -98,13 +105,18 @@ export default function ReviewScreen({ navigation }) {
         try {
           const event = JSON.parse(jsonStr);
           if (event.type === 'token') fullReply += event.content;
+          else if (event.type === 'suggestions') suggestions = event.suggestions || [];
           else if (event.type === 'error') throw new Error(event.content);
         } catch {
           // skip malformed line
         }
       }
-      fullReply = fullReply.replace(/\n{1,3}---\n*Sources?:.*$/s, '').trim();
+      fullReply = fullReply
+        .replace(RECOMMEND_BLOCK_RE, '')
+        .replace(/\n{1,3}---\n*Sources?:.*$/s, '')
+        .trim();
       setAiReview(fullReply || 'No response.');
+      setAiSuggestions(suggestions);
       setAiState('done');
     } catch (err) {
       setAiReview(`Error: ${err.message}`);
@@ -261,6 +273,9 @@ export default function ReviewScreen({ navigation }) {
                   <Badge variant="neutral" style={styles.aiGenBadge}>AI-generated</Badge>
                 </View>
                 <MarkdownBubble>{aiReview}</MarkdownBubble>
+                {aiSuggestions.length > 0 && (
+                  <StackSuggestions suggestions={aiSuggestions} />
+                )}
               </View>
             )}
           </View>
