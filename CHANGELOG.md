@@ -2,45 +2,56 @@
 
 All notable changes to PepTalk are documented here. Newest first.
 
-## 2026-06-15 — One-tap "Add to stack" from AI answers & Stack Review
+## 2026-07-14 — Inline "＋ Add" buttons from AI answers & Stack Review
 
 - **Problem:** when the AI recommended a peptide/supplement, the user had to
   leave the answer, open the Stack tab, run the 3-step add flow, and re-find the
   item by name. There was no path from a recommendation to the user's stack.
-- **Outcome:** the AI now tags the items it actively recommends (and that the user
-  isn't already taking) in a hidden, markdown-invisible block at the end of its
-  answer. The backend validates each against the item registry and streams a new
-  `suggestions` SSE event; the app renders one "+ <item>" chip per recommendation
-  under the answer — in **both** regular chat and the Stack Review AI deep-dive.
-  Tapping a chip opens the existing schedule form **pre-filled with the AI's
-  suggested dose/unit/time**; confirming adds it to the stack.
+- **Outcome:** the AI now marks each item it actively recommends (and that the
+  user isn't already taking) with an **inline tag** placed right where it names
+  the item — `{{add:Name|amount|unit|timeSlot}}`. The backend validates each
+  against the item registry and streams a `suggestions` SSE event; the app renders
+  a tappable **"＋ Add" button inline, beside the recommendation** (so the user can
+  tap it while reading, without scrolling), in **both** regular chat and the Stack
+  Review AI deep-dive. Tapping opens the schedule form **pre-filled with the AI's
+  suggested dose/unit/time**; confirming adds it to the stack. Any validated
+  suggestion not placed inline (e.g. the free-text fallback) still appears as a
+  chip below the answer.
 - **Backend:**
-  - `app/config.py` — appended a `<!--PEPTALK_RECOMMEND ... -->` block spec to
-    both `SYSTEM_PROMPT` and `STACK_REVIEW_PROMPT` (one `Name | amount | unit |
-    timeSlot` line per recommended item; emitted only when recommending new items).
+  - `app/config.py` — appended an inline `{{add:…}}`-tag spec to both
+    `SYSTEM_PROMPT` and `STACK_REVIEW_PROMPT` (model places the tag next to each
+    recommended item; emits none if recommending nothing new).
   - `app/item_registry.py` — new cached `_item_catalog()` (slug → name/category,
     name from each item's `overview.md` H1) and `resolve_recommendation(raw_name)`,
     which normalizes (alias-aware) and validates against real slugs. `_item_slugs()`
     now derives from the catalog (single source).
-  - `app/routers/chat.py` — `parse_recommendations()` extracts the block, resolves
-    + dedupes items, drops anything in the user's stack, and parses dose fields;
-    `stream_response()` buffers the answer and emits the `suggestions` event before
-    `done`. Both `/chat` and `/chat/stack-review` pass the stack's slugs as the
-    exclusion set.
+  - `app/routers/chat.py` — `parse_recommendations()` extracts the inline tags,
+    resolves + dedupes items, drops anything in the user's stack, parses dose
+    fields, and carries `matchName` (the raw name the model wrote) so the frontend
+    can bind a rendered tag to its validated suggestion; `stream_response()` buffers
+    the answer and emits the `suggestions` event. Both `/chat` and
+    `/chat/stack-review` pass the stack's slugs as the exclusion set. Falls back to
+    free-text `detect_items()` when no tags are present.
 - **Frontend:**
-  - `components/StackSuggestions.js` (new) — shared chip row + schedule modal;
-    filters items already in the stack or added this session; `addItem()` on confirm.
+  - `components/MarkdownBubble.js` — now accepts a `suggestions` prop; transforms
+    `{{add:…}}` tags into inline "＋ Add" buttons via a custom markdown `link` rule
+    (`add:<slug>` scheme), owns the `ScheduleFormModal` + `addItem`, hides items
+    already in the stack/added this session, and renders any un-inlined suggestion
+    as a fallback chip.
   - `components/ScheduleFormModal.js` — new optional `initialValues` prop, synced to
     the form each time it opens (manual add flow unchanged); unknown emitted units
     fall back to `mg`.
-  - `screens/ChatScreen.js` / `screens/ReviewScreen.js` — handle the `suggestions`
-    event, strip the recommendation block from displayed text, render
-    `<StackSuggestions>`.
-- **Known limitations:** days-of-week is left at the default (every day) for the
-  user to adjust — the model emits dose/unit/time only, not a weekly cadence
-  (reliable schedule emission is the brittle part). If the model omits the block
-  entirely, the backend falls back to free-text item detection over the answer,
-  which is lower-precision (can surface items mentioned as cautions).
+  - `screens/ChatScreen.js` / `screens/ReviewScreen.js` — pass `suggestions` to
+    `MarkdownBubble`; keep tags in the displayed answer but strip them from the chat
+    history sent back to the model.
+- **Known limitations:** days-of-week defaults to every day for the user to adjust
+  — the model emits dose/unit/time only, not a weekly cadence (reliable schedule
+  emission is the brittle part). RN can't apply padding/border-radius to inline
+  text, so the inline button is an accent-filled "＋ Add" label rather than a bordered
+  pill. If the model omits the tags entirely, the backend falls back to free-text
+  item detection (lower precision), surfaced as bottom chips.
+- **Note:** `components/StackSuggestions.js` (the earlier bottom-chip-only
+  component) is now superseded by `MarkdownBubble` and unused.
 
 ## 2026-05-30 — Fix intermittently truncated LLM answers
 

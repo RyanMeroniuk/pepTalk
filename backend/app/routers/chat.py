@@ -30,15 +30,15 @@ router = APIRouter()
 
 _DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
-# --- Recommendation block ------------------------------------------------------
-# The model ends its answer with a hidden, markdown-invisible block listing items
-# it actively recommends the user add. We strip it from the displayed answer and
-# parse it into a structured "suggestions" SSE event for the add-to-stack chips.
-#   <!--PEPTALK_RECOMMEND
-#   Creatine | 5 | g | morning
-#   Magnesium Glycinate | 300 | mg | night
-#   -->
-RECOMMEND_BLOCK_RE = re.compile(r"<!--\s*PEPTALK_RECOMMEND\b(.*?)-->", re.DOTALL | re.IGNORECASE)
+# --- Inline add-to-stack tags --------------------------------------------------
+# The model marks each item it actively recommends with an inline tag placed right
+# where it names the item in its prose, so the app can render a tappable "＋ Add"
+# button inline (not just a chip at the bottom):
+#   ...you might add creatine {{add:Creatine|5|g|morning}} to support strength.
+# The tag is markdown-invisible after the frontend transforms it into a button; we
+# parse the same tags here into a structured "suggestions" SSE event. Fields after
+# the name (amount|unit|timeSlot) are optional.
+ADD_TAG_RE = re.compile(r"\{\{\s*add:\s*(.*?)\s*\}\}", re.DOTALL | re.IGNORECASE)
 _VALID_TIME_SLOTS = {"morning", "night"}
 
 
@@ -56,25 +56,23 @@ def _parse_amount(raw: str):
 def parse_recommendations(text: str, exclude_slugs: frozenset = frozenset()) -> list[dict]:
     """Extract add-to-stack suggestions from a generated answer.
 
-    Primary path: parse the hidden PEPTALK_RECOMMEND block — one item per line,
-    "Name | amount | unit | timeSlot" (trailing fields optional). Each name is
-    resolved + validated against the item registry; unknown items and anything in
-    ``exclude_slugs`` (the user's current stack) are dropped; results are deduped
-    by slug.
+    Primary path: parse the inline ``{{add:Name|amount|unit|timeSlot}}`` tags the
+    model places next to each item it recommends (trailing dose fields optional).
+    Each name is resolved + validated against the item registry; unknown items and
+    anything in ``exclude_slugs`` (the user's current stack) are dropped; results
+    are deduped by slug. ``matchName`` carries the raw name the model wrote so the
+    frontend can match a rendered tag back to its validated suggestion.
 
-    Fallback: if NO block is present at all, run free-text detection over the
-    answer (lower precision — may surface items mentioned as cautions).
+    Fallback: if NO tag is present at all, run free-text detection over the answer
+    (lower precision — may surface items mentioned as cautions).
     """
-    match = RECOMMEND_BLOCK_RE.search(text)
     suggestions = []
     seen = set(exclude_slugs)
 
-    if match:
-        for line in match.group(1).splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            parts = [p.strip() for p in line.split("|")]
+    tags = ADD_TAG_RE.findall(text)
+    if tags:
+        for raw in tags:
+            parts = [p.strip() for p in raw.split("|")]
             resolved = resolve_recommendation(parts[0])
             if not resolved or resolved["slug"] in seen:
                 continue
@@ -84,6 +82,7 @@ def parse_recommendations(text: str, exclude_slugs: frozenset = frozenset()) -> 
             suggestions.append(
                 {
                     **resolved,
+                    "matchName": parts[0],
                     "doseAmount": _parse_amount(parts[1]) if len(parts) > 1 else None,
                     "doseUnit": unit,
                     "timeSlot": time_slot if time_slot in _VALID_TIME_SLOTS else None,
@@ -91,13 +90,19 @@ def parse_recommendations(text: str, exclude_slugs: frozenset = frozenset()) -> 
             )
         return suggestions
 
-    # No block — conservative free-text fallback.
+    # No tags — conservative free-text fallback (rendered as bottom chips).
     for slug in detect_items(text, exclude=frozenset(exclude_slugs)):
         resolved = resolve_recommendation(slug)
         if resolved and resolved["slug"] not in seen:
             seen.add(resolved["slug"])
             suggestions.append(
-                {**resolved, "doseAmount": None, "doseUnit": None, "timeSlot": None}
+                {
+                    **resolved,
+                    "matchName": resolved["name"],
+                    "doseAmount": None,
+                    "doseUnit": None,
+                    "timeSlot": None,
+                }
             )
     return suggestions
 
