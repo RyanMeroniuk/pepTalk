@@ -5,7 +5,7 @@
 // Add-to-stack: the model marks each item it recommends with an inline tag
 // {{add:Name|amount|unit|slot}} placed right where it names the item. When a
 // `suggestions` array is supplied (the backend-validated recommendations), each
-// tag whose item is in that list is rendered as a tappable inline "＋ Add" button
+// tag whose item is in that list is rendered as a tappable inline "+ Add" pill
 // (via a custom markdown link rule); tapping opens ScheduleFormModal pre-filled
 // with the AI's dose. Any suggestion not placed inline (e.g. the free-text
 // fallback) is shown as a chip below the answer. Tags with no matching validated
@@ -47,7 +47,7 @@ export default function MarkdownBubble({ children, suggestions }) {
     byKey[normKey(s.name)] = s;
   }
 
-  // Transform inline tags → markdown links we render as buttons. Track which
+  // Transform inline tags → markdown links we render as pill buttons. Track which
   // suggestions were placed inline so the rest fall through to bottom chips.
   const inlined = new Set();
   const md = source.replace(ADD_TAG_RE, (_, raw) => {
@@ -86,7 +86,9 @@ export default function MarkdownBubble({ children, suggestions }) {
     closeForm();
   };
 
-  // Custom link rule: `add:<slug>` → inline button; everything else → normal link.
+  // Custom link rule: `add:<slug>` → inline pill button; else → normal link.
+  // The pill is a rounded View (Text can't round its corners mid-paragraph) which
+  // RN lays out inline within the surrounding answer text.
   const rules = {
     link: (node, childNodes) => {
       const href = node.attributes?.href || '';
@@ -94,15 +96,19 @@ export default function MarkdownBubble({ children, suggestions }) {
         const slug = href.slice(4);
         const s = list.find((x) => x.slug === slug);
         if (!s) return null;
+        const isPep = s.category === 'peptide';
+        const tint = isPep ? COLORS.blueTint : COLORS.greenTint;
+        const accent = isPep ? COLORS.bluePrimary : COLORS.greenDeep;
         return (
-          <Text
-            key={node.key}
-            style={styles.inlineAdd}
-            onPress={() => openForm(s)}
-            suppressHighlighting
-          >
-            {' ＋ Add '}
-          </Text>
+          <View key={node.key} style={[styles.inlinePill, { backgroundColor: tint }]}>
+            <Text
+              style={[styles.inlinePillText, { color: accent }]}
+              onPress={() => openForm(s)}
+              suppressHighlighting
+            >
+              + Add
+            </Text>
+          </View>
         );
       }
       return (
@@ -161,13 +167,20 @@ export default function MarkdownBubble({ children, suggestions }) {
 }
 
 const styles = StyleSheet.create({
-  // Inline "＋ Add" button rendered within answer prose. RN can't apply padding /
-  // border-radius to inline Text, so we use an accent fill + hair-space padding.
-  inlineAdd: {
-    color: COLORS.bluePrimary,
-    backgroundColor: COLORS.blueTint,
+  // Inline "+ Add" pill rendered within answer prose. A rounded View so it matches
+  // the bottom chips' pill shape; RN lays it out inline among the text runs. RN
+  // aligns an inline View near the text's top, so nudge it down to sit centered
+  // on the line (fontSize 15 / lineHeight 22).
+  inlinePill: {
+    borderRadius: RADII.full,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    transform: [{ translateY: 4 }],
+  },
+  inlinePillText: {
+    fontSize: 13,
     fontWeight: '700',
-    fontSize: 14,
+    lineHeight: 17,
   },
   chipsWrap: {
     marginTop: SPACING.l,
