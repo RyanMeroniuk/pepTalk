@@ -3,28 +3,22 @@
 // bold, and bullet structure — matching the design's rich answer body.
 //
 // Add-to-stack: the model marks each item it recommends with an inline tag
-// {{add:Name|amount|unit|slot}} placed right where it names the item. When a
-// `suggestions` array is supplied (the backend-validated recommendations), each
-// tag whose item is in that list is rendered as a tappable inline "+ Add" pill
-// (via a custom markdown link rule); tapping opens ScheduleFormModal pre-filled
-// with the AI's dose. Any suggestion not placed inline (e.g. the free-text
-// fallback) is shown as a chip below the answer. Tags with no matching validated
-// suggestion — already in the stack, or hallucinated — are stripped silently.
+// {{add:Name|amount|unit|slot}}; the backend parses those into the validated
+// `suggestions` array. Here we strip the tags from the displayed text and render
+// each suggestion (that the user isn't already on) as a "+ <item>" chip below the
+// answer. Tapping a chip opens ScheduleFormModal pre-filled with the AI's dose.
 
 import { useState } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native';
+import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import { useStack } from '../context/StackContext';
 import ScheduleFormModal from './ScheduleFormModal';
 import Icon from './Icon';
 import { COLORS, RADII, SPACING, FONT_SIZES } from '../theme/tokens';
 
-// Inline recommendation tag: {{add:Name|amount|unit|timeSlot}} (fields optional).
+// Inline recommendation tag: {{add:Name|amount|unit|timeSlot}} — stripped from the
+// displayed text (the backend already parsed these into `suggestions`).
 const ADD_TAG_RE = /\{\{\s*add:\s*(.*?)\s*\}\}/gis;
-
-// Loose key for matching a tag's raw name to a validated suggestion — both come
-// from the model's own text, so lowercased-alphanumeric comparison is reliable.
-const normKey = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
 
 export default function MarkdownBubble({ children, suggestions }) {
   const { stack, addItem } = useStack();
@@ -39,26 +33,10 @@ export default function MarkdownBubble({ children, suggestions }) {
   const stackSlugs = new Set(stack.map((s) => s.slug));
   const isHidden = (slug) => stackSlugs.has(slug) || addedSlugs.includes(slug);
 
-  // Match a suggestion by the raw name written in the tag (falling back to its
-  // resolved display name).
-  const byKey = {};
-  for (const s of list) {
-    byKey[normKey(s.matchName)] = s;
-    byKey[normKey(s.name)] = s;
-  }
-
-  // Transform inline tags → markdown links we render as pill buttons. Track which
-  // suggestions were placed inline so the rest fall through to bottom chips.
-  const inlined = new Set();
-  const md = source.replace(ADD_TAG_RE, (_, raw) => {
-    const name = (raw.split('|')[0] || '').trim();
-    const s = byKey[normKey(name)];
-    if (!s || isHidden(s.slug)) return '';
-    inlined.add(s.slug);
-    return ` [add](add:${s.slug})`;
-  });
-
-  const leftover = list.filter((s) => !inlined.has(s.slug) && !isHidden(s.slug));
+  // Strip the inline markers from the displayed answer; every validated suggestion
+  // the user isn't already on becomes a chip below.
+  const md = source.replace(ADD_TAG_RE, '');
+  const chips = list.filter((s) => !isHidden(s.slug));
 
   const openForm = (s) => {
     if (!s) return;
@@ -86,54 +64,17 @@ export default function MarkdownBubble({ children, suggestions }) {
     closeForm();
   };
 
-  // Custom link rule: `add:<slug>` → inline pill button; else → normal link.
-  // The pill is a rounded View (Text can't round its corners mid-paragraph) which
-  // RN lays out inline within the surrounding answer text.
-  const rules = {
-    link: (node, childNodes) => {
-      const href = node.attributes?.href || '';
-      if (href.startsWith('add:')) {
-        const slug = href.slice(4);
-        const s = list.find((x) => x.slug === slug);
-        if (!s) return null;
-        const isPep = s.category === 'peptide';
-        const tint = isPep ? COLORS.blueTint : COLORS.greenTint;
-        const accent = isPep ? COLORS.bluePrimary : COLORS.greenDeep;
-        return (
-          <View key={node.key} style={[styles.inlinePill, { backgroundColor: tint }]}>
-            <Text
-              style={[styles.inlinePillText, { color: accent }]}
-              onPress={() => openForm(s)}
-              suppressHighlighting
-            >
-              + Add
-            </Text>
-          </View>
-        );
-      }
-      return (
-        <Text
-          key={node.key}
-          style={markdownStyles.link}
-          onPress={() => Linking.openURL(href).catch(() => {})}
-        >
-          {childNodes}
-        </Text>
-      );
-    },
-  };
-
   return (
     <View>
-      <Markdown style={markdownStyles} rules={rules} mergeStyle>
+      <Markdown style={markdownStyles} mergeStyle>
         {md}
       </Markdown>
 
-      {leftover.length > 0 && (
+      {chips.length > 0 && (
         <View style={styles.chipsWrap}>
           <Text style={styles.chipsLabel}>SUGGESTED FOR YOUR STACK</Text>
           <View style={styles.chipRow}>
-            {leftover.map((s) => {
+            {chips.map((s) => {
               const isPep = s.category === 'peptide';
               const tint = isPep ? COLORS.blueTint : COLORS.greenTint;
               const accent = isPep ? COLORS.bluePrimary : COLORS.greenDeep;
@@ -167,21 +108,6 @@ export default function MarkdownBubble({ children, suggestions }) {
 }
 
 const styles = StyleSheet.create({
-  // Inline "+ Add" pill rendered within answer prose. A rounded View so it matches
-  // the bottom chips' pill shape; RN lays it out inline among the text runs. RN
-  // aligns an inline View near the text's top, so nudge it down to sit centered
-  // on the line (fontSize 15 / lineHeight 22).
-  inlinePill: {
-    borderRadius: RADII.full,
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    transform: [{ translateY: 4 }],
-  },
-  inlinePillText: {
-    fontSize: 13,
-    fontWeight: '700',
-    lineHeight: 17,
-  },
   chipsWrap: {
     marginTop: SPACING.l,
     paddingTop: SPACING.ms,

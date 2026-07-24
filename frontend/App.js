@@ -9,6 +9,9 @@ import StackScreen from './screens/StackScreen';
 import ChatScreen from './screens/ChatScreen';
 import SyringeCalculatorScreen from './screens/SyringeCalculatorScreen';
 import ReviewScreen from './screens/ReviewScreen';
+import AddItemScreen from './screens/AddItemScreen';
+import CurrentStackScreen from './screens/CurrentStackScreen';
+import CenterTabButton from './components/CenterTabButton';
 import { COLORS } from './theme/tokens';
 
 const Tab = createBottomTabNavigator();
@@ -75,6 +78,14 @@ function MainTabs() {
         component={StackScreen}
         options={{ tabBarLabel: 'Protocol', headerShown: false }}
       />
+      {/* Center "+" — not a real tab; its button opens the Add-to-Stack modal. */}
+      <Tab.Screen
+        name="AddTab"
+        component={AddPlaceholder}
+        options={{
+          tabBarButton: () => <CenterTabButton />,
+        }}
+      />
       <Tab.Screen
         name="AI"
         component={ChatScreen}
@@ -82,6 +93,12 @@ function MainTabs() {
       />
     </Tab.Navigator>
   );
+}
+
+// Never actually shown — the center tab's button navigates to the AddItem modal
+// instead of focusing this screen.
+function AddPlaceholder() {
+  return null;
 }
 
 export default function App() {
@@ -100,6 +117,16 @@ export default function App() {
             <RootStack.Screen
               name="Review"
               component={ReviewScreen}
+              options={{ presentation: 'modal' }}
+            />
+            <RootStack.Screen
+              name="AddItem"
+              component={AddItemScreen}
+              options={{ presentation: 'modal' }}
+            />
+            <RootStack.Screen
+              name="CurrentStack"
+              component={CurrentStackScreen}
               options={{ presentation: 'modal' }}
             />
           </RootStack.Navigator>

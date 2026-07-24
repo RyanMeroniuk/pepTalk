@@ -1,22 +1,23 @@
-// Three-column quick-action grid: Add item / Syringe calc / AI Review.
+// Three-column quick-action grid: Current stack / Syringe calc / AI Review.
 // Each card has a tinted icon square, a primary label, and a secondary subtitle.
 //
 // The Review action is always rendered; tapping with an empty stack will just
 // navigate to a Review screen that shows the "no items" empty state — better
-// UX than hiding the button entirely.
+// UX than hiding the button entirely. (Adding items now lives on the center "+"
+// tab button, not here.)
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from './Icon';
 import { COLORS, RADII, SPACING, FONT_SIZES, SHADOWS } from '../theme/tokens';
 
 const ACTIONS = [
-  { key: 'add', icon: 'plus', label: 'Add item', sub: 'Peptide or supp' },
+  { key: 'stack', icon: 'stack', label: 'Current stack', sub: 'View & edit all' },
   { key: 'syringe', icon: 'syringe', label: 'Syringe calc', sub: 'Dose by mg/mL' },
   { key: 'review', icon: 'shield', label: 'AI Review', sub: 'Check conflicts' },
 ];
 
-export default function QuickActions({ onAdd, onSyringe, onReview }) {
-  const handlers = { add: onAdd, syringe: onSyringe, review: onReview };
+export default function QuickActions({ onCurrentStack, onSyringe, onReview }) {
+  const handlers = { stack: onCurrentStack, syringe: onSyringe, review: onReview };
   return (
     <View style={styles.row}>
       {ACTIONS.map((a) => (

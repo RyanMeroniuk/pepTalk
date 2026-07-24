@@ -2,6 +2,51 @@
 
 All notable changes to PepTalk are documented here. Newest first.
 
+## 2026-07-24 — Add-to-stack suggestions back to bottom chips; larger FAB
+
+- **Add-to-stack suggestions:** reverted the inline "＋ Add" pill (RN can't
+  reliably vertically-center a rounded control mid-paragraph) back to the bottom
+  "SUGGESTED FOR YOUR STACK" chip row. The model still places `{{add:…}}` tags
+  inline and the backend still parses them into `suggestions`; `MarkdownBubble`
+  now just strips the tags from the displayed text and renders every validated
+  suggestion as a chip below the answer. No backend/prompt change.
+- **Center "+" FAB:** enlarged from 58→84 px (icon 28→40) with a stronger shadow
+  and more lift, so it's clearly the primary action (`components/CenterTabButton.js`).
+
+## 2026-07-19 — Center "+" FAB & Current Stack master list
+
+- **Problem:** adding items was a small quick-action card at the top of the
+  Protocol screen (easy to miss, only reachable from that tab), and there was no
+  way to see or manage the whole stack at once — the daily view only shows items
+  scheduled for the selected date, so removing everything meant flipping through
+  many days to find each item.
+- **Outcome:**
+  - **Center "+" FAB** — a raised circular button now sits in the middle of the
+    bottom tab bar, between Protocol and AI, and opens the Add-to-Stack flow from
+    anywhere in the app.
+  - The top quick action changed from **"Add item" → "Current stack"**, opening a
+    new master-list screen.
+  - **Current Stack screen** — lists every item in the stack (regardless of
+    schedule), grouped into Peptides / Supplements, each row editable in place
+    (tap → pre-filled schedule form → update) or removable (with confirm). One
+    place to edit or clear the whole stack.
+- **Frontend:**
+  - `App.js` — added a middle `AddTab` whose `tabBarButton` renders the FAB, plus
+    `AddItem` and `CurrentStack` modal routes on the root stack.
+  - `components/CenterTabButton.js` (new) — the raised circular "+" button;
+    `navigate('AddItem')` bubbles from the tab navigator to the root modal.
+  - `screens/AddItemScreen.js` (new) — the add flow (category → item → schedule)
+    extracted out of `StackScreen` into its own modal, with the item catalog
+    fetched on mount.
+  - `screens/CurrentStackScreen.js` (new) — the master list with edit/delete.
+  - `components/ScheduleFormModal.js` — new `confirmLabel` and `subtitle` props so
+    the same form serves both "Add to Stack" and "Save changes" (edit) modes.
+  - `components/QuickActions.js` — the `add` action is now `stack` ("Current
+    stack", `onCurrentStack`).
+  - `screens/StackScreen.js` — removed the in-screen add flow, its catalog fetch,
+    and the load gate (now handled by `AddItemScreen`); QuickActions points at the
+    `CurrentStack` modal.
+
 ## 2026-07-14 — Inline "＋ Add" buttons from AI answers & Stack Review
 
 - **Problem:** when the AI recommended a peptide/supplement, the user had to

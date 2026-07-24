@@ -13,8 +13,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Modal,
-  ActivityIndicator,
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -32,10 +30,7 @@ import QuickActions from '../components/QuickActions';
 import DoseCheckbox from '../components/DoseCheckbox';
 import Icon from '../components/Icon';
 import Badge from '../components/Badge';
-import ItemPickerModal from '../components/ItemPickerModal';
-import ScheduleFormModal from '../components/ScheduleFormModal';
 import { COLORS, RADII, SPACING, FONT_SIZES, SHADOWS } from '../theme/tokens';
-import { API_URL } from '../config';
 
 // Route values stored as 'oral' / 'subcutaneous' / 'intranasal' / 'intramuscular'.
 // Display them as short uppercase labels matching the design.
@@ -51,7 +46,6 @@ export default function StackScreen() {
   const insets = useSafeAreaInsets();
   const {
     stack,
-    addItem,
     removeItem,
     loadLogsForDate,
     logDose,
@@ -62,31 +56,6 @@ export default function StackScreen() {
   const dateStripRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(todayString());
 
-  // Backend item catalog (for the add flow)
-  const [peptides, setPeptides] = useState([]);
-  const [supplements, setSupplements] = useState([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
-
-  // Add-flow state — unchanged from original
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
-  const [showItemPicker, setShowItemPicker] = useState(false);
-  const [pickerCategory, setPickerCategory] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [showScheduleForm, setShowScheduleForm] = useState(false);
-
-  useEffect(() => {
-    Promise.all([
-      fetch(`${API_URL}/peptides`).then((r) => r.json()),
-      fetch(`${API_URL}/supplements`).then((r) => r.json()),
-    ])
-      .then(([pepData, supData]) => {
-        setPeptides(pepData.items || []);
-        setSupplements(supData.items || []);
-        setDataLoaded(true);
-      })
-      .catch(() => setDataLoaded(true));
-  }, []);
-
   useEffect(() => {
     loadLogsForDate(selectedDate);
   }, [selectedDate, loadLogsForDate]);
@@ -96,37 +65,6 @@ export default function StackScreen() {
   const nightItems = dayItems.filter((s) => s.timeSlot === 'night');
   const taken = dayItems.filter((i) => isLogged(selectedDate, i.id)).length;
   const isToday = selectedDate === todayString();
-
-  // --- Add flow ---
-  const handleAddPress = () => setShowCategoryPicker(true);
-  const handleCategorySelect = (category) => {
-    setPickerCategory(category);
-    setShowCategoryPicker(false);
-    setShowItemPicker(true);
-  };
-  const handleItemSelect = (item) => {
-    setSelectedItem(item);
-    setShowItemPicker(false);
-    setShowScheduleForm(true);
-  };
-  const handleScheduleConfirm = (scheduleData) => {
-    if (selectedItem) {
-      addItem({
-        item: selectedItem.name,
-        slug: selectedItem.slug,
-        category: pickerCategory,
-        ...scheduleData,
-      });
-    }
-    resetAddFlow();
-  };
-  const resetAddFlow = () => {
-    setShowScheduleForm(false);
-    setShowItemPicker(false);
-    setShowCategoryPicker(false);
-    setSelectedItem(null);
-    setPickerCategory(null);
-  };
 
   // --- Dose toggle ---
   const handleToggleDose = useCallback(
@@ -151,14 +89,6 @@ export default function StackScreen() {
       },
     ]);
   };
-
-  if (!dataLoaded) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={COLORS.bluePrimary} />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -194,7 +124,7 @@ export default function StackScreen() {
         />
 
         <QuickActions
-          onAdd={handleAddPress}
+          onCurrentStack={() => navigation.navigate('CurrentStack')}
           onSyringe={() => navigation.navigate('SyringeCalculator')}
           onReview={() => navigation.navigate('Review')}
         />
@@ -240,47 +170,6 @@ export default function StackScreen() {
           </>
         )}
       </ScrollView>
-
-      {/* --- Add-flow modals (still legacy dark styling — restyled in Step 7) --- */}
-      <Modal visible={showCategoryPicker} transparent animationType="fade">
-        <View style={styles.overlay}>
-          <View style={styles.categoryModal}>
-            <Text style={styles.modalTitle}>What are you adding?</Text>
-            <TouchableOpacity
-              style={styles.categoryBtn}
-              onPress={() => handleCategorySelect('peptide')}
-            >
-              <Icon name="flask" size={22} color={COLORS.bluePrimary} />
-              <Text style={styles.categoryBtnText}>Peptide</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.categoryBtn}
-              onPress={() => handleCategorySelect('supplement')}
-            >
-              <Icon name="leaf" size={22} color={COLORS.greenDeep} />
-              <Text style={styles.categoryBtnText}>Supplement</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelBtn} onPress={resetAddFlow}>
-              <Text style={styles.cancelBtnText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <ItemPickerModal
-        visible={showItemPicker}
-        title={pickerCategory === 'peptide' ? 'Select a Peptide' : 'Select a Supplement'}
-        items={pickerCategory === 'peptide' ? peptides : supplements}
-        onSelect={handleItemSelect}
-        onClose={resetAddFlow}
-      />
-
-      <ScheduleFormModal
-        visible={showScheduleForm}
-        itemName={selectedItem?.name || ''}
-        onConfirm={handleScheduleConfirm}
-        onClose={resetAddFlow}
-      />
     </View>
   );
 }
@@ -611,12 +500,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  loading: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   scroll: {
     paddingTop: SPACING.m,
     paddingBottom: 40,
@@ -647,51 +530,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     padding: 4,
-  },
-
-  // --- Legacy add-flow modal (Step 7 cleanup) ---
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(15, 23, 42, 0.45)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: SPACING.xl,
-  },
-  categoryModal: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 20,
-    padding: SPACING.xl,
-    width: '100%',
-    maxWidth: 320,
-  },
-  modalTitle: {
-    color: COLORS.textPrimary,
-    fontSize: FONT_SIZES.navTitle,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: SPACING.l,
-  },
-  categoryBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.m,
-    backgroundColor: COLORS.background,
-    borderRadius: RADII.input,
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
-  },
-  categoryBtnText: {
-    color: COLORS.textPrimary,
-    fontSize: FONT_SIZES.body,
-    fontWeight: '500',
-  },
-  cancelBtn: {
-    alignItems: 'center',
-    paddingVertical: SPACING.m,
-    marginTop: SPACING.xxs,
-  },
-  cancelBtnText: {
-    color: COLORS.textSecondary,
-    fontSize: FONT_SIZES.body,
   },
 });

@@ -32,6 +32,8 @@ export default function ScheduleFormModal({
   visible,
   itemName,
   initialValues,
+  confirmLabel = 'Add to Stack',
+  subtitle = 'Configure your protocol',
   onConfirm,
   onClose,
 }) {
@@ -95,7 +97,7 @@ export default function ScheduleFormModal({
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           {/* Header */}
           <Text style={styles.title}>{itemName}</Text>
-          <Text style={styles.subtitle}>Configure your protocol</Text>
+          <Text style={styles.subtitle}>{subtitle}</Text>
 
           {/* Dose — amount + unit */}
           <Text style={styles.label}>Dose</Text>
@@ -228,7 +230,7 @@ export default function ScheduleFormModal({
             onPress={handleConfirm}
             disabled={daysOfWeek.length === 0}
           >
-            <Text style={styles.confirmBtnText}>Add to Stack</Text>
+            <Text style={styles.confirmBtnText}>{confirmLabel}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
             <Text style={styles.cancelBtnText}>Cancel</Text>
