@@ -2,6 +2,65 @@
 
 All notable changes to PepTalk are documented here. Newest first.
 
+## 2026-07-24 — My Stack: circular dose-progress tracker
+
+- **Problem:** the daily adherence summary was a flat "X of Y doses taken · NN%"
+  bar below the quick-actions, and it gave no sense of what's still due or when.
+- **Outcome:** replaced the bar with a circular **DoseProgress** tracker placed
+  directly below the date picker (above the Current stack / Syringe calc / AI
+  Review actions). A ring shows `taken / total` with the count in its center,
+  beside a "Doses taken today" headline and a `N remaining · next at H:MM`
+  subline. When the day is fully logged the ring closes to green and the subline
+  reads "All doses logged". Every value is derived from the user's stack + dose
+  logs for the selected day — nothing is hard-coded.
+- **Frontend:**
+  - `components/DoseProgress.js` (new) — the SVG ring + text card (react-native-svg
+    `Circle`, arc rotated to start at 12 o'clock; blue while pending, green when
+    complete). Tokens only, no new hex values.
+  - `screens/StackScreen.js` — removed the old inline `AdherenceBar` component
+    and its styles; renders `DoseProgress` between `DateStrip` and `QuickActions`.
+    Computes `remaining` and the next pending dose's time. Since items only carry
+    a coarse `timeSlot` (the schedule form offers morning/night), a `SLOT_TIME`
+    map turns the soonest unlogged slot into a clock time (morning → 8:00 AM,
+    night → 8:00 PM, plus midday/evening/bedtime) for the "next at …" readout.
+- **Known limitation:** dose times are representative per-slot values, not a
+  per-item user-set time (items have no clock-time field yet).
+
+## 2026-07-24 — My Stack date picker: arrow nav + dot week track
+
+- **Problem:** the date picker was a horizontal `FlatList` scrubbing a 180-day
+  window (90 past / 90 future) with `getItemLayout`/`initialScrollIndex` — heavy
+  for what is really week-at-a-glance navigation, and it gave no signal about
+  which days had logged doses.
+- **Outcome:** replaced `components/DateStrip.js` with a compact control:
+  prev/next chevrons that step the selection one day at a time; a centered label
+  that reads **"Today"** (21px/700) with the short date (`Tue, May 27`) beneath
+  when the selection is today, otherwise just the short date; and below it a
+  Sunday-first **7-dot week track**. Each dot reflects that day's dose adherence
+  — selected = 8px solid blue, fully logged = green, partially logged = blue at
+  33%, nothing logged / no scheduled items = hairline. Tapping a dot column
+  selects that day.
+- **Frontend:**
+  - `components/DateStrip.js` — full rewrite. Dropped the FlatList,
+    `generateDateRange` window, `getItemLayout`, and `initialScrollIndex`. Same
+    public API (`forwardRef` + imperative `scrollToToday()`, which now just calls
+    `onSelectDate(todayString())`, plus `selectedDate`/`onSelectDate`), with one
+    new optional `adherenceByDate` prop shaped `{ 'YYYY-MM-DD': 0..1 }`.
+  - `utils/schedule.js` — exported `toLocalDateString`; added `getWeekDates()`
+    which builds the Sunday-first week (local-time date math, never
+    `toISOString`) shared by DateStrip and StackScreen.
+  - `context/StackContext.js` — added `loadLogsForDates(dates)`, a batch selector
+    that loads a whole week's dose logs in one pass (skipping cached dates)
+    instead of the per-render single-date fetch. No change to the per-date
+    persistence keys/format.
+  - `screens/StackScreen.js` — removed the `formatDateHeader` header title
+    (DateStrip owns the date label now; kept the MY STACK eyebrow and Go to Today
+    link). Computes the visible week's `adherenceByDate` from `getItemsForDate`
+    (denominator) and cached logs (numerator) and passes it to DateStrip; loads
+    the week's logs via `loadLogsForDates`.
+- **Known limitation:** `formatDateHeader` / `generateDateRange` remain exported
+  in `utils/schedule.js` but are now unused by the app.
+
 ## 2026-07-24 — Add-to-stack suggestions back to bottom chips; larger FAB
 
 - **Add-to-stack suggestions:** reverted the inline "＋ Add" pill (RN can't

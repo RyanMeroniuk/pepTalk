@@ -56,6 +56,27 @@ export function StackProvider({ children }) {
     return ids;
   }, [logs]);
 
+  // Batch-load a set of dates (e.g. a visible week) in one pass, skipping any
+  // already in the cache. Reads the same per-date keys as loadLogsForDate — no
+  // change to the persistence format.
+  const loadLogsForDates = useCallback(async (dateStrings) => {
+    const missing = dateStrings.filter((d) => logs[d] === undefined);
+    if (missing.length === 0) return;
+    const entries = await Promise.all(
+      missing.map(async (d) => {
+        const json = await AsyncStorage.getItem(LOG_PREFIX + d);
+        return [d, json ? JSON.parse(json) : []];
+      })
+    );
+    setLogs((prev) => {
+      const next = { ...prev };
+      for (const [d, ids] of entries) {
+        if (next[d] === undefined) next[d] = ids;
+      }
+      return next;
+    });
+  }, [logs]);
+
   const logDose = useCallback(async (dateString, itemId) => {
     const current = logs[dateString] || [];
     if (current.includes(itemId)) return;
@@ -86,6 +107,7 @@ export function StackProvider({ children }) {
         loaded,
         logs,
         loadLogsForDate,
+        loadLogsForDates,
         logDose,
         unlogDose,
         isLogged,

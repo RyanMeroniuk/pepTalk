@@ -9,7 +9,7 @@
  * Never use toISOString() for this — it converts to UTC
  * and can shift the date in western timezones.
  */
-function toLocalDateString(d) {
+export function toLocalDateString(d) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
@@ -67,6 +67,27 @@ export function generateDateRange(pastDays = 90, futureDays = 90) {
   }
 
   return days;
+}
+
+/**
+ * Build the Sunday-first week (7 days) containing a given date.
+ * All date math is done in local time via toLocalDateString — never toISOString.
+ * @param {string} dateString - "YYYY-MM-DD" anchor date
+ * @returns {Array<{dateString: string, letter: string}>} 7 days, Sun→Sat
+ */
+export function getWeekDates(dateString) {
+  const anchor = new Date(dateString + 'T00:00:00');
+  const start = new Date(anchor);
+  start.setDate(anchor.getDate() - anchor.getDay()); // step back to Sunday
+  const letters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+  const week = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    week.push({ dateString: toLocalDateString(d), letter: letters[i] });
+  }
+  return week;
 }
 
 /**

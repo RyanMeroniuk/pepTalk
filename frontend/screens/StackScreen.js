@@ -6,7 +6,7 @@
 // → schedule form) are preserved as-is in their current dark styling and get
 // restyled in Step 7.
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -21,11 +21,12 @@ import { useStack } from '../context/StackContext';
 import {
   getItemsForDate,
   todayString,
-  formatDateHeader,
+  getWeekDates,
   describeDays,
   formatDose,
 } from '../utils/schedule';
 import DateStrip from '../components/DateStrip';
+import DoseProgress from '../components/DoseProgress';
 import QuickActions from '../components/QuickActions';
 import DoseCheckbox from '../components/DoseCheckbox';
 import Icon from '../components/Icon';
@@ -41,13 +42,26 @@ const ROUTE_LABEL = {
   intramuscular: 'IM',
 };
 
+// Items only carry a coarse timeSlot (the schedule form offers morning/night),
+// so map each slot to a representative clock time for the "next at …" readout.
+// Ordering decides which pending dose is "next".
+const SLOT_TIME = {
+  morning: '8:00 AM',
+  midday: '12:00 PM',
+  evening: '6:00 PM',
+  night: '8:00 PM',
+  bedtime: '10:00 PM',
+};
+const SLOT_ORDER = { morning: 0, midday: 1, evening: 2, night: 3, bedtime: 4 };
+
 export default function StackScreen() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const {
     stack,
     removeItem,
-    loadLogsForDate,
+    logs,
+    loadLogsForDates,
     logDose,
     unlogDose,
     isLogged,
@@ -56,15 +70,40 @@ export default function StackScreen() {
   const dateStripRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(todayString());
 
+  // The Sunday-first week containing the selection — drives both the log fetch
+  // and the DateStrip dot track.
+  const week = useMemo(() => getWeekDates(selectedDate), [selectedDate]);
+
   useEffect(() => {
-    loadLogsForDate(selectedDate);
-  }, [selectedDate, loadLogsForDate]);
+    loadLogsForDates(week.map((d) => d.dateString));
+  }, [week, loadLogsForDates]);
+
+  // Per-day adherence ratio (0..1) for the visible week. Days with no scheduled
+  // items are omitted so DateStrip renders them as hairline.
+  const adherenceByDate = useMemo(() => {
+    const map = {};
+    for (const { dateString } of week) {
+      const items = getItemsForDate(stack, dateString);
+      if (items.length === 0) continue;
+      const dayLogs = logs[dateString] || [];
+      const taken = items.filter((i) => dayLogs.includes(i.id)).length;
+      map[dateString] = taken / items.length;
+    }
+    return map;
+  }, [week, stack, logs]);
 
   const dayItems = getItemsForDate(stack, selectedDate);
   const morningItems = dayItems.filter((s) => s.timeSlot === 'morning');
   const nightItems = dayItems.filter((s) => s.timeSlot === 'night');
   const taken = dayItems.filter((i) => isLogged(selectedDate, i.id)).length;
+  const remaining = dayItems.length - taken;
   const isToday = selectedDate === todayString();
+
+  // The soonest pending (unlogged) dose drives the "next at …" readout.
+  const nextTime = dayItems
+    .filter((i) => !isLogged(selectedDate, i.id))
+    .sort((a, b) => (SLOT_ORDER[a.timeSlot] ?? 99) - (SLOT_ORDER[b.timeSlot] ?? 99))
+    .map((i) => SLOT_TIME[i.timeSlot] || null)[0] ?? null;
 
   // --- Dose toggle ---
   const handleToggleDose = useCallback(
@@ -100,9 +139,6 @@ export default function StackScreen() {
         <View style={styles.header}>
           <View style={{ flex: 1 }}>
             <Text style={styles.eyebrow}>MY STACK</Text>
-            <Text style={styles.title}>
-              {isToday ? 'Today' : formatDateHeader(selectedDate)}
-            </Text>
           </View>
           {!isToday && (
             <TouchableOpacity
@@ -121,18 +157,25 @@ export default function StackScreen() {
           ref={dateStripRef}
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
+          adherenceByDate={adherenceByDate}
         />
+
+        {/* Dose progress ring — only shown when the day has scheduled items */}
+        {dayItems.length > 0 && (
+          <DoseProgress
+            taken={taken}
+            total={dayItems.length}
+            remaining={remaining}
+            nextTime={nextTime}
+            isToday={isToday}
+          />
+        )}
 
         <QuickActions
           onCurrentStack={() => navigation.navigate('CurrentStack')}
           onSyringe={() => navigation.navigate('SyringeCalculator')}
           onReview={() => navigation.navigate('Review')}
         />
-
-        {/* Adherence summary — only shown when there are items today */}
-        {dayItems.length > 0 && (
-          <AdherenceBar taken={taken} total={dayItems.length} />
-        )}
 
         {/* Sections / empty state */}
         {dayItems.length === 0 ? (
@@ -173,98 +216,6 @@ export default function StackScreen() {
     </View>
   );
 }
-
-// ─────────────────────────────────────────────────────────────
-// AdherenceBar — "X of Y doses taken · NN%" with progress bar.
-// When all doses are logged, switches to green with a check.
-// ─────────────────────────────────────────────────────────────
-function AdherenceBar({ taken, total }) {
-  const pct = total === 0 ? 0 : Math.round((taken / total) * 100);
-  const complete = taken === total && total > 0;
-  return (
-    <View style={[adStyles.wrap, SHADOWS.card]}>
-      <View style={adStyles.row}>
-        <View style={adStyles.leftRow}>
-          {complete && (
-            <View style={adStyles.checkDot}>
-              <Icon name="check" size={11} color="#fff" strokeWidth={3.5} />
-            </View>
-          )}
-          <Text style={adStyles.label}>
-            {complete ? 'All doses logged' : `${taken} of ${total} doses taken`}
-          </Text>
-        </View>
-        <Text
-          style={[
-            adStyles.pct,
-            { color: complete ? COLORS.greenDeep : COLORS.textSecondary },
-          ]}
-        >
-          {pct}%
-        </Text>
-      </View>
-      <View style={adStyles.track}>
-        <View
-          style={[
-            adStyles.fill,
-            {
-              width: `${pct}%`,
-              backgroundColor: complete ? COLORS.green : COLORS.bluePrimary,
-            },
-          ]}
-        />
-      </View>
-    </View>
-  );
-}
-
-const adStyles = StyleSheet.create({
-  wrap: {
-    marginHorizontal: SPACING.ms,
-    marginBottom: SPACING.l,
-    paddingHorizontal: SPACING.ms,
-    paddingVertical: SPACING.m,
-    backgroundColor: COLORS.surface,
-    borderColor: COLORS.hairline,
-    borderWidth: 1,
-    borderRadius: RADII.input,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.s,
-  },
-  leftRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.s },
-  checkDot: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: COLORS.green,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
-  },
-  pct: {
-    fontSize: FONT_SIZES.meta,
-    fontWeight: '600',
-    fontVariant: ['tabular-nums'],
-  },
-  track: {
-    height: 4,
-    borderRadius: RADII.full,
-    backgroundColor: COLORS.panel,
-    overflow: 'hidden',
-  },
-  fill: {
-    height: '100%',
-    borderRadius: RADII.full,
-  },
-});
 
 // ─────────────────────────────────────────────────────────────
 // SectionHeader — sun/moon icon + uppercase label + count
@@ -517,13 +468,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.textSecondary,
     letterSpacing: 0.7,
-  },
-  title: {
-    fontSize: FONT_SIZES.screenTitle,
-    fontWeight: '700',
-    color: COLORS.textPrimary,
-    letterSpacing: -0.5,
-    marginTop: 2,
   },
   goToday: {
     color: COLORS.bluePrimary,

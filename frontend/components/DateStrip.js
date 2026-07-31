@@ -1,131 +1,175 @@
-// Horizontal date picker — 7-day window into a 180-day range (90 past, 90 future).
-// Active day fills with brand blue, inactive days show the day-of-week label in
-// secondary text + day-of-month in primary text.
+// Compact date navigator — arrow-stepped label over a 7-dot week track.
 //
-// Keeps the existing imperative `scrollToToday()` ref API used by StackScreen.
+// Prev/next chevrons step selectedDate by one day (local time only, never
+// toISOString). The centered label reads "Today" (with the short date beneath)
+// when the selection is today, otherwise the short form "Tue, May 27". Below it,
+// a Sunday-first week track shows one dot per day, colored by dose adherence.
+//
+// Keeps the existing imperative scrollToToday() ref API used by StackScreen —
+// it now simply jumps the selection back to today.
 
-import { useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { generateDateRange } from '../utils/schedule';
-import { COLORS, RADII, FONT_SIZES, SPACING } from '../theme/tokens';
+import { forwardRef, useImperativeHandle } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { toLocalDateString, todayString, getWeekDates } from '../utils/schedule';
+import Icon from './Icon';
+import { COLORS, SPACING, FONT_SIZES } from '../theme/tokens';
 
-const CELL_WIDTH = 48;
-const PAST_DAYS = 90;
-const FUTURE_DAYS = 90;
-const TODAY_INDEX = PAST_DAYS;
+// Shift a "YYYY-MM-DD" string by whole days in local time.
+function shiftDate(dateString, delta) {
+  const d = new Date(dateString + 'T00:00:00');
+  d.setDate(d.getDate() + delta);
+  return toLocalDateString(d);
+}
 
-const dates = generateDateRange(PAST_DAYS, FUTURE_DAYS);
+// "Tue, May 27"
+function shortDate(dateString) {
+  const d = new Date(dateString + 'T00:00:00');
+  return d.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 
-const DateStrip = forwardRef(function DateStrip({ selectedDate, onSelectDate }, ref) {
-  const listRef = useRef(null);
+// Resolve a day's dot appearance. Selection always wins; otherwise the color
+// reflects the day's adherence ratio (0..1). Missing/absent ratios read as
+// hairline ("nothing logged").
+function dotFor(dateString, selectedDate, adherenceByDate) {
+  if (dateString === selectedDate) {
+    return { size: 8, color: COLORS.bluePrimary, opacity: 1 };
+  }
+  const ratio = adherenceByDate ? adherenceByDate[dateString] : undefined;
+  if (ratio >= 1) return { size: 6, color: COLORS.green, opacity: 1 };
+  if (ratio > 0) return { size: 6, color: COLORS.bluePrimary, opacity: 0.33 };
+  return { size: 6, color: COLORS.hairline, opacity: 1 };
+}
 
+const DateStrip = forwardRef(function DateStrip(
+  { selectedDate, onSelectDate, adherenceByDate },
+  ref
+) {
   useImperativeHandle(ref, () => ({
-    scrollToToday: () => {
-      listRef.current?.scrollToIndex({ index: TODAY_INDEX, animated: true, viewPosition: 0.5 });
-    },
+    scrollToToday: () => onSelectDate(todayString()),
   }));
 
-  const getItemLayout = useCallback(
-    (_, index) => ({
-      length: CELL_WIDTH + 6, // cell + horizontal margin
-      offset: (CELL_WIDTH + 6) * index,
-      index,
-    }),
-    []
-  );
-
-  const renderItem = useCallback(
-    ({ item }) => {
-      const isSelected = item.dateString === selectedDate;
-      return (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => onSelectDate(item.dateString)}
-          style={[styles.cell, isSelected && styles.cellSelected]}
-        >
-          <Text
-            style={[
-              styles.dow,
-              isSelected ? styles.dowActive : item.isToday && styles.dowToday,
-            ]}
-          >
-            {item.dayOfWeek.toUpperCase()}
-          </Text>
-          <Text
-            style={[
-              styles.dom,
-              isSelected ? styles.domActive : item.isToday && styles.domToday,
-            ]}
-          >
-            {item.dayOfMonth}
-          </Text>
-        </TouchableOpacity>
-      );
-    },
-    [selectedDate, onSelectDate]
-  );
+  const isToday = selectedDate === todayString();
+  const week = getWeekDates(selectedDate);
 
   return (
-    <FlatList
-      ref={listRef}
-      data={dates}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.dateString}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      getItemLayout={getItemLayout}
-      initialScrollIndex={TODAY_INDEX}
-      style={styles.list}
-      contentContainerStyle={styles.content}
-    />
+    <View style={styles.container}>
+      {/* Arrow-stepped label */}
+      <View style={styles.navRow}>
+        <TouchableOpacity
+          onPress={() => onSelectDate(shiftDate(selectedDate, -1))}
+          hitSlop={10}
+          style={styles.arrow}
+        >
+          <Icon name="back" size={20} color={COLORS.textSecondary} />
+        </TouchableOpacity>
+
+        <View style={styles.labelWrap}>
+          {isToday ? (
+            <>
+              <Text style={styles.todayTitle}>Today</Text>
+              <Text style={styles.todaySub}>{shortDate(selectedDate)}</Text>
+            </>
+          ) : (
+            <Text style={styles.todayTitle}>{shortDate(selectedDate)}</Text>
+          )}
+        </View>
+
+        <TouchableOpacity
+          onPress={() => onSelectDate(shiftDate(selectedDate, 1))}
+          hitSlop={10}
+          style={styles.arrow}
+        >
+          <Icon name="chevron" size={20} color={COLORS.textSecondary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Sunday-first week dot track */}
+      <View style={styles.track}>
+        {week.map((day) => {
+          const dot = dotFor(day.dateString, selectedDate, adherenceByDate);
+          return (
+            <TouchableOpacity
+              key={day.dateString}
+              onPress={() => onSelectDate(day.dateString)}
+              activeOpacity={0.7}
+              style={styles.column}
+            >
+              <Text style={styles.dayLetter}>{day.letter}</Text>
+              <View style={styles.dotSlot}>
+                <View
+                  style={{
+                    width: dot.size,
+                    height: dot.size,
+                    borderRadius: dot.size / 2,
+                    backgroundColor: dot.color,
+                    opacity: dot.opacity,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
   );
 });
 
 export default DateStrip;
 
 const styles = StyleSheet.create({
-  list: {
-    flexGrow: 0,
-  },
-  content: {
+  container: {
     paddingHorizontal: SPACING.ms,
     paddingTop: SPACING.xxs,
     paddingBottom: SPACING.ms,
   },
-  cell: {
-    width: CELL_WIDTH,
-    paddingVertical: SPACING.s,
+  navRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: RADII.input,
-    marginHorizontal: 3,
-    gap: SPACING.xxs,
+    justifyContent: 'space-between',
   },
-  cellSelected: {
-    backgroundColor: COLORS.bluePrimary,
+  arrow: {
+    padding: SPACING.xs,
   },
-  dow: {
-    fontSize: 10.5,
-    fontWeight: '700',
-    letterSpacing: 0.7,
-    color: COLORS.textSecondary,
+  labelWrap: {
+    flex: 1,
+    alignItems: 'center',
   },
-  dowActive: {
-    color: '#FFFFFF',
-    opacity: 0.85,
-  },
-  dowToday: {
-    color: COLORS.bluePrimary,
-  },
-  dom: {
-    fontSize: FONT_SIZES.navTitle,
+  todayTitle: {
+    fontSize: 21,
     fontWeight: '700',
     color: COLORS.textPrimary,
-    letterSpacing: -0.2,
+    letterSpacing: -0.3,
   },
-  domActive: {
-    color: '#FFFFFF',
+  todaySub: {
+    fontSize: FONT_SIZES.meta,
+    fontWeight: '500',
+    color: COLORS.textSecondary,
+    marginTop: 1,
   },
-  domToday: {
-    color: COLORS.bluePrimary,
+  track: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: SPACING.sm,
+  },
+  column: {
+    width: 34,
+    alignItems: 'center',
+    gap: SPACING.xs,
+  },
+  dayLetter: {
+    fontSize: 9.5,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    color: COLORS.textTertiary,
+    textTransform: 'uppercase',
+  },
+  dotSlot: {
+    height: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
