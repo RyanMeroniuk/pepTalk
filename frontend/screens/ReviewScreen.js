@@ -244,9 +244,6 @@ export default function ReviewScreen({ navigation }) {
                   onPress={fetchAIReview}
                   icon={<Icon name="sparkSolid" size={16} color="#fff" strokeWidth={2} />}
                 />
-                <Text style={styles.aiHint}>
-                  Deeper personalized review using your full library
-                </Text>
               </View>
             )}
 
@@ -329,12 +326,7 @@ function NoIssues() {
       <View style={ni.checkCircle}>
         <Icon name="check" size={20} color="#fff" strokeWidth={3} />
       </View>
-      <View style={{ alignItems: 'center' }}>
-        <Text style={ni.title}>No known issues</Text>
-        <Text style={ni.subtitle}>
-          No known conflicts or synergies found between your stack items.
-        </Text>
-      </View>
+      <Text style={ni.title}>No known issues</Text>
     </View>
   );
 }

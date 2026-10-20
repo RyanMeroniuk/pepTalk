@@ -140,6 +140,26 @@ def _item_catalog() -> dict:
     return catalog
 
 
+@lru_cache(maxsize=1)
+def _display_name_to_slug() -> dict:
+    """Lowercased display name (overview.md H1) → slug, e.g. "klow stack" → "klow"."""
+    return {meta["name"].lower(): slug for slug, meta in _item_catalog().items()}
+
+
+def resolve_item_id(name: str) -> str:
+    """Resolve a stack item's display name (or any alias) to its graph/slug ID.
+
+    The app sends display names like "BPC-157 (Body Protection Compound-157)";
+    the knowledge graph is keyed by slug ("bpc-157"). Exact display names are
+    looked up first, since a few (e.g. "KLOW Stack" → "klow") don't normalize
+    to their slug; everything else goes through ``normalize_id``.
+    """
+    if not name or not name.strip():
+        return ""
+    by_name = _display_name_to_slug().get(name.strip().lower())
+    return by_name or normalize_id(name)
+
+
 def resolve_recommendation(raw_name: str) -> dict | None:
     """Resolve a free-text item name to {slug, name, category}, or None if unknown.
 

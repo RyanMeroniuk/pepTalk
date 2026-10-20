@@ -160,16 +160,15 @@ export default function StackScreen() {
           adherenceByDate={adherenceByDate}
         />
 
-        {/* Dose progress ring — only shown when the day has scheduled items */}
-        {dayItems.length > 0 && (
-          <DoseProgress
-            taken={taken}
-            total={dayItems.length}
-            remaining={remaining}
-            nextTime={nextTime}
-            isToday={isToday}
-          />
-        )}
+        {/* Dose progress ring — always shown, renders a zero-state when the day
+            has no scheduled items */}
+        <DoseProgress
+          taken={taken}
+          total={dayItems.length}
+          remaining={remaining}
+          nextTime={nextTime}
+          isToday={isToday}
+        />
 
         <QuickActions
           onCurrentStack={() => navigation.navigate('CurrentStack')}

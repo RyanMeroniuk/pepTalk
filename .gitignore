@@ -78,3 +78,11 @@ htmlcov/
 # Misc
 *.log
 *.tmp
+
+# Local-only: design references, AI tooling and notes
+frontend/design inspo/
+.tldr/
+.tldrignore
+.claude/
+CLAUDE.md
+CHANGELOG.md

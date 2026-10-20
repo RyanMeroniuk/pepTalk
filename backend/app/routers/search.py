@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from app.config import RAG_SCORE_THRESHOLD
 from app.dependencies import get_collection, get_model
 from app.graph_utils import get_conflicts, get_timing_conflicts, get_synergies, get_stack_context, get_graph_stats
+from app.item_registry import resolve_item_id
 
 router = APIRouter()
 
@@ -98,11 +99,12 @@ async def stack_review(request: ConflictRequest):
     # Get synergies for each item in the stack
     all_synergies = []
     seen_pairs = set()
-    for item_name in stack_items:
-        for syn in get_synergies(item_name):
+    stack_ids = [resolve_item_id(s) for s in stack_items]
+    for item_id in stack_ids:
+        for syn in get_synergies(item_id):
             # Only include synergies between items in the stack
-            pair = tuple(sorted([item_name.lower(), syn["target"]]))
-            if syn["target"] in [s.lower() for s in stack_items] and pair not in seen_pairs:
+            pair = tuple(sorted([item_id, syn["target"]]))
+            if syn["target"] in stack_ids and pair not in seen_pairs:
                 seen_pairs.add(pair)
                 all_synergies.append({
                     "items": list(pair),

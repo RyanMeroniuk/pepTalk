@@ -7,6 +7,8 @@ from pathlib import Path
 import networkx as nx
 from networkx.readwrite import json_graph
 
+from app.item_registry import resolve_item_id
+
 GRAPH_PATH = Path(__file__).resolve().parent.parent / "graph.json"
 
 _graph = None
@@ -36,7 +38,7 @@ def reload_graph():
 def get_synergies(item: str) -> list[dict]:
     """Get all supplements/peptides that synergize with an item."""
     G = get_graph()
-    item = item.lower()
+    item = resolve_item_id(item)
     if not G.has_node(item):
         return []
 
@@ -67,7 +69,7 @@ def get_conflicts(stack: list[str]) -> list[dict]:
     G = get_graph()
     conflicts = []
 
-    normalized = [item.lower() for item in stack]
+    normalized = [resolve_item_id(item) for item in stack]
 
     for item_a, item_b in combinations(normalized, 2):
         if not G.has_node(item_a) or not G.has_node(item_b):
@@ -104,7 +106,7 @@ def get_timing_conflicts(stack: list[str]) -> list[dict]:
     G = get_graph()
     timing = []
 
-    normalized = [item.lower() for item in stack]
+    normalized = [resolve_item_id(item) for item in stack]
 
     for item_a, item_b in combinations(normalized, 2):
         if not G.has_node(item_a) or not G.has_node(item_b):
@@ -141,7 +143,7 @@ def get_stack_context(stack: list[str]) -> str:
     if G.number_of_nodes() == 0:
         return ""
 
-    normalized = [item.lower() for item in stack]
+    normalized = [resolve_item_id(item) for item in stack]
     lines = []
 
     # Conflicts between stack items
@@ -159,7 +161,14 @@ def get_stack_context(stack: list[str]) -> str:
                 line += f" — {mech}"
             lines.append(line)
     else:
-        if normalized:
+        unknown = [item for item in normalized if not G.has_node(item)]
+        if unknown:
+            # Don't claim "no conflicts" for items the graph knows nothing about
+            lines.append(
+                "No known conflicts found, but these items are not in the knowledge graph: "
+                + ", ".join(unknown)
+            )
+        elif normalized:
             lines.append("No known conflicts between items in user's stack ✓")
 
     # Synergies between stack items
@@ -209,7 +218,7 @@ def get_stack_context(stack: list[str]) -> str:
 def get_related_items(item: str, depth: int = 1) -> list[dict]:
     """Get everything connected to an item up to N hops away."""
     G = get_graph()
-    item = item.lower()
+    item = resolve_item_id(item)
     if not G.has_node(item):
         return []
 

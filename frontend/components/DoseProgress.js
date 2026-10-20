@@ -19,9 +19,12 @@ export default function DoseProgress({ taken, total, remaining, nextTime, isToda
   const dash = CIRC * pct;
   const arcColor = complete ? COLORS.green : COLORS.bluePrimary;
 
-  const subtitle = complete
-    ? 'All doses logged'
-    : `${remaining} remaining${nextTime ? ` · next at ${nextTime}` : ''}`;
+  const subtitle =
+    total === 0
+      ? 'Nothing scheduled'
+      : complete
+      ? 'All doses logged'
+      : `${remaining} remaining${nextTime ? ` · next at ${nextTime}` : ''}`;
 
   return (
     <View style={styles.card}>
@@ -77,18 +80,19 @@ const styles = StyleSheet.create({
     borderRadius: RADII.input,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: SPACING.md,
     ...SHADOWS.card,
   },
   ring: {
     width: SIZE,
     height: SIZE,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   ringCenter: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: SIZE,
+    height: SIZE,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   textCol: {
-    flexShrink: 1,
+    flex: 1,
   },
   title: {
     fontSize: FONT_SIZES.navTitle,

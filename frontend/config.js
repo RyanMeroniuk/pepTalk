@@ -6,4 +6,4 @@
 // is started with `--host 0.0.0.0` so it accepts connections from the phone.
 //
 // On the iOS Simulator you can use http://localhost:8000 instead.
-export const API_URL = 'http://192.168.0.27:8000';
+export const API_URL = 'http://10.0.0.83:8000';
